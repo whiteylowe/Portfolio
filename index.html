@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nicholas Lowe — Technical Artist & Spatial Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #090908;
+    --bg-2: #111110;
+    --bg-3: #181816;
+    --text: #e2ddd4;
+    --text-mid: #7a756c;
+    --text-dim: #383530;
+    --accent: #c4a882;
+    --accent-dim: #4a3e2e;
+    --rule: #1c1b18;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    mix-blend-mode: normal;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: var(--text-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav ul a {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--text-mid); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    overflow: hidden;
+  }
+
+  canvas#field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.9s ease 0.45s forwards;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--text-mid);
+  }
+
+  .hero-desc {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--text-mid);
+    max-width: 52ch;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.9s ease 0.6s forwards;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.9s ease 0.75s forwards;
+  }
+
+  .hero-link-primary {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent-dim);
+    padding-bottom: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .hero-link-primary:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .hero-link-sec {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .hero-link-sec:hover { color: var(--text-mid); }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    right: 3rem;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .hero-scroll-hint::before {
+    content: '';
+    width: 1px;
+    height: 50px;
+    background: var(--text-dim);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RULE */
+  .rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 0 3rem;
+  }
+
+  /* ABOUT STRIP */
+  .about-strip {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 5rem;
+    padding: 5rem 3rem;
+    max-width: 1300px;
+  }
+
+  .about-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    padding-top: 0.3rem;
+  }
+
+  .about-text {
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    color: var(--text-mid);
+    line-height: 1.85;
+    max-width: 65ch;
+  }
+
+  .about-text strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* WORK */
+  .work-section {
+    padding: 0 3rem 7rem;
+  }
+
+  .work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 0;
+  }
+
+  .work-header-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+  }
+
+  .work-header-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* PROJECT ROWS */
+  .project-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    align-items: start;
+    gap: 3rem;
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .project-row:hover .project-row-title { color: var(--accent); }
+  .project-row:hover .project-row-arrow { opacity: 1; transform: translateX(0); }
+  .project-row:hover .project-preview { opacity: 1; }
+
+  .project-row-left {}
+
+  .project-row-index {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+
+  .project-row-title {
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    transition: color 0.2s;
+  }
+
+  .project-row-tags {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .project-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    padding: 0.2rem 0.6rem;
+  }
+
+  .project-row-desc {
+    font-size: 15px;
+    color: var(--text-mid);
+    max-width: 55ch;
+    line-height: 1.75;
+  }
+
+  .project-row-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .project-row-year {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .project-row-arrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  /* Hover image preview */
+  .project-preview {
+    position: absolute;
+    right: 120px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 200px;
+    height: 130px;
+    background: var(--bg-3);
+    border: 1px solid var(--rule);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .preview-placeholder {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* Featured visual for each project */
+  .preview-co {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0c0a;
+  }
+
+  .preview-sl {
+    width: 100%;
+    height: 100%;
+    background: #060809;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-mm {
+    width: 100%;
+    height: 100%;
+    background: #080a0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* CAPABILITIES */
+  .caps-section {
+    padding: 5rem 3rem;
+    background: var(--bg-2);
+    border-top: 1px solid var(--rule);
+  }
+
+  .caps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: 2.5rem;
+  }
+
+  .cap-cell {
+    background: var(--bg-2);
+    padding: 2rem;
+  }
+
+  .cap-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .cap-title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .cap-body {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 6rem 3rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: end;
+  }
+
+  .contact-left h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-left p {
+    font-size: 15px;
+    color: var(--text-mid);
+    max-width: 42ch;
+    line-height: 1.8;
+  }
+
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+
+  .contact-link:hover { border-color: var(--accent-dim); }
+  .contact-link:hover .contact-link-label { color: var(--accent); }
+  .contact-link:hover .contact-link-arrow { color: var(--accent); }
+
+  .contact-link-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .contact-link-value {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .contact-link-arrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    transition: color 0.2s;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-2);
+  }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .footer-right {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.25rem 1.5rem; }
+    nav ul { display: none; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .rule { margin: 0 1.5rem; }
+    .about-strip { grid-template-columns: 1fr; gap: 1.5rem; padding: 3rem 1.5rem; }
+    .work-section { padding: 0 1.5rem 5rem; }
+    .project-row { grid-template-columns: 1fr; }
+    .project-preview { display: none; }
+    .caps-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-section { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
+    .caps-section { padding: 4rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Nicholas Lowe</a>
+  <ul>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="field"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Technical Artist &nbsp;/&nbsp; Spatial Designer &nbsp;/&nbsp; XR</div>
+    <h1 class="hero-name">Nicholas<br><em>Lowe</em></h1>
+    <p class="hero-desc">Former Meta Reality Labs. Designing perceptual systems, spatial interfaces, and real-time environments where the gap between a confusing experience and a clear one has real consequences.</p>
+    <div class="hero-links">
+      <a href="#work" class="hero-link-primary">View Work</a>
+      <a href="mailto:nicklowe3d@gmail.com" class="hero-link-sec">Get in touch</a>
+      <a href="nicklowe3d.com" class="hero-link-sec" target="_blank">nicklowe3d.com</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">Scroll</div>
+</section>
+
+<hr class="rule">
+
+<!-- ABOUT -->
+<div class="about-strip reveal" id="about">
+  <div class="about-label">Background</div>
+  <p class="about-text">
+    <strong>Technical artist and spatial designer</strong> with dual masters in Architecture and Game Development. Four years at Meta Reality Labs designing perceptual feedback systems and AR interfaces for next-generation wearables. Background in architecture gives a systems-level fluency in how people move through, read, and experience complex environments — applied now to interaction design, real-time visualization, and spatial computing. <strong>Based in Portland, ME. Open to work.</strong>
+  </p>
+</div>
+
+<hr class="rule">
+
+<!-- WORK -->
+<div class="work-section" id="work">
+  <div class="work-header reveal">
+    <span class="work-header-label">Selected Work</span>
+    <span class="work-header-count">03 Projects</span>
+  </div>
+
+  <!-- Campus Obscura -->
+  <a href="campus-obscura.html" class="project-row reveal">
+    <div class="project-row-left">
+      <div class="project-row-index">01</div>
+      <div class="project-row-title">Campus Obscura</div>
+      <div class="project-row-tags">
+        <span class="project-tag">Architectural Research</span>
+        <span class="project-tag">Perceptual Systems</span>
+        <span class="project-tag">Physical Making</span>
+      </div>
+      <p class="project-row-desc">M.Arch thesis investigating vision as a constructed process across mechanical, spatial, and biological systems. Handbuilt optical instruments, pinhole photography, computational simulation.</p>
+    </div>
+    <div class="project-row-right">
+      <span class="project-row-year">2011</span>
+      <span class="project-row-arrow">View &rarr;</span>
+    </div>
+    <div class="project-preview">
+      <div class="preview-co">
+        <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+          <rect x="30" y="10" width="40" height="30" stroke="#4a3e2e" stroke-width="0.5"/>
+          <circle cx="50" cy="25" r="8" stroke="#c4a882" stroke-width="0.5" opacity="0.5"/>
+          <line x1="10" y1="55" x2="45" y2="10" stroke="#4a3e2e" stroke-width="0.5"/>
+          <line x1="90" y1="55" x2="55" y2="10" stroke="#4a3e2e" stroke-width="0.5"/>
+          <line x1="10" y1="55" x2="90" y2="55" stroke="#4a3e2e" stroke-width="0.5"/>
+        </svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- Signal Lock -->
+  <a href="signal-lock.html" class="project-row reveal">
+    <div class="project-row-left">
+      <div class="project-row-index">02</div>
+      <div class="project-row-title">Signal Lock</div>
+      <div class="project-row-tags">
+        <span class="project-tag">Cinematic UI</span>
+        <span class="project-tag">HTML / Canvas</span>
+        <span class="project-tag">Tactical Interface</span>
+      </div>
+      <p class="project-row-desc">A monocular HUD and 16:9 tactical control surface built in vanilla HTML/Canvas. Defense and surveillance aesthetic study — perceptual hierarchy and attention direction as design problems.</p>
+    </div>
+    <div class="project-row-right">
+      <span class="project-row-year">2024</span>
+      <span class="project-row-arrow">View &rarr;</span>
+    </div>
+    <div class="project-preview">
+      <div class="preview-sl">
+        <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+          <rect x="10" y="10" width="100" height="60" stroke="#1a4d35" stroke-width="0.5"/>
+          <line x1="60" y1="10" x2="60" y2="70" stroke="#4ade9a" stroke-width="0.3" opacity="0.4"/>
+          <line x1="10" y1="40" x2="120" y2="40" stroke="#4ade9a" stroke-width="0.3" opacity="0.4"/>
+          <circle cx="60" cy="40" r="12" stroke="#4ade9a" stroke-width="0.5" opacity="0.6"/>
+          <circle cx="60" cy="40" r="20" stroke="#1a4d35" stroke-width="0.5" stroke-dasharray="2 3"/>
+          <rect x="20" y="15" width="18" height="8" fill="none" stroke="#1a4d35" stroke-width="0.5"/>
+          <rect x="82" y="15" width="18" height="8" fill="none" stroke="#1a4d35" stroke-width="0.5"/>
+        </svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- Midnight Miso -->
+  <a href="midnight-miso.html" class="project-row reveal">
+    <div class="project-row-left">
+      <div class="project-row-index">03</div>
+      <div class="project-row-title">Midnight Miso</div>
+      <div class="project-row-tags">
+        <span class="project-tag">Unreal Engine 5</span>
+        <span class="project-tag">Real-Time Environment</span>
+        <span class="project-tag">Cinematic</span>
+      </div>
+      <p class="project-row-desc">Drone city scene in Unreal Engine 5. Cinematic lighting, atmospheric depth, and real-time rendering pushed toward a nocturnal urban aesthetic — technical art as spatial storytelling.</p>
+    </div>
+    <div class="project-row-right">
+      <span class="project-row-year">2023</span>
+      <span class="project-row-arrow">View &rarr;</span>
+    </div>
+    <div class="project-preview">
+      <div class="preview-mm">
+        <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+          <rect x="0" y="50" width="15" height="30" fill="#0f1520" stroke="#1a2535" stroke-width="0.5"/>
+          <rect x="20" y="35" width="12" height="45" fill="#0f1520" stroke="#1a2535" stroke-width="0.5"/>
+          <rect x="37" y="42" width="18" height="38" fill="#0f1520" stroke="#1a2535" stroke-width="0.5"/>
+          <rect x="60" y="28" width="14" height="52" fill="#0f1520" stroke="#1a2535" stroke-width="0.5"/>
+          <rect x="80" y="38" width="10" height="42" fill="#0f1520" stroke="#1a2535" stroke-width="0.5"/>
+          <rect x="96" y="44" width="20" height="36" fill="#0f1520" stroke="#1a2535" stroke-width="0.5"/>
+          <circle cx="67" cy="18" r="6" fill="none" stroke="#c4a882" stroke-width="0.5" opacity="0.4"/>
+          <line x1="0" y1="50" x2="120" y2="50" stroke="#1a2535" stroke-width="0.3"/>
+        </svg>
+      </div>
+    </div>
+  </a>
+</div>
+
+<!-- CAPABILITIES -->
+<section class="caps-section" id="capabilities">
+  <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--accent-dim); text-transform: uppercase;">Capabilities</span>
+  <div class="caps-grid reveal">
+    <div class="cap-cell">
+      <div class="cap-label">01</div>
+      <div class="cap-title">Interaction & Perceptual Design</div>
+      <div class="cap-body">Spatial interfaces, HUD systems, ambient feedback, perceptual hierarchy. Translating sensing and contextual data into legible interface behaviors.</div>
+    </div>
+    <div class="cap-cell">
+      <div class="cap-label">02</div>
+      <div class="cap-title">Real-Time Environments</div>
+      <div class="cap-body">Unreal Engine 5, Unity, shader development, VFX integration, cinematic layout, performance optimization across research and production contexts.</div>
+    </div>
+    <div class="cap-cell">
+      <div class="cap-label">03</div>
+      <div class="cap-title">Spatial & XR Systems</div>
+      <div class="cap-body">AR wearable platforms, holographic UI, mixed reality interaction models. Four years designing for Meta Reality Labs hardware constraints and perception research.</div>
+    </div>
+    <div class="cap-cell">
+      <div class="cap-label">04</div>
+      <div class="cap-title">Architectural Thinking</div>
+      <div class="cap-body">M.Arch from UF, AIA Bronze Medal. Systems-level fluency in how people navigate, read, and experience complex spatial and operational environments.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section reveal" id="contact">
+  <div class="contact-left">
+    <h2>Open to the right opportunity.</h2>
+    <p>Technical Artist, XR Design, Interaction Design, and Spatial Computing roles. Available immediately. Based in Portland, ME — open to remote or relocation.</p>
+  </div>
+  <div class="contact-right">
+    <a href="mailto:nicklowe3d@gmail.com" class="contact-link">
+      <span class="contact-link-label">Email</span>
+      <span class="contact-link-value">nicklowe3d@gmail.com</span>
+      <span class="contact-link-arrow">&rarr;</span>
+    </a>
+    <a href="https://linkedin.com/in/nicholas-lowe" target="_blank" class="contact-link">
+      <span class="contact-link-label">LinkedIn</span>
+      <span class="contact-link-value">linkedin.com/in/nicholas-lowe</span>
+      <span class="contact-link-arrow">&rarr;</span>
+    </a>
+    <a href="https://github.com" target="_blank" class="contact-link">
+      <span class="contact-link-label">GitHub</span>
+      <span class="contact-link-value">github.com/nicklowe3d</span>
+      <span class="contact-link-arrow">&rarr;</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-left">Nicholas Lowe &nbsp;&nbsp; Portland, ME</span>
+  <span class="footer-right">Technical Art &nbsp;/&nbsp; Spatial Design &nbsp;/&nbsp; XR</span>
+</footer>
+
+<script>
+// SENSOR FIELD — mouse-reactive point field
+(function() {
+  const canvas = document.getElementById('field');
+  const ctx = canvas.getContext('2d');
+  let W, H, points = [], mouse = { x: -999, y: -999 };
+  const COUNT = 80;
+  const MAX_DIST = 180;
+  const POINT_COLOR = '50,46,40';
+  const ACCENT_COLOR = '100,88,70';
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function initPoints() {
+    points = [];
+    for (let i = 0; i < COUNT; i++) {
+      points.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        r: Math.random() * 1.2 + 0.4,
+        baseOpacity: Math.random() * 0.4 + 0.1,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // update
+    for (let p of points) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+    }
+
+    // connections
+    for (let i = 0; i < points.length; i++) {
+      for (let j = i + 1; j < points.length; j++) {
+        const dx = points[i].x - points[j].x;
+        const dy = points[i].y - points[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          const alpha = (1 - dist / 120) * 0.12;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${POINT_COLOR},${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[j].x, points[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // mouse influence
+    for (let p of points) {
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      let opacity = p.baseOpacity;
+      let color = POINT_COLOR;
+      let r = p.r;
+
+      if (dist < MAX_DIST) {
+        const influence = 1 - dist / MAX_DIST;
+        opacity = p.baseOpacity + influence * 0.5;
+        color = ACCENT_COLOR;
+        r = p.r + influence * 1.5;
+
+        // draw connection to mouse
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${ACCENT_COLOR},${influence * 0.2})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color},${opacity})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  window.addEventListener('resize', () => { resize(); initPoints(); });
+
+  resize();
+  initPoints();
+  draw();
+})();
+
+// SCROLL REVEALS
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), 0);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
