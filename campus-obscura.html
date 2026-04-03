@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Obscura — Nicholas Lowe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg-2: #111111;
+    --bg-3: #181818;
+    --text: #e8e4dc;
+    --text-mid: #9a9488;
+    --text-dim: #55524e;
+    --accent: #c8b89a;
+    --accent-dim: #6b5f4e;
+    --rule: #252520;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+  }
+
+  nav .logo {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--text-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  nav .logo span { color: var(--accent); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav ul a {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200,184,154,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 60%, rgba(200,184,154,0.02) 0%, transparent 70%);
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 2rem;
+    max-width: 14ch;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    max-width: 900px;
+  }
+
+  .hero-meta-block { flex: 1; }
+
+  .hero-meta-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .hero-meta-value {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-scroll::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: var(--accent-dim);
+  }
+
+  /* SECTION LAYOUT */
+  section { padding: 6rem 3rem; }
+
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 0 3rem;
+  }
+
+  /* INTRO */
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    max-width: 1200px;
+  }
+
+  .intro-left {}
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: block;
+  }
+
+  .intro-left h2 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+
+  .intro-left p {
+    font-size: 16px;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+
+  .intro-right {
+    padding-top: 3.5rem;
+  }
+
+  .intro-right p {
+    font-size: 16px;
+    color: var(--text-mid);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .pull-quote {
+    border-left: 1px solid var(--accent-dim);
+    padding-left: 1.5rem;
+    margin: 2.5rem 0;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--accent);
+    line-height: 1.6;
+  }
+
+  /* CAMERA SECTION */
+  .camera-section {
+    background: var(--bg-2);
+    padding: 5rem 3rem;
+  }
+
+  .camera-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .camera-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .camera-header h3 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text);
+  }
+
+  .camera-header span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .camera-placeholder {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: var(--bg-3);
+    border: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .camera-placeholder-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cam-panel {
+    background: var(--bg-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .cam-panel-label {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .cam-panel-detail {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .cam-sub {
+    background: var(--bg-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Placeholder camera diagram */
+  .cam-diagram {
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--accent-dim);
+    position: relative;
+    transform: rotate(-8deg);
+  }
+
+  .cam-diagram::before {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 30px;
+    background: var(--accent-dim);
+  }
+
+  .cam-lens {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: radial-gradient(circle, var(--bg) 30%, var(--accent-dim) 100%);
+  }
+
+  .camera-caption {
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* ACT SECTIONS */
+  .act-header {
+    margin-bottom: 4rem;
+  }
+
+  .act-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .act-title {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .act-subtitle {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .act-desc {
+    font-size: 15px;
+    color: var(--text-mid);
+    max-width: 480px;
+    line-height: 1.8;
+  }
+
+  /* PROJECT GRID */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: 3rem;
+  }
+
+  .project-card {
+    background: var(--bg);
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card:hover { background: var(--bg-2); }
+
+  .project-card-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--bg-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .project-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Unique placeholder visuals per card */
+  .vis-taxonomy {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3px;
+    width: 80%;
+    height: 70%;
+  }
+
+  .vis-taxonomy .cell {
+    background: var(--bg);
+    border: 1px solid var(--accent-dim);
+    opacity: 0.6;
+  }
+
+  .vis-taxonomy .cell.filled { background: var(--accent-dim); opacity: 0.4; }
+
+  .vis-curved {
+    width: 70%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vis-curved svg { width: 100%; height: 100%; }
+
+  .vis-water {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 80%;
+    height: 60%;
+  }
+
+  .vis-water .ring {
+    border-radius: 50%;
+    border: 1px solid var(--accent-dim);
+    margin: auto;
+    opacity: 0.5;
+  }
+
+  .project-card-info {
+    padding: 1.25rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .project-card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .project-card-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+
+  /* PROCESS */
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 5rem;
+    max-width: 1000px;
+    margin-top: 3rem;
+  }
+
+  .process-item {}
+
+  .process-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--accent-dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .process-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .process-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 4rem 3rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer .back {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  footer .back:hover { color: var(--accent); }
+
+  footer .next {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: color 0.2s;
+  }
+
+  footer .next:hover { color: var(--accent); }
+
+  footer .next-label { font-style: italic; font-family: var(--serif); font-size: 13px; }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    nav ul { display: none; }
+    .hero { padding: 0 1.5rem 4rem; }
+    section { padding: 4rem 1.5rem; }
+    .section-rule { margin: 0 1.5rem; }
+    .intro { grid-template-columns: 1fr; gap: 2rem; }
+    .project-grid { grid-template-columns: 1fr; }
+    .process-grid { grid-template-columns: 1fr; gap: 2rem; }
+    footer { padding: 3rem 1.5rem; flex-direction: column; gap: 2rem; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo"><span>NL</span> &nbsp; Nicholas Lowe</a>
+  <ul>
+    <li><a href="#">Work</a></li>
+    <li><a href="#">Research</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-label">Research &nbsp;/&nbsp; 2011</p>
+  <h1>Campus Obscura</h1>
+  <div class="hero-meta">
+    <div class="hero-meta-block">
+      <div class="hero-meta-label">Discipline</div>
+      <div class="hero-meta-value">Architectural Research<br>Perceptual Systems</div>
+    </div>
+    <div class="hero-meta-block">
+      <div class="hero-meta-label">Context</div>
+      <div class="hero-meta-value">M.Arch Thesis<br>University of Florida</div>
+    </div>
+    <div class="hero-meta-block">
+      <div class="hero-meta-label">Recognition</div>
+      <div class="hero-meta-value">Florida AIA Bronze Medal<br>for Design Excellence</div>
+    </div>
+    <div class="hero-meta-block">
+      <div class="hero-meta-label">Medium</div>
+      <div class="hero-meta-value">Simulation, Physical Making,<br>Photographic Research</div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- INTRO -->
+<section>
+  <div class="intro">
+    <div class="intro-left fade-up">
+      <span class="section-label">Overview</span>
+      <h2>The apparatus does not simply record space. It reconstructs it.</h2>
+      <p>Investigations into vision as a constructed process across mechanical, spatial, and biological systems.</p>
+    </div>
+    <div class="intro-right fade-up">
+      <p>Campus Obscura is an architectural research project examining how perception is not a passive reception of space but an active construction — shaped by the instruments, bodies, and systems through which space is seen.</p>
+      <div class="pull-quote">
+        "The camera obscura does not reveal the world as it is. It reveals the world as the apparatus allows it to be seen."
+      </div>
+      <p>The project spans physical making, computational simulation, and phenomenological inquiry — tracing how spatial experience is mediated, distorted, and reconstructed across mechanical, photographic, and biological systems.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- CAMERA -->
+<section class="camera-section">
+  <div class="camera-inner">
+    <div class="camera-header">
+      <h3>Handbuilt Pinhole Camera &amp; Tripod</h3>
+      <span>Wood and cigar box &nbsp;/&nbsp; Physical artifact</span>
+    </div>
+
+    <!-- IMAGE SLOT: replace this div with your <img> tag -->
+    <div class="camera-placeholder">
+      <div style="text-align:center; font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em;">
+        <div style="width: 60px; height: 60px; border: 1px solid var(--accent-dim); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--accent);"></div>
+        </div>
+        IMAGE PLACEHOLDER<br>
+        <span style="color: var(--text-dim); font-size: 10px;">Drop your camera photo here</span>
+      </div>
+    </div>
+
+    <div class="camera-caption">Hand built pinhole camera &amp; Tripod, wood and cigar box</div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ACT I -->
+<section>
+  <div class="act-header fade-up">
+    <span class="act-number">Act I</span>
+    <h2 class="act-title">Perception as Signal</h2>
+    <a href="#" class="act-subtitle">Perception as constructed signal</a>
+    <p class="act-desc">Investigations into vision as a constructed process across mechanical, spatial, and biological systems.</p>
+  </div>
+
+  <div class="project-grid fade-up">
+
+    <div class="project-card">
+      <div class="project-card-img">
+        <div class="project-card-img-placeholder">
+          <div class="vis-taxonomy">
+            <div class="cell filled"></div><div class="cell"></div><div class="cell filled"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell filled"></div><div class="cell"></div><div class="cell filled"></div>
+            <div class="cell filled"></div><div class="cell"></div><div class="cell"></div><div class="cell filled"></div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card-info">
+        <div class="project-card-title">Taxonomy of Light</div>
+        <div class="project-card-sub">Aperture studies</div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-img">
+        <div class="project-card-img-placeholder">
+          <div class="vis-curved">
+            <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 140 Q60 20 100 80 Q140 140 180 20" stroke="#6b5f4e" stroke-width="1" fill="none"/>
+              <path d="M20 120 Q60 40 100 90 Q140 140 180 40" stroke="#6b5f4e" stroke-width="0.5" fill="none" opacity="0.5"/>
+              <ellipse cx="100" cy="80" rx="40" ry="30" stroke="#c8b89a" stroke-width="0.5" fill="none" opacity="0.3"/>
+              <line x1="10" y1="80" x2="190" y2="80" stroke="#252520" stroke-width="0.5"/>
+              <line x1="100" y1="10" x2="100" y2="150" stroke="#252520" stroke-width="0.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="project-card-info">
+        <div class="project-card-title">Curved Film Plane</div>
+        <div class="project-card-sub">Bending the image field</div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-img">
+        <div class="project-card-img-placeholder">
+          <div class="vis-water">
+            <div class="ring" style="width:120px;height:120px;"></div>
+            <div class="ring" style="width:80px;height:80px;margin-top:-60px;"></div>
+            <div class="ring" style="width:40px;height:40px;margin-top:-50px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card-info">
+        <div class="project-card-title">Water Lens</div>
+        <div class="project-card-sub">Campus as photogram</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- PROCESS -->
+<section>
+  <span class="section-label fade-up">Research Method</span>
+  <div class="process-grid">
+    <div class="process-item fade-up">
+      <div class="process-num">01</div>
+      <div class="process-title">Physical Making</div>
+      <div class="process-desc">Handbuilt optical instruments — pinhole cameras, water lenses, aperture mechanisms — as research objects. The apparatus itself becomes a site of inquiry.</div>
+    </div>
+    <div class="process-item fade-up">
+      <div class="process-num">02</div>
+      <div class="process-title">Photographic Investigation</div>
+      <div class="process-desc">Long-exposure pinhole photography of the UF campus. Images that record not a moment but a duration — accumulations of spatial experience over time.</div>
+    </div>
+    <div class="process-item fade-up">
+      <div class="process-num">03</div>
+      <div class="process-title">Computational Simulation</div>
+      <div class="process-desc">Real-time environments modelling light, shadow, and perceptual distortion. Translating phenomenological inquiry into spatial simulation.</div>
+    </div>
+    <div class="process-item fade-up">
+      <div class="process-num">04</div>
+      <div class="process-title">Phenomenological Framing</div>
+      <div class="process-desc">Grounded in Merleau-Ponty and Eisenstein — the body as perceptual instrument, space as sequence, vision as active reconstruction rather than passive recording.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- FOOTER NAV -->
+<footer>
+  <a href="#" class="back">&#8592; &nbsp; All Work</a>
+  <a href="#" class="next">
+    <span class="next-label">Midnight Miso</span>
+    Next Project &nbsp; &#8594;
+  </a>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach((el, i) => {
+    el.style.transitionDelay = (i % 3) * 0.1 + 's';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

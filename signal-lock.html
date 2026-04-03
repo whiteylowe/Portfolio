@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Lock — Nicholas Lowe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #060809;
+    --bg-2: #0c0f11;
+    --bg-3: #111518;
+    --bg-4: #161b1f;
+    --text: #c8d4d0;
+    --text-mid: #6b8078;
+    --text-dim: #2e3d38;
+    --accent: #4ade9a;
+    --accent-dim: #1a4d35;
+    --accent-glow: rgba(74,222,154,0.08);
+    --warn: #e8a838;
+    --warn-dim: #4a3510;
+    --rule: #141a17;
+    --rule-accent: #1f3028;
+    --mono: 'DM Mono', monospace;
+    --serif: 'EB Garamond', Georgia, serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    cursor: crosshair;
+  }
+
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2.5rem;
+    background: rgba(6,8,9,0.92);
+    border-bottom: 1px solid var(--rule);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--text-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-logo::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .nav-right a {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-right a:hover { color: var(--accent); }
+
+  .nav-status {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    border: 1px solid var(--accent-dim);
+    padding: 0.3rem 0.75rem;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 64px;
+  }
+
+  .hero-left {
+    padding: 5rem 2.5rem 4rem;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  .hero-left::before {
+    content: 'SGL-001 // CLASSIFIED';
+    position: absolute;
+    top: 5rem;
+    left: 2.5rem;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .hero-classification {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--warn);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-classification::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--warn);
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--text);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title span {
+    display: block;
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.8;
+    max-width: 38ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.25rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover {
+    background: #6bebb0;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1px solid var(--rule-accent);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* HUD PREVIEW */
+  .hero-right {
+    padding: 5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hud-preview {
+    flex: 1;
+    background: var(--bg-2);
+    border-left: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    min-height: 400px;
+  }
+
+  /* Animated HUD elements */
+  .hud-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+  }
+
+  .hud-corner.tl { top: 16px; left: 16px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+  .hud-corner.tr { top: 16px; right: 16px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+  .hud-corner.bl { bottom: 16px; left: 16px; border-bottom: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+  .hud-corner.br { bottom: 16px; right: 16px; border-bottom: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+
+  .hud-crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+  }
+
+  .hud-crosshair::before,
+  .hud-crosshair::after {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .hud-crosshair::before {
+    width: 1px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+  }
+
+  .hud-crosshair::after {
+    height: 1px;
+    width: 100%;
+    top: 50%;
+    left: 0;
+  }
+
+  .hud-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid var(--accent-dim);
+    animation: rotate 12s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .hud-ring-1 { width: 100px; height: 100px; animation-duration: 8s; }
+  .hud-ring-2 { width: 160px; height: 160px; animation-duration: 15s; animation-direction: reverse; border-style: dashed; }
+  .hud-ring-3 { width: 220px; height: 220px; animation-duration: 20s; opacity: 0.4; }
+
+  .hud-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+    animation: scan 3s ease-in-out infinite;
+  }
+
+  @keyframes scan {
+    0% { top: 0%; opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  .hud-data {
+    position: absolute;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+
+  .hud-data.tl { top: 40px; left: 20px; }
+  .hud-data.tr { top: 40px; right: 20px; text-align: right; }
+  .hud-data.bl { bottom: 40px; left: 20px; }
+  .hud-data.br { bottom: 40px; right: 20px; text-align: right; }
+
+  .hud-data span { color: var(--accent); display: block; }
+
+  /* IMAGE PLACEHOLDER with slot label */
+  .img-slot {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-2);
+  }
+
+  .img-slot-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 2;
+  }
+
+  /* HERO BOTTOM BAR */
+  .hero-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+
+  .hero-bar-item {
+    padding: 1.25rem 2.5rem;
+    border-right: 1px solid var(--rule);
+  }
+
+  .hero-bar-item:last-child { border-right: none; }
+
+  .hero-bar-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+
+  .hero-bar-value {
+    font-size: 11px;
+    color: var(--text-mid);
+    font-weight: 300;
+  }
+
+  /* SECTION BASE */
+  .section {
+    padding: 5rem 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .section-tag {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent-dim);
+  }
+
+  /* INTERFACE SHOWCASE */
+  .showcase {
+    background: var(--bg-2);
+  }
+
+  .showcase-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .showcase-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .showcase-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-transform: uppercase;
+  }
+
+  .showcase-mode {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .showcase-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .showcase-tab {
+    padding: 0.75rem 2.5rem;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    cursor: pointer;
+    border-right: 1px solid var(--rule);
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .showcase-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  .showcase-tab:hover:not(.active) { color: var(--text-mid); }
+
+  .showcase-view {
+    aspect-ratio: 16/9;
+    background: var(--bg-3);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Monocular HUD simulation */
+  .hud-mono {
+    width: 260px;
+    height: 180px;
+    border: 1px solid var(--accent-dim);
+    position: relative;
+    background: rgba(74,222,154,0.02);
+  }
+
+  .hud-mono-inner {
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(74,222,154,0.15);
+  }
+
+  .hud-mono-reticle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+  }
+
+  .hud-mono-reticle::before,
+  .hud-mono-reticle::after {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+    opacity: 0.7;
+  }
+
+  .hud-mono-reticle::before { width: 1px; height: 100%; left: 50%; }
+  .hud-mono-reticle::after { height: 1px; width: 100%; top: 50%; }
+
+  .hud-readout {
+    position: absolute;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    line-height: 1.6;
+  }
+
+  .hud-readout.top-left { top: 6px; left: 8px; }
+  .hud-readout.top-right { top: 6px; right: 8px; text-align: right; }
+  .hud-readout.bot-left { bottom: 6px; left: 8px; }
+  .hud-readout.bot-right { bottom: 6px; right: 8px; text-align: right; }
+
+  .showcase-caption {
+    padding: 1rem 2.5rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .showcase-caption-text {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .showcase-caption-tag {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+  }
+
+  /* PROCESS / SPECS */
+  .specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: 2.5rem;
+  }
+
+  .spec-cell {
+    background: var(--bg);
+    padding: 2rem 2.5rem;
+  }
+
+  .spec-num {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .spec-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .spec-body {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+
+  /* TECH STACK */
+  .stack-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .stack-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    border: 1px solid var(--rule-accent);
+    padding: 0.3rem 0.75rem;
+    transition: all 0.15s;
+  }
+
+  .stack-tag:hover {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* STATEMENT */
+  .statement-section {
+    background: var(--bg-2);
+  }
+
+  .statement-inner {
+    max-width: 900px;
+  }
+
+  .statement-text {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 2rem;
+  }
+
+  .statement-sub {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.85;
+    max-width: 60ch;
+  }
+
+  /* DATA STRIP */
+  .data-strip {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    overflow: hidden;
+  }
+
+  .data-strip-item {
+    flex: 1;
+    padding: 1.5rem 2.5rem;
+    border-right: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .data-strip-item:last-child { border-right: none; }
+
+  .data-strip-num {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .data-strip-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 2.5rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    background: var(--bg-2);
+  }
+
+  .footer-back {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .footer-back:hover { color: var(--accent); }
+
+  .footer-center {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .footer-next {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: right;
+    transition: color 0.2s;
+    display: block;
+  }
+
+  .footer-next:hover { color: var(--accent); }
+
+  .footer-next-label {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text);
+    letter-spacing: 0;
+    text-transform: none;
+    margin-top: 0.2rem;
+  }
+
+  /* ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-bar { grid-template-columns: repeat(2, 1fr); }
+    .specs-grid { grid-template-columns: 1fr; }
+    .data-strip { flex-direction: column; }
+    footer { grid-template-columns: 1fr; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">NL / Nicholas Lowe</a>
+  <div class="nav-right">
+    <a href="#">Work</a>
+    <a href="#">Research</a>
+    <a href="#">About</a>
+    <span class="nav-status">Available</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid">
+
+    <div class="hero-left">
+      <div class="hero-classification">Cinematic UI / Tactical Interface</div>
+      <h1 class="hero-title">Signal<span>Lock</span></h1>
+      <p class="hero-desc">A monocular HUD interface and 16:9 tactical control surface built in HTML/Canvas. Designed as a defense and surveillance aesthetic study — cinematic UI as perceptual instrument.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary">Launch Demo</a>
+        <a href="#" class="btn btn-ghost">View on GitHub</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hud-preview">
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
+        <div class="hud-scan"></div>
+        <div class="hud-ring hud-ring-1"></div>
+        <div class="hud-ring hud-ring-2"></div>
+        <div class="hud-ring hud-ring-3"></div>
+        <div class="hud-crosshair"></div>
+        <div class="hud-data tl">
+          <span>AZ 247.4</span>
+          EL 12.8<br>
+          RNG 4.2KM
+        </div>
+        <div class="hud-data tr">
+          <span>LOCKED</span>
+          TGT 004<br>
+          CONF 94%
+        </div>
+        <div class="hud-data bl">
+          LAT 37.4419<br>
+          LON -122.143
+        </div>
+        <div class="hud-data br">
+          <span>REC</span>
+          FPS 60<br>
+          BUF 100%
+        </div>
+
+        <!-- IMAGE SLOT -->
+        <div class="img-slot" style="opacity:0.15;">
+          <div class="img-slot-label">
+            DROP SCREENSHOT HERE<br>
+            <span style="font-size:8px; color: var(--text-dim);">replace .img-slot div with img tag</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-bar">
+    <div class="hero-bar-item">
+      <div class="hero-bar-label">Type</div>
+      <div class="hero-bar-value">Cinematic UI / HTML Canvas</div>
+    </div>
+    <div class="hero-bar-item">
+      <div class="hero-bar-label">Format</div>
+      <div class="hero-bar-value">Monocular HUD + 16:9 Control Surface</div>
+    </div>
+    <div class="hero-bar-item">
+      <div class="hero-bar-label">Tech</div>
+      <div class="hero-bar-value">HTML / CSS / JavaScript / Canvas API</div>
+    </div>
+    <div class="hero-bar-item">
+      <div class="hero-bar-label">Status</div>
+      <div class="hero-bar-value" style="color: var(--accent);">Interactive Demo Live</div>
+    </div>
+  </div>
+</div>
+
+<!-- STATEMENT -->
+<section class="section statement-section fade-in">
+  <div class="statement-inner">
+    <div class="section-tag">Design Intent</div>
+    <p class="statement-text">Signal Lock treats the tactical interface as a spatial and perceptual problem — not a stylistic one.</p>
+    <p class="statement-sub">Built as a self-contained UI artifact, Signal Lock explores how information hierarchy, spatial framing, and motion behavior shape operator perception under high-stakes conditions. The aesthetic vocabulary is drawn from defense and surveillance systems, but the underlying questions are the same ones that drove the AR interface work at Meta: how does an interface direct attention, communicate confidence, and reduce cognitive load at the moment of decision?</p>
+  </div>
+</section>
+
+<!-- DATA STRIP -->
+<div class="data-strip">
+  <div class="data-strip-item fade-in">
+    <div class="data-strip-num">2</div>
+    <div class="data-strip-label">Interface Modes</div>
+  </div>
+  <div class="data-strip-item fade-in">
+    <div class="data-strip-num">60</div>
+    <div class="data-strip-label">FPS Canvas Render</div>
+  </div>
+  <div class="data-strip-item fade-in">
+    <div class="data-strip-num">16:9</div>
+    <div class="data-strip-label">Full Control Surface</div>
+  </div>
+  <div class="data-strip-item fade-in">
+    <div class="data-strip-num">0</div>
+    <div class="data-strip-label">Dependencies</div>
+  </div>
+</div>
+
+<!-- SHOWCASE -->
+<section class="section showcase fade-in" style="padding: 0;">
+  <div class="showcase-inner">
+    <div class="showcase-header">
+      <div class="showcase-title">Interface Modes</div>
+      <div class="showcase-mode">SGL // v1.0</div>
+    </div>
+    <div class="showcase-tabs">
+      <div class="showcase-tab active" onclick="switchTab(this, 'mono')">Monocular HUD</div>
+      <div class="showcase-tab" onclick="switchTab(this, 'surface')">16:9 Control Surface</div>
+    </div>
+
+    <div class="showcase-view" id="view-mono">
+      <!-- Monocular HUD placeholder / will show screenshot -->
+      <div style="position:relative; width:360px; height:240px;">
+        <div class="hud-mono">
+          <div class="hud-mono-inner">
+            <div class="hud-mono-reticle"></div>
+            <div class="hud-readout top-left">AZ 247.4<br>EL 12.8</div>
+            <div class="hud-readout top-right">TGT 004<br>LOCK</div>
+            <div class="hud-readout bot-left">4.2 KM</div>
+            <div class="hud-readout bot-right">94%</div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:-24px; left:0; right:0; text-align:center; font-size:8px; letter-spacing:0.1em; color: var(--text-dim); text-transform:uppercase;">
+          Monocular HUD — replace with screenshot
+        </div>
+      </div>
+    </div>
+
+    <div class="showcase-view" id="view-surface" style="display:none;">
+      <div style="text-align:center;">
+        <div style="font-size:9px; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:1rem;">16:9 Control Surface</div>
+        <div style="width:400px; height:225px; border:1px solid var(--rule-accent); background:var(--bg-3); display:flex; align-items:center; justify-content:center;">
+          <div style="font-size:8px; letter-spacing:0.1em; color:var(--text-dim); text-transform:uppercase;">Drop screenshot here</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="showcase-caption">
+      <div class="showcase-caption-text">HTML / Canvas — no external libraries</div>
+      <div class="showcase-caption-tag">Interactive in browser</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section fade-in">
+  <div class="section-tag">Design Process</div>
+  <div class="specs-grid">
+    <div class="spec-cell">
+      <div class="spec-num">01 // Constraint</div>
+      <div class="spec-title">Zero Dependencies</div>
+      <div class="spec-body">Built entirely in vanilla HTML, CSS, and Canvas API. No frameworks, no libraries. The constraint was deliberate — understanding the rendering pipeline at a low level informed every visual decision about motion timing and draw order.</div>
+    </div>
+    <div class="spec-cell">
+      <div class="spec-num">02 // Hierarchy</div>
+      <div class="spec-title">Information Architecture</div>
+      <div class="spec-body">Tactical UI design is fundamentally an information hierarchy problem. Signal Lock maps data criticality to spatial position, motion behavior, and visual weight — primary targeting data at center, contextual telemetry at periphery.</div>
+    </div>
+    <div class="spec-cell">
+      <div class="spec-num">03 // Motion</div>
+      <div class="spec-title">Perceptual Feedback</div>
+      <div class="spec-body">Every animated element in Signal Lock encodes state. Scan lines indicate active acquisition, reticle behavior changes on lock confirmation, peripheral data dims during high-attention moments. Motion as communication, not decoration.</div>
+    </div>
+    <div class="spec-cell">
+      <div class="spec-num">04 // Connection</div>
+      <div class="spec-title">From HUD to AR</div>
+      <div class="spec-body">The perceptual questions Signal Lock explores — attention direction, confidence signaling, ambient feedback — are the same ones that drove the AR wearable interface work at Meta Reality Labs. Different medium, same underlying design problem.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="section fade-in" style="padding-top: 0; border-top: none;">
+  <div class="section-tag">Stack</div>
+  <div class="stack-row">
+    <div class="stack-tag">HTML5</div>
+    <div class="stack-tag">Canvas API</div>
+    <div class="stack-tag">CSS3</div>
+    <div class="stack-tag">Vanilla JS</div>
+    <div class="stack-tag">RequestAnimationFrame</div>
+    <div class="stack-tag">No Dependencies</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-back">&#8592; All Work</a>
+  <div class="footer-center">NL // 2024</div>
+  <a href="#" class="footer-next">
+    Next Project
+    <span class="footer-next-label">Midnight Miso</span>
+  </a>
+</footer>
+
+<script>
+  function switchTab(el, view) {
+    document.querySelectorAll('.showcase-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('view-mono').style.display = view === 'mono' ? 'flex' : 'none';
+    document.getElementById('view-surface').style.display = view === 'surface' ? 'flex' : 'none';
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.08 + 's';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
