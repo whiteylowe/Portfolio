@@ -215,6 +215,9 @@ function loadGlasses() {
       glasses.position.sub(center.multiplyScalar(scale));
       glasses.scale.setScalar(scale);
 
+      // Correct for Blender's coordinate system -- rotate to face front
+      glasses.rotation.x = -Math.PI / 2;
+
       // Find lens meshes
       lensL = glasses.getObjectByName(CONFIG.lensLeft);
       lensR = glasses.getObjectByName(CONFIG.lensRight);
