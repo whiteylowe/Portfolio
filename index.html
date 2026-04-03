@@ -215,12 +215,22 @@ function loadGlasses() {
       glasses.position.sub(center.multiplyScalar(scale));
       glasses.scale.setScalar(scale);
 
-      // Correct for Blender's coordinate system -- rotate to face front
-      glasses.rotation.x = -Math.PI / 2;
+      // Correct for Blender's coordinate system
+      glasses.rotation.x = Math.PI / 2;
+
+      // Debug -- log every mesh name in the GLB
+      console.log('=== ALL MESH NAMES IN GLB ===');
+      glasses.traverse((child) => {
+        if (child.isMesh) console.log('MESH:', child.name);
+      });
+      console.log('=============================');
 
       // Find lens meshes
       lensL = glasses.getObjectByName(CONFIG.lensLeft);
       lensR = glasses.getObjectByName(CONFIG.lensRight);
+
+      console.log('Lens_L found:', !!lensL);
+      console.log('Lens_R found:', !!lensR);
 
       if (lensL) applyLensMaterial(lensL, CONFIG.lensMedia.left);
       if (lensR) applyLensMaterial(lensR, CONFIG.lensMedia.right);
