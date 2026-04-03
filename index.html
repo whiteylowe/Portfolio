@@ -95,29 +95,11 @@
     height: 100%;
   }
 
-  .theater-dark {
+  canvas#theater-canvas {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center 20%;
-    filter: brightness(0.12) saturate(0.6);
-  }
-
-  canvas#theater-bright {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  canvas#theater-glow {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
   }
 
   /* All-on toggle */
@@ -665,12 +647,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-theater">
-    <!-- Dark base layer — always visible -->
-    <img class="theater-img theater-dark" src="images/Campus_Aperture_Theater.png" alt="">
-    <!-- Bright reveal layer — masked by canvas -->
-    <canvas id="theater-bright"></canvas>
-    <!-- Particle/glow overlay canvas -->
-    <canvas id="theater-glow"></canvas>
+    <canvas id="theater-canvas"></canvas>
   </div>
 
   <div class="hero-content">
@@ -861,268 +838,179 @@
 </footer>
 
 <script>
-// APERTURE THEATER — two-canvas reveal system
-// brightCanvas: draws the full-res image then masks it with zone shapes (destination-in)
-// glowCanvas: additive warm light + particles on top
 (function() {
-  const brightCanvas = document.getElementById('theater-bright');
-  const glowCanvas   = document.getElementById('theater-glow');
-  const bCtx = brightCanvas.getContext('2d');
-  const gCtx = glowCanvas.getContext('2d');
+  const canvas = document.getElementById('theater-canvas');
+  const ctx    = canvas.getContext('2d');
   const toggle = document.getElementById('light-toggle');
   const toggleLabel = document.getElementById('toggle-label');
-  const hero = document.querySelector('.hero');
+  const hero   = document.querySelector('.hero');
 
   let W, H;
-  let mouse = { x: -9999, y: -9999 };
-  let allOn = false;
+  let mouseX = -9999, mouseY = -9999;
+  let allOn  = false;
 
-  // Bright image — drawn offscreen, composited onto brightCanvas each frame
-  const srcImg = new Image();
-  srcImg.src = 'images/Campus_Aperture_Theater.png';
+  // Load the one image
+  const img = new Image();
+  img.src = 'images/Campus_Aperture_Theater.png';
 
-  // Light zones — cx/cy as fraction of W/H (origin top-left of hero)
-  // beamTipX/Y = where beam terminates (fraction), srcRadius = fixture glow size
+  // Zones: source point (sx,sy) and beam tip (tx,ty), all 0-1 fractions of W/H
   const ZONES = [
-    // Central skylight — the big dramatic downward shaft
-    { cx: 0.50, cy: 0.02, tipX: 0.50, tipY: 0.72, srcR: 0.04, tipR: 0.14, label: 'center' },
-    // Upper-left angular funnel
-    { cx: 0.22, cy: 0.07, tipX: 0.30, tipY: 0.55, srcR: 0.03, tipR: 0.10, label: 'ul' },
-    // Upper-right angular funnel
-    { cx: 0.72, cy: 0.09, tipX: 0.65, tipY: 0.48, srcR: 0.03, tipR: 0.09, label: 'ur' },
-    // Far left vent
-    { cx: 0.07, cy: 0.17, tipX: 0.10, tipY: 0.50, srcR: 0.025, tipR: 0.08, label: 'fl' },
-    // Far right vent
-    { cx: 0.88, cy: 0.14, tipX: 0.84, tipY: 0.42, srcR: 0.025, tipR: 0.08, label: 'fr' },
-    // Left balcony gap
-    { cx: 0.30, cy: 0.24, tipX: 0.25, tipY: 0.58, srcR: 0.022, tipR: 0.07, label: 'lb' },
-    // Right mid wall light
-    { cx: 0.83, cy: 0.30, tipX: 0.78, tipY: 0.60, srcR: 0.022, tipR: 0.07, label: 'rm' },
-    // Lower left stage spot
-    { cx: 0.12, cy: 0.56, tipX: 0.18, tipY: 0.78, srcR: 0.018, tipR: 0.06, label: 'ls' },
+    { sx:0.50, sy:0.02, tx:0.50, ty:0.75, sr:0.05, tr:0.13 }, // center shaft
+    { sx:0.22, sy:0.07, tx:0.28, ty:0.52, sr:0.03, tr:0.09 }, // upper-left funnel
+    { sx:0.72, sy:0.09, tx:0.66, ty:0.46, sr:0.03, tr:0.09 }, // upper-right funnel
+    { sx:0.07, sy:0.17, tx:0.10, ty:0.48, sr:0.025,tr:0.07 }, // far-left vent
+    { sx:0.88, sy:0.14, tx:0.85, ty:0.44, sr:0.025,tr:0.07 }, // far-right vent
+    { sx:0.30, sy:0.23, tx:0.26, ty:0.56, sr:0.022,tr:0.06 }, // left balcony
+    { sx:0.83, sy:0.30, tx:0.79, ty:0.58, sr:0.022,tr:0.06 }, // right wall
+    { sx:0.12, sy:0.55, tx:0.17, ty:0.76, sr:0.018,tr:0.055}, // stage spot
   ];
 
-  const zoneState = ZONES.map(() => ({
-    brightness: 0,
-    target: 0,
-    particles: Array.from({ length: 22 }, () => ({
+  const state = ZONES.map(() => ({ b: 0, target: 0 }));
+
+  // Particles per zone
+  const particles = ZONES.map(() =>
+    Array.from({length: 24}, () => ({
       t: Math.random(),
-      lateralT: (Math.random() - 0.5) * 2,
-      speed: 0.001 + Math.random() * 0.002,
-      size: 1 + Math.random() * 2,
-      opacity: 0.3 + Math.random() * 0.5,
-      drift: (Math.random() - 0.5) * 0.003,
+      lat: (Math.random()-0.5)*1.6,
+      speed: 0.0008 + Math.random()*0.0015,
+      r: 0.8 + Math.random()*1.8,
+      a: 0.2 + Math.random()*0.55,
+      drift: (Math.random()-0.5)*0.003,
     }))
-  }));
+  );
 
   function resize() {
-    W = brightCanvas.width  = glowCanvas.width  = hero.offsetWidth;
-    H = brightCanvas.height = glowCanvas.height = hero.offsetHeight;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
   }
 
-  // Draw the bright reveal mask onto brightCanvas using destination-in
-  function drawBrightLayer() {
-    bCtx.clearRect(0, 0, W, H);
-
-    if (!srcImg.complete) return;
-
-    // Step 1: draw full bright image
-    // Cover crop matching the CSS object-fit:cover / object-position:center 20%
-    const imgAspect = srcImg.naturalWidth / srcImg.naturalHeight;
-    const canvasAspect = W / H;
-    let drawW, drawH, drawX, drawY;
-    if (canvasAspect > imgAspect) {
-      drawW = W;
-      drawH = W / imgAspect;
-    } else {
-      drawH = H;
-      drawW = H * imgAspect;
-    }
-    drawX = (W - drawW) / 2;
-    // object-position center 20% shifts image so 20% mark is at top
-    drawY = -(drawH * 0.20);
-
-    bCtx.filter = 'brightness(1.1) saturate(1.1)';
-    bCtx.drawImage(srcImg, drawX, drawY, drawW, drawH);
-    bCtx.filter = 'none';
-
-    // Step 2: composite operation — keep only where mask is drawn
-    bCtx.globalCompositeOperation = 'destination-in';
-
-    // Draw the reveal mask — all active zone shapes
-    ZONES.forEach((z, i) => {
-      const b = zoneState[i].brightness;
-      if (b < 0.002) return;
-
-      const sx = z.cx * W;
-      const sy = z.cy * H;
-      const tx = z.tipX * W;
-      const ty = z.tipY * H;
-      const sr = z.srcR * W;
-      const tr = z.tipR * W;
-
-      // Beam shape: trapezoid filled with radial gradient (narrow at top, wide at bottom)
-      // Use a linear gradient along beam axis for the mask alpha
-      const grad = bCtx.createLinearGradient(sx, sy, tx, ty);
-      grad.addColorStop(0,   `rgba(255,255,255,${b * 0.9})`);
-      grad.addColorStop(0.3, `rgba(255,255,255,${b * 0.85})`);
-      grad.addColorStop(1,   `rgba(255,255,255,${b * 0.4})`);
-
-      // Draw trapezoid path
-      const angle = Math.atan2(ty - sy, tx - sx);
-      const perp = angle + Math.PI / 2;
-      const perpX = Math.cos(perp);
-      const perpY = Math.sin(perp);
-
-      bCtx.beginPath();
-      bCtx.moveTo(sx + perpX * sr * 0.5, sy + perpY * sr * 0.5);
-      bCtx.lineTo(sx - perpX * sr * 0.5, sy - perpY * sr * 0.5);
-      bCtx.lineTo(tx - perpX * tr,       ty - perpY * tr);
-      bCtx.lineTo(tx + perpX * tr,       ty + perpY * tr);
-      bCtx.closePath();
-      bCtx.fillStyle = grad;
-      bCtx.fill();
-
-      // Source fixture circle
-      const srcGrad = bCtx.createRadialGradient(sx, sy, 0, sx, sy, sr * 2.5);
-      srcGrad.addColorStop(0, `rgba(255,255,255,${b})`);
-      srcGrad.addColorStop(1, `rgba(255,255,255,0)`);
-      bCtx.beginPath();
-      bCtx.arc(sx, sy, sr * 2.5, 0, Math.PI * 2);
-      bCtx.fillStyle = srcGrad;
-      bCtx.fill();
-
-      // Floor pool
-      bCtx.save();
-      bCtx.translate(tx, ty);
-      bCtx.scale(1, 0.4);
-      const poolGrad = bCtx.createRadialGradient(0, 0, 0, 0, 0, tr * 1.5);
-      poolGrad.addColorStop(0, `rgba(255,255,255,${b * 0.8})`);
-      poolGrad.addColorStop(0.6, `rgba(255,255,255,${b * 0.4})`);
-      poolGrad.addColorStop(1, `rgba(255,255,255,0)`);
-      bCtx.beginPath();
-      bCtx.arc(0, 0, tr * 1.5, 0, Math.PI * 2);
-      bCtx.fillStyle = poolGrad;
-      bCtx.fill();
-      bCtx.restore();
-    });
-
-    // Reset composite mode
-    bCtx.globalCompositeOperation = 'source-over';
+  // Compute how to draw image cover-cropped, object-position center 20%
+  function getImgRect() {
+    if (!img.complete || !img.naturalWidth) return null;
+    const ia = img.naturalWidth / img.naturalHeight;
+    const ca = W / H;
+    let dw, dh;
+    if (ca > ia) { dw = W; dh = W / ia; }
+    else          { dh = H; dw = H * ia; }
+    const dx = (W - dw) / 2;
+    const dy = -(dh * 0.20); // object-position 20% from top
+    return { dx, dy, dw, dh };
   }
 
-  // Draw additive warm glow + particles on glowCanvas
-  function drawGlowLayer() {
-    gCtx.clearRect(0, 0, W, H);
+  function drawFrame() {
+    ctx.clearRect(0, 0, W, H);
+    const r = getImgRect();
+    if (!r) { requestAnimationFrame(drawFrame); return; }
 
+    // 1. Draw dark base image
+    ctx.save();
+    ctx.filter = 'brightness(0.12) saturate(0.6)';
+    ctx.drawImage(img, r.dx, r.dy, r.dw, r.dh);
+    ctx.restore();
+
+    // 2. For each active zone, clip-reveal the bright image + add glow
     ZONES.forEach((z, i) => {
-      const b = zoneState[i].brightness;
-      if (b < 0.01) return;
-      const zs = zoneState[i];
+      const s = state[i];
+      if (s.b < 0.002) return;
 
-      const sx = z.cx * W;
-      const sy = z.cy * H;
-      const tx = z.tipX * W;
-      const ty = z.tipY * H;
-      const sr = z.srcR * W;
-      const tr = z.tipR * W;
+      const sx = z.sx * W,  sy = z.sy * H;
+      const tx = z.tx * W,  ty = z.ty * H;
+      const sr = z.sr * W,  tr = z.tr * W;
+
       const angle = Math.atan2(ty - sy, tx - sx);
-      const perp = angle + Math.PI / 2;
-      const perpX = Math.cos(perp);
-      const perpY = Math.sin(perp);
+      const px = Math.cos(angle + Math.PI/2);
+      const py = Math.sin(angle + Math.PI/2);
 
-      // Warm haze along beam — additive blend
-      gCtx.globalCompositeOperation = 'lighter';
+      // --- REVEAL: save, clip trapezoid, draw bright image, restore ---
+      ctx.save();
+      ctx.beginPath();
+      // trapezoid: narrow at source, wide at tip
+      ctx.moveTo(sx + px*sr*0.4,  sy + py*sr*0.4);
+      ctx.lineTo(sx - px*sr*0.4,  sy - py*sr*0.4);
+      ctx.lineTo(tx - px*tr,      ty - py*tr);
+      ctx.lineTo(tx + px*tr,      ty + py*tr);
+      ctx.closePath();
 
-      const steps = 20;
-      for (let s = 0; s < steps; s++) {
-        const t = s / steps;
-        const bx = sx + (tx - sx) * t;
-        const by = sy + (ty - sy) * t;
-        const w = sr * 0.5 + (tr - sr * 0.5) * t;
-        const alpha = b * (1 - t * 0.6) * 0.022;
-        const hGrad = gCtx.createRadialGradient(bx, by, 0, bx, by, w);
-        hGrad.addColorStop(0,   `rgba(255,210,140,${alpha * 3})`);
-        hGrad.addColorStop(0.4, `rgba(255,185,100,${alpha})`);
-        hGrad.addColorStop(1,   `rgba(255,160,60,0)`);
-        gCtx.beginPath();
-        gCtx.arc(bx, by, w, 0, Math.PI * 2);
-        gCtx.fillStyle = hGrad;
-        gCtx.fill();
-      }
+      // Soft feathered edge using shadowBlur trick: we'll clip then draw
+      ctx.clip();
 
-      // Fixture bloom
-      const bloom = gCtx.createRadialGradient(sx, sy, 0, sx, sy, sr * 6);
-      bloom.addColorStop(0,   `rgba(255,240,200,${b * 0.5})`);
-      bloom.addColorStop(0.3, `rgba(255,220,150,${b * 0.15})`);
-      bloom.addColorStop(1,   `rgba(255,190,80,0)`);
-      gCtx.beginPath();
-      gCtx.arc(sx, sy, sr * 6, 0, Math.PI * 2);
-      gCtx.fillStyle = bloom;
-      gCtx.fill();
+      // Fade in via globalAlpha
+      ctx.globalAlpha = Math.min(s.b * 1.2, 1);
+      ctx.filter = 'brightness(0.9) saturate(1.05)';
+      ctx.drawImage(img, r.dx, r.dy, r.dw, r.dh);
+      ctx.restore();
 
-      gCtx.globalCompositeOperation = 'source-over';
+      // --- SOURCE FIXTURE GLOW ---
+      ctx.save();
+      const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr*7);
+      sg.addColorStop(0,   `rgba(255,230,170,${s.b*0.55})`);
+      sg.addColorStop(0.4, `rgba(255,200,120,${s.b*0.12})`);
+      sg.addColorStop(1,   'rgba(255,180,80,0)');
+      ctx.fillStyle = sg;
+      ctx.beginPath();
+      ctx.arc(sx, sy, sr*7, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
 
-      // Particles drifting down beam
-      zs.particles.forEach(p => {
-        const t = p.t;
-        const px = sx + (tx - sx) * t + perpX * p.lateralT * (sr * 0.3 + (tr - sr * 0.3) * t);
-        const py = sy + (ty - sy) * t + perpY * p.lateralT * (sr * 0.3 + (tr - sr * 0.3) * t);
-        const pa = b * p.opacity * (1 - t * 0.6) * 0.6;
+      // --- FLOOR POOL GLOW ---
+      ctx.save();
+      ctx.translate(tx, ty);
+      ctx.scale(1, 0.38);
+      const pg = ctx.createRadialGradient(0, 0, 0, 0, 0, tr*1.6);
+      pg.addColorStop(0,   `rgba(255,220,150,${s.b*0.35})`);
+      pg.addColorStop(0.5, `rgba(255,190,100,${s.b*0.12})`);
+      pg.addColorStop(1,   'rgba(255,160,60,0)');
+      ctx.fillStyle = pg;
+      ctx.beginPath();
+      ctx.arc(0, 0, tr*1.6, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
 
-        gCtx.beginPath();
-        gCtx.arc(px, py, p.size, 0, Math.PI * 2);
-        gCtx.fillStyle = `rgba(255,220,160,${pa})`;
-        gCtx.fill();
+      // --- PARTICLES ---
+      particles[i].forEach(p => {
+        const t  = p.t;
+        const bx = sx + (tx-sx)*t + px*p.lat*(sr*0.3 + (tr - sr*0.3)*t);
+        const by = sy + (ty-sy)*t + py*p.lat*(sr*0.3 + (tr - sr*0.3)*t);
+        const pa = s.b * p.a * (1 - t*0.5) * 0.75;
+        ctx.beginPath();
+        ctx.arc(bx, by, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,215,155,${pa})`;
+        ctx.fill();
 
-        p.t += p.speed;
-        p.lateralT += p.drift;
-        if (p.t > 1) { p.t = 0; p.lateralT = (Math.random() - 0.5) * 2; }
-        if (Math.abs(p.lateralT) > 1) p.drift *= -1;
+        p.t   += p.speed;
+        p.lat += p.drift;
+        if (p.t > 1) { p.t = 0; p.lat = (Math.random()-0.5)*1.6; }
+        if (Math.abs(p.lat) > 1) p.drift *= -1;
       });
     });
+
+    requestAnimationFrame(drawFrame);
   }
 
   function updateZones() {
-    // Get mouse relative to hero
     const rect = hero.getBoundingClientRect();
-    const mx = mouse.x - rect.left;
-    const my = mouse.y - rect.top;
+    const mx = mouseX - rect.left;
+    const my = mouseY - rect.top;
 
     ZONES.forEach((z, i) => {
-      const zs = zoneState[i];
-      const sx = z.cx * W;
-      const sy = z.cy * H;
-      const tx = z.tipX * W;
-      const ty = z.tipY * H;
-
-      // Check proximity to beam axis (source + tip zone), not just source
-      const distSrc = Math.hypot(mx - sx, my - sy);
-      const distTip = Math.hypot(mx - tx, my - ty);
-      const proximityR = W * 0.16;
+      const s = state[i];
+      const sx = z.sx*W, sy = z.sy*H;
+      const tx = z.tx*W, ty = z.ty*H;
+      const R = W * 0.17;
 
       if (allOn) {
-        zs.target = 1.0;
+        s.target = 1;
       } else {
-        const closest = Math.min(distSrc, distTip);
-        zs.target = closest < proximityR ? (1 - closest / proximityR) : 0;
+        const d = Math.min(Math.hypot(mx-sx, my-sy), Math.hypot(mx-tx, my-ty));
+        s.target = d < R ? (1 - d/R) : 0;
       }
-
-      zs.brightness += (zs.target - zs.brightness) * 0.06;
+      s.b += (s.target - s.b) * 0.07;
     });
+
+    requestAnimationFrame(updateZones);
   }
 
-  function draw() {
-    updateZones();
-    drawBrightLayer();
-    drawGlowLayer();
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
+  window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
   toggle.addEventListener('click', () => {
     allOn = !allOn;
@@ -1131,9 +1019,9 @@
   });
 
   window.addEventListener('resize', resize);
-
   resize();
-  draw();
+  updateZones();
+  drawFrame();
 })();
 
 // SCROLL REVEALS
