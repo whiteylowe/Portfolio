@@ -1021,7 +1021,12 @@
   window.addEventListener('resize', resize);
   resize();
   updateZones();
-  drawFrame();
+
+  if (img.complete) {
+    drawFrame();
+  } else {
+    img.onload = drawFrame;
+  }
 })();
 
 // SCROLL REVEALS
