@@ -3,171 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
 <title>Nick Lowe</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: #050507;
-    overflow: hidden;
-    font-family: 'Courier New', monospace;
-    color: #fff;
-    width: 100vw;
-    height: 100vh;
-  }
-
-  #canvas-container {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-  }
-
+  body { background: #050507; overflow: hidden; font-family: 'Courier New', monospace; color: #fff; width: 100vw; height: 100vh; cursor: none; }
+  #canvas-container { width: 100vw; height: 100vh; position: relative; }
   canvas { display: block; }
 
-  #ui {
+  #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 48px 56px; }
+  #top-bar { display: flex; justify-content: space-between; align-items: flex-start; }
+  #name { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); line-height: 1.8; }
+  #role { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); text-align: right; }
+  #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; }
+  #hint { font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.1); text-align: right; }
+
+  #grain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.045; mix-blend-mode: screen; }
+  #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; letter-spacing: 0.3em; color: rgba(255,255,255,0.2); text-transform: uppercase; }
+
+  /* Reticle */
+  #reticle {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
     pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 48px 56px;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
   }
 
-  #top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  #name {
-    font-size: 11px;
+  /* Project label that follows mouse */
+  #project-tag {
+    position: absolute;
+    pointer-events: none;
+    font-size: 9px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.5);
-    line-height: 1.8;
+    white-space: nowrap;
+    transform: translate(24px, -50%);
+    opacity: 0;
+    transition: opacity 0.4s;
   }
 
-  #role {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.2);
-    text-align: right;
-  }
-
-  #bottom-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  #project-label {
-    font-size: 10px;
+  #scan-line {
+    position: absolute;
+    bottom: 48px;
+    left: 56px;
+    font-size: 9px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.18);
-  }
-
-  #hint {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: rgba(255,255,255,0.1);
-    text-align: right;
-  }
-
-  #grain {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    opacity: 0.045;
-    mix-blend-mode: screen;
-  }
-
-  #loading {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: rgba(255,255,255,0.2);
-    text-transform: uppercase;
+    color: rgba(255,255,255,0.15);
+    opacity: 0;
+    transition: opacity 0.5s;
   }
 </style>
 </head>
 <body>
-
 <div id="canvas-container">
   <canvas id="grain"></canvas>
   <div id="loading">Loading</div>
+
+  <svg id="reticle" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer pulse ring -->
+    <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5">
+      <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.08;0.3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Inner ring -->
+    <circle cx="20" cy="20" r="8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+    <!-- Cross hairs -->
+    <line x1="20" y1="2" x2="20" y2="11" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+    <line x1="20" y1="29" x2="20" y2="38" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+    <line x1="2" y1="20" x2="11" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+    <line x1="29" y1="20" x2="38" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+    <!-- Corner ticks -->
+    <line x1="14" y1="14" x2="16" y2="14" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="14" y1="14" x2="14" y2="16" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="26" y1="14" x2="24" y2="14" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="26" y1="14" x2="26" y2="16" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="14" y1="26" x2="16" y2="26" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="14" y1="26" x2="14" y2="24" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="26" y1="26" x2="24" y2="26" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <line x1="26" y1="26" x2="26" y2="24" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+    <!-- Center dot -->
+    <circle cx="20" cy="20" r="0.8" fill="rgba(255,255,255,0.6)"/>
+  </svg>
+
+  <div id="project-tag"></div>
+  <div id="scan-line">--</div>
+
   <div id="ui">
     <div id="top-bar">
-      <div id="name">
-        Nick Lowe<br>
-        <span style="color:rgba(255,255,255,0.2)">Technical Artist</span>
-      </div>
-      <div id="role">
-        Spatial Design<br>
-        XR &amp; Architecture
-      </div>
+      <div id="name">Nick Lowe<br><span style="color:rgba(255,255,255,0.2)">Technical Artist</span></div>
+      <div id="role">Spatial Design<br>XR &amp; Architecture</div>
     </div>
     <div id="bottom-bar">
-      <div id="project-label">Campus Aperture Theater</div>
-      <div id="hint">Move cursor to rotate</div>
+      <div></div>
+      <div id="hint">Move to explore</div>
     </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
+const PROJECTS = [
+  { name: 'Campus Aperture Theater', image: './images/Campus_Aperture_Theater.png' },
+  { name: 'Camp Model Apertures',    image: './videos/Signal_Lock_Final.mp4' },
+  { name: 'Campus Obscura Pinhole',  image: './gifs/Naoko_breakdown_animation.gif' },
+];
+
 const CONFIG = {
   glbPath: './assets/RayBan_Effects_2026.glb',
   lensLeft: 'Lens_L',
   lensRight: 'Lens_R',
-  frame: 'Frame',
-
-  // Per-lens media config
-  // type: 'image' or 'video'
-  // path: file in ./assets/
-  lensMedia: {
-    left: {
-      type: 'image',
-      path: './assets/Campus_Aperture_Theater.png'
-    },
-    right: {
-      type: 'image',
-      path: './assets/Campus_Aperture_Theater.png'
-    }
-  },
-
-  // Subtle iridescence amount (0 = off, 1 = full)
-  iridescenceStrength: 0.15,
-
-  // Mouse rotation limits in degrees
+  imageScale: 1.4,
   rotationX: 12,
   rotationY: 18,
+  parallaxStrength: 0.08,
 };
-// ──────────────────────────────────────────────────────────
 
 let scene, camera, renderer;
 let glasses, lensL, lensR;
 let targetRotX = 0, targetRotY = 0;
 let currentRotX = 0, currentRotY = 0;
-let mouseX = 0, mouseY = 0;
 let W = window.innerWidth, H = window.innerHeight;
+let mouseNX = 0, mouseRawX = 0, mouseRawY = 0;
+let parallaxX = 0, parallaxY = 0;
+let targetParallaxX = 0, targetParallaxY = 0;
+let preloadedTextures = [];
+let currentProject = 0;
+let isTransitioning = false;
+
+const reticle = document.getElementById('reticle');
+const projectTag = document.getElementById('project-tag');
+const scanLine = document.getElementById('scan-line');
 
 function init() {
   scene = new THREE.Scene();
-
   camera = new THREE.PerspectiveCamera(38, W / H, 0.01, 100);
   camera.position.set(0, 0, 2.8);
-
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(W, H);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -176,184 +151,318 @@ function init() {
   renderer.toneMappingExposure = 1.1;
   document.getElementById('canvas-container').prepend(renderer.domElement);
 
-  // Lighting
-  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-  scene.add(ambient);
-
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
   const keyLight = new THREE.DirectionalLight(0xd0d8ff, 2.2);
-  keyLight.position.set(-2, 3, 4);
-  scene.add(keyLight);
-
+  keyLight.position.set(-2, 3, 4); scene.add(keyLight);
   const fillLight = new THREE.DirectionalLight(0xffeedd, 0.6);
-  fillLight.position.set(3, -1, 2);
-  scene.add(fillLight);
-
+  fillLight.position.set(3, -1, 2); scene.add(fillLight);
   const rimLight = new THREE.DirectionalLight(0x8888ff, 0.8);
-  rimLight.position.set(0, -2, -3);
-  scene.add(rimLight);
+  rimLight.position.set(0, -2, -3); scene.add(rimLight);
 
-  loadGlasses();
+  preloadAll(() => loadGlasses());
   setupGrain();
   setupEvents();
   animate();
 }
 
+function buildCanvasTexture(img, projectName) {
+  const pad = CONFIG.imageScale;
+  const size = 1024;
+  const c = document.createElement('canvas');
+  c.width = size; c.height = size;
+  const ctx = c.getContext('2d');
+
+  function draw(liveSource) {
+    const source = liveSource || img;
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, size, size);
+    const aspect = source.naturalWidth / source.naturalHeight || source.width / source.height || 1.6;
+    let drawW = aspect >= 1 ? size / pad : (size / pad) * aspect;
+    let drawH = aspect >= 1 ? drawW / aspect : size / pad;
+    const ox = (size - drawW) / 2;
+    const oy = (size - drawH) / 2;
+    ctx.drawImage(source, ox, oy, drawW, drawH);
+
+    // Holographic label -- 3x bigger, glowing
+    const labelY = oy + drawH + 52;
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '6px';
+
+    // Glow layers
+    ctx.font = '300 32px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(140,200,255,0.12)';
+    for (let g = 8; g >= 1; g--) {
+      ctx.shadowColor = 'rgba(140,200,255,0.4)';
+      ctx.shadowBlur = g * 6;
+      ctx.fillText(projectName.toUpperCase(), size / 2, labelY);
+    }
+
+    // Main text
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(180,220,255,0.75)';
+    ctx.fillText(projectName.toUpperCase(), size / 2, labelY);
+
+    // Thin rule above
+    ctx.strokeStyle = 'rgba(140,200,255,0.2)';
+    ctx.lineWidth = 0.5;
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = 'rgba(140,200,255,0.4)';
+    ctx.beginPath();
+    ctx.moveTo(ox + drawW * 0.15, oy + drawH + 20);
+    ctx.lineTo(ox + drawW * 0.85, oy + drawH + 20);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  draw();
+  const texture = new THREE.CanvasTexture(c);
+  texture.encoding = THREE.sRGBEncoding;
+  texture.flipY = false;
+
+  // For GIFs -- use a live DOM img so browser handles animation
+  if (img.src && img.src.toLowerCase().endsWith('.gif')) {
+    const liveImg = document.createElement('img');
+    liveImg.style.cssText = 'position:fixed;opacity:0;pointer-events:none;width:1px;height:1px;';
+    liveImg.src = img.src;
+    document.body.appendChild(liveImg);
+    setInterval(() => {
+      draw(liveImg);
+      texture.needsUpdate = true;
+    }, 50);
+  }
+
+  return texture;
+}
+
+function buildVideoTexture(project) {
+  const video = document.createElement('video');
+  video.src = project.image;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.autoplay = true;
+  video.style.cssText = 'position:fixed;opacity:0;pointer-events:none;width:1px;height:1px;';
+  document.body.appendChild(video);
+  video.play();
+
+  // Overlay the label on a canvas on top of the video texture
+  const size = 1024;
+  const c = document.createElement('canvas');
+  c.width = size; c.height = size;
+  const ctx = c.getContext('2d');
+  const pad = CONFIG.imageScale;
+
+  const texture = new THREE.CanvasTexture(c);
+  texture.encoding = THREE.sRGBEncoding;
+  texture.flipY = false;
+
+  function drawFrame() {
+    if (video.readyState >= 2) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, size, size);
+      const aspect = video.videoWidth / video.videoHeight || 1.77;
+      let drawW = aspect >= 1 ? size / pad : (size / pad) * aspect;
+      let drawH = aspect >= 1 ? drawW / aspect : size / pad;
+      const ox = (size - drawW) / 2;
+      const oy = (size - drawH) / 2;
+      ctx.drawImage(video, ox, oy, drawW, drawH);
+
+      // Holographic label
+      const labelY = oy + drawH + 100;
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.font = '300 64px "Inter", sans-serif';
+      ctx.shadowColor = 'rgba(140,200,255,0.4)';
+      ctx.shadowBlur = 20;
+      ctx.fillStyle = 'rgba(180,220,255,0.75)';
+      ctx.fillText(project.name.toUpperCase(), size / 2, labelY);
+      ctx.strokeStyle = 'rgba(140,200,255,0.2)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(ox + drawW * 0.15, oy + drawH + 20);
+      ctx.lineTo(ox + drawW * 0.85, oy + drawH + 20);
+      ctx.stroke();
+      ctx.restore();
+      texture.needsUpdate = true;
+    }
+    requestAnimationFrame(drawFrame);
+  }
+  drawFrame();
+  return texture;
+}
+
+function preloadAll(callback) {
+  let total = PROJECTS.length;
+  let loaded = 0;
+
+  PROJECTS.forEach((p, i) => {
+    if (p.type === 'video') {
+      // Don't wait for video -- set placeholder and count as loaded
+      preloadedTextures[i] = null;
+      if (++loaded === total) callback();
+    } else {
+      const img = new Image();
+      img.onload = () => {
+        preloadedTextures[i] = buildCanvasTexture(img, p.name);
+        if (++loaded === total) callback();
+      };
+      img.onerror = () => {
+        preloadedTextures[i] = null;
+        if (++loaded === total) callback();
+      };
+      img.src = p.image;
+    }
+  });
+}
+
 function loadGlasses() {
   const loader = new THREE.GLTFLoader();
-  loader.load(
-    CONFIG.glbPath,
+  loader.load(CONFIG.glbPath,
     (gltf) => {
       glasses = gltf.scene;
-
-      // Center and scale
       const box = new THREE.Box3().setFromObject(glasses);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 1.4 / maxDim;
-
+      const scale = 1.4 / Math.max(size.x, size.y, size.z);
       glasses.position.sub(center.multiplyScalar(scale));
       glasses.scale.setScalar(scale);
 
-      // Correct for Blender's coordinate system
-      glasses.rotation.x = Math.PI / 2;
-
-      // Debug -- log every mesh name in the GLB
-      console.log('=== ALL MESH NAMES IN GLB ===');
-      glasses.traverse((child) => {
-        if (child.isMesh) console.log('MESH:', child.name);
-      });
-      console.log('=============================');
-
-      // Find lens meshes
       lensL = glasses.getObjectByName(CONFIG.lensLeft);
       lensR = glasses.getObjectByName(CONFIG.lensRight);
+      applyTexture(lensL, preloadedTextures[0] || null, 1.0);
+      applyTexture(lensR, preloadedTextures[0] || null, 1.0);
 
-      console.log('Lens_L found:', !!lensL);
-      console.log('Lens_R found:', !!lensR);
-
-      if (lensL) applyLensMaterial(lensL, CONFIG.lensMedia.left);
-      if (lensR) applyLensMaterial(lensR, CONFIG.lensMedia.right);
-
-      // Frame material -- dark gunmetal
       glasses.traverse((child) => {
         if (child.isMesh && child.name !== CONFIG.lensLeft && child.name !== CONFIG.lensRight) {
-          child.material = new THREE.MeshStandardMaterial({
-            color: 0x111114,
-            metalness: 0.92,
-            roughness: 0.22,
-            envMapIntensity: 1.2,
-          });
+          child.material = new THREE.MeshStandardMaterial({ color: 0x111114, metalness: 0.92, roughness: 0.22 });
         }
       });
 
       scene.add(glasses);
       document.getElementById('loading').style.display = 'none';
+      scanLine.style.opacity = '1';
+      scanLine.textContent = PROJECTS[0].name;
     },
-    (xhr) => {
-      const pct = Math.round((xhr.loaded / xhr.total) * 100);
-      document.getElementById('loading').textContent = `Loading ${pct}%`;
-    },
-    (err) => {
-      console.error('GLB load error:', err);
-      document.getElementById('loading').textContent = 'Error loading model';
-    }
+    (xhr) => { document.getElementById('loading').textContent = `Loading ${Math.round(xhr.loaded / xhr.total * 100)}%`; },
+    (err) => { console.error(err); document.getElementById('loading').textContent = 'Error loading model'; }
   );
 }
 
-function applyLensMaterial(mesh, mediaConfig) {
-  if (mediaConfig.type === 'video') {
-    const video = document.createElement('video');
-    video.src = mediaConfig.path;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.play();
-
-    const texture = new THREE.VideoTexture(video);
-    texture.encoding = THREE.sRGBEncoding;
-
-    mesh.material = buildLensMaterial(texture);
-  } else {
-    const loader = new THREE.TextureLoader();
-    loader.load(mediaConfig.path, (texture) => {
-      texture.encoding = THREE.sRGBEncoding;
-      mesh.material = buildLensMaterial(texture);
-    });
-  }
-}
-
-function buildLensMaterial(texture) {
-  return new THREE.MeshStandardMaterial({
+function applyTexture(mesh, texture, opacity) {
+  if (!mesh) return;
+  mesh.material = new THREE.MeshStandardMaterial({
     map: texture,
     transparent: true,
-    opacity: 0.88,
+    opacity: opacity !== undefined ? opacity : 1.0,
     roughness: 0.08,
     metalness: 0.3,
-    envMapIntensity: CONFIG.iridescenceStrength * 2,
-    side: THREE.DoubleSide,
+    side: THREE.FrontSide,
   });
 }
 
-// Swap lens media at runtime
-// Usage: swapLens('left', { type: 'image', path: './assets/MyProject.png' })
-window.swapLens = function(side, mediaConfig) {
-  const mesh = side === 'left' ? lensL : lensR;
-  if (!mesh) return;
-  applyLensMaterial(mesh, mediaConfig);
-  document.getElementById('project-label').textContent =
-    mediaConfig.path.split('/').pop().replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
-};
+function crossfadeTo(index) {
+  if (isTransitioning || index === currentProject) return;
+  isTransitioning = true;
+
+  // Update label immediately
+  projectTag.textContent = PROJECTS[index].name;
+  scanLine.textContent = PROJECTS[index].name;
+
+  let opacity = 1.0;
+  const fadeOut = setInterval(() => {
+    opacity = Math.max(0, opacity - 0.08);
+    if (lensL && lensL.material) lensL.material.opacity = opacity;
+    if (lensR && lensR.material) lensR.material.opacity = opacity;
+    if (opacity <= 0) {
+      clearInterval(fadeOut);
+      currentProject = index;
+      const p = PROJECTS[index];
+      if (p.type === 'video' && !preloadedTextures[index]) {
+        preloadedTextures[index] = buildVideoTexture(p);
+      }
+      applyTexture(lensL, preloadedTextures[index], 0);
+      applyTexture(lensR, preloadedTextures[index], 0);
+      let op2 = 0;
+      const fadeIn = setInterval(() => {
+        op2 = Math.min(1.0, op2 + 0.05);
+        if (lensL && lensL.material) lensL.material.opacity = op2;
+        if (lensR && lensR.material) lensR.material.opacity = op2;
+        if (op2 >= 1.0) { clearInterval(fadeIn); isTransitioning = false; }
+      }, 16);
+    }
+  }, 16);
+}
 
 function setupEvents() {
   window.addEventListener('mousemove', (e) => {
-    mouseX = (e.clientX / W) * 2 - 1;
-    mouseY = (e.clientY / H) * 2 - 1;
+    mouseRawX = e.clientX;
+    mouseRawY = e.clientY;
+    mouseNX = e.clientX / W;
+
+    // Reticle position
+    reticle.style.left = e.clientX + 'px';
+    reticle.style.top = e.clientY + 'px';
+    projectTag.style.left = e.clientX + 'px';
+    projectTag.style.top = e.clientY + 'px';
+
+    const nx = (e.clientX / W) * 2 - 1;
+    const ny = (e.clientY / H) * 2 - 1;
+    targetRotY = -nx * (CONFIG.rotationY * Math.PI / 180);
+    targetRotX = ny * (CONFIG.rotationX * Math.PI / 180);
+
+    // Parallax -- subtle offset opposite to rotation
+    targetParallaxX = -nx * CONFIG.parallaxStrength;
+    targetParallaxY = ny * CONFIG.parallaxStrength;
+
+    // Zone detection
+    const zone = Math.min(Math.floor(mouseNX * PROJECTS.length), PROJECTS.length - 1);
+    if (zone !== currentProject) crossfadeTo(zone);
+
+    // Show project tag near cursor
+    projectTag.textContent = PROJECTS[zone].name;
+    projectTag.style.opacity = '1';
   });
 
   window.addEventListener('resize', () => {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    camera.aspect = W / H;
-    camera.updateProjectionMatrix();
-    renderer.setSize(W, H);
+    W = window.innerWidth; H = window.innerHeight;
+    camera.aspect = W / H; camera.updateProjectionMatrix(); renderer.setSize(W, H);
   });
 }
 
 function animate() {
   requestAnimationFrame(animate);
-
-  targetRotY = mouseX * (CONFIG.rotationY * Math.PI / 180);
-  targetRotX = -mouseY * (CONFIG.rotationX * Math.PI / 180);
-
   currentRotX += (targetRotX - currentRotX) * 0.05;
   currentRotY += (targetRotY - currentRotY) * 0.05;
+  parallaxX += (targetParallaxX - parallaxX) * 0.04;
+  parallaxY += (targetParallaxY - parallaxY) * 0.04;
 
   if (glasses) {
     glasses.rotation.x = currentRotX;
-    glasses.rotation.y = currentRotY;
+    glasses.rotation.y = -currentRotY;
   }
+
+  // Apply parallax to lens texture offset -- subtle, centered around 0.5
+  [lensL, lensR].forEach(mesh => {
+    if (mesh && mesh.material && mesh.material.map) {
+      mesh.material.map.offset.set(parallaxX, parallaxY);
+      mesh.material.map.needsUpdate = true;
+    }
+  });
 
   renderer.render(scene, camera);
 }
 
-// Film grain canvas
 function setupGrain() {
   const canvas = document.getElementById('grain');
   const ctx = canvas.getContext('2d');
-  canvas.width = W;
-  canvas.height = H;
-
   function drawGrain() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const imgData = ctx.createImageData(canvas.width, canvas.height);
     const data = imgData.data;
     for (let i = 0; i < data.length; i += 4) {
       const v = Math.random() * 255;
-      data[i] = data[i+1] = data[i+2] = v;
-      data[i+3] = 255;
+      data[i] = data[i+1] = data[i+2] = v; data[i+3] = 255;
     }
     ctx.putImageData(imgData, 0, 0);
     setTimeout(drawGrain, 80);
