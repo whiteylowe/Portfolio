@@ -3,474 +3,1835 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
-<title>Nick Lowe</title>
+<title>Nicholas Lowe</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #050507; overflow: hidden; font-family: 'Courier New', monospace; color: #fff; width: 100vw; height: 100vh; cursor: none; }
-  #canvas-container { width: 100vw; height: 100vh; position: relative; }
-  canvas { display: block; }
+  :root{
+    --bg:#050507;
+    --panel:rgba(10,12,16,0.78);
+    --line:rgba(255,255,255,0.10);
+    --text:rgba(255,255,255,0.92);
+    --text-dim:rgba(255,255,255,0.52);
+    --muted:rgba(255,255,255,0.50);
+    --accent: 240, 220, 180;
+    --content-width:min(1320px, calc(100vw - 64px));
+    --hero-width:min(1400px, calc(100vw - 40px));
+    --header-h:112px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:auto}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
+  *{cursor:none !important;}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:'DM Mono',monospace}
 
-  #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 48px 56px; }
-  #top-bar { display: flex; justify-content: space-between; align-items: flex-start; }
-  #name { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); line-height: 1.8; }
-  #role { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); text-align: right; }
-  #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; }
-  #hint { font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.1); text-align: right; }
+  .site-header{
+    position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50;
+    background:linear-gradient(180deg, rgba(5,5,7,0.98), rgba(5,5,7,0.84) 72%, rgba(5,5,7,0.14));
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .site-header::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.22), transparent);
+  }
+  .header-inner{
+    width:var(--content-width); height:100%; margin:0 auto;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  }
+  .brand{justify-self:center; text-align:center; display:block}
+  .header-left-controls{justify-self:start; display:flex; align-items:center; margin-top:10px}
+  #name{
+    font-size:22px; line-height:1; letter-spacing:0.28em; text-transform:uppercase; font-weight:400;
+    display:inline-block; position:relative;
+  }
+  #name::after{
+    content:""; position:absolute; left:0; right:0; bottom:-8px; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.72), transparent);
+  }
+  #name-sub{margin-top:14px; font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(var(--accent),0.78)}
+  .header-controls{
+    justify-self:end;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+    margin-top:10px;
+    position:relative;
+  }
+  .audio-toggle,
+  .contact-trigger{
+    border:none;
+    background:none;
+    color:var(--text-dim);
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:10px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    padding:0;
+  }
+  .audio-toggle{color:rgba(120,255,185,0.9)}
+  .audio-toggle.is-off{color:rgba(255,170,80,0.88)}
+  .audio-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(120,255,185,0.95);
+    box-shadow:0 0 10px rgba(120,255,185,0.18);
+    flex-shrink:0;
+  }
+  .audio-toggle.is-off .audio-dot{
+    background:rgba(255,170,80,0.95);
+    box-shadow:0 0 10px rgba(255,170,80,0.16);
+  }
+  .audio-toggle:hover,
+  .contact-trigger:hover{color:rgba(var(--accent),0.95)}
+  .contact-menu-wrap{position:relative}
+  .contact-dropdown{
+    position:absolute;
+    top:100%;
+    right:0;
+    margin-top:12px;
+    width:max-content;
+    min-width:0;
+    border:1px solid rgba(255,255,255,0.10);
+    background:rgba(10,12,16,0.975);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    padding:12px 16px;
+    display:grid;
+    gap:10px;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(-6px);
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:70;
+  }
+  .contact-menu-wrap.open .contact-dropdown{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+  }
+  .contact-link-item{
+    font-size:10px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.62);
+    padding:4px 0;
+    text-align:right;
+  }
+  .contact-link-item:hover{color:rgba(var(--accent),0.92)}
+  .pw-row{
+    display:grid;
+    gap:8px;
+    justify-items:end;
+    padding-top:4px;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .pw-label{
+    font-size:9px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:rgba(255,140,90,0.82);
+  }
+  .pw-input{
+    width:132px;
+    background:none;
+    border:none;
+    border-bottom:1px solid rgba(255,120,80,0.45);
+    color:rgba(255,210,190,0.92);
+    font-size:10px;
+    letter-spacing:0.16em;
+    text-align:right;
+    outline:none;
+    padding:2px 0;
+  }
+  .pw-input::placeholder{color:rgba(255,120,80,0.45)}
+  .pw-lock{
+    border:none;
+    background:none;
+    color:rgba(255,120,80,0.88);
+    padding:0;
+    width:18px;
+    height:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .pw-lock-icon{
+    display:inline-block;
+    width:8px;
+    height:9px;
+    border:1.5px solid currentColor;
+    border-radius:1px;
+    position:relative;
+  }
+  .pw-lock-icon::before{
+    content:'';
+    position:absolute;
+    top:-6px;
+    left:-1px;
+    width:8px;
+    height:6px;
+    border:1.5px solid currentColor;
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-4px)}
+    40%{transform:translateX(4px)}
+    60%{transform:translateX(-3px)}
+    80%{transform:translateX(3px)}
+  }
+  .shake{animation:shake .35s ease}
 
-  #grain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.045; mix-blend-mode: screen; }
-  #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; letter-spacing: 0.3em; color: rgba(255,255,255,0.2); text-transform: uppercase; }
-
-  /* Reticle */
-  #reticle {
-    position: absolute;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
+  main{padding-top:calc(var(--header-h) + 20px)}
+  .hero-wrap{width:var(--content-width); margin:0 auto; padding-bottom:32px}
+  .hero-stage{
+    position:relative; width:var(--hero-width); aspect-ratio:16/9; margin:0 auto;
+    background:#09090c; overflow:hidden; border:1px solid rgba(255,255,255,0.06);
+  }
+  .hero-stage::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(5,5,7,0.06), rgba(5,5,7,0.20) 48%, rgba(5,5,7,0.70) 100%);
+    pointer-events:none; z-index:4;
+  }
+  .hero-stage::after{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at 50% 56%, rgba(255,255,255,0.08), transparent 34%);
+    pointer-events:none; z-index:4;
+  }
+  .hero-videos, .hero-mask, #swarm-canvas{
+    position:absolute; inset:0; width:100%; height:100%;
+  }
+  .hero-videos{z-index:1}
+  #hero-glasses{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center center;
+    pointer-events:none;
+    z-index:2;
+    opacity:1;
+    transition:opacity .16s ease;
+  }
+  #hero-glasses.glasses-hidden{
+    opacity:0;
+  }
+  #hero-glasses.glasses-return{
+    opacity:1;
+    transition:opacity .48s ease;
+  }
+  #hero-frame{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center center;
+    pointer-events:none;
+    z-index:5;
+    opacity:0;
+  }
+  #hero-frame.frame-flash{
+    animation:heroFrameFlash 2.0s ease forwards;
+  }
+  @keyframes heroFrameFlash{
+    0%{opacity:0;}
+    12%{opacity:.6;}
+    80%{opacity:.6;}
+    100%{opacity:0;}
+  }
+  .hero-video{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center center;
+    opacity:0; transition:opacity .45s ease;
+  }
+  .hero-video.active{opacity:1}
+  #swarm-canvas{z-index:3; pointer-events:none}
+  .hero-mask{z-index:6}
+  .mask-zone{position:absolute; cursor:none; appearance:none; -webkit-appearance:none; border:0; background:transparent; padding:0; outline:none; box-shadow:none}
+  .mask-zone .zone-glint{
+    position:absolute;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    width:22px; height:22px;
+    border-radius:50%;
+    background:radial-gradient(circle at center, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.42) 36%, rgba(255,255,255,0.10) 65%, transparent 100%);
+    opacity:0; filter:blur(1.5px); transition:opacity .3s ease;
+    pointer-events:none;
+  }
+  .mask-zone:hover .zone-glint,
+  .mask-zone.active .zone-glint{opacity:1}
+  .zone-glint.ambient-pulse{animation:glintPulse 0.7s ease-out forwards}
+  @keyframes glintPulse{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(0.5);}
+    35%{opacity:0.85;}
+    60%{opacity:0.55; transform:translate(-50%,-50%) scale(1.2);}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(1);}
   }
 
-  /* Project label that follows mouse */
-  #project-tag {
-    position: absolute;
-    pointer-events: none;
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    white-space: nowrap;
-    transform: translate(24px, -50%);
-    opacity: 0;
-    transition: opacity 0.4s;
+  .hero-overlay-copy{
+    position:absolute; left:28px; right:28px; bottom:-22px; z-index:6; pointer-events:none;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
+  }
+  .hero-copy{max-width:720px; transform:translateY(0)}
+  .eyebrow{font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:rgba(var(--accent),.82); margin-bottom:10px}
+  .headline{font-size:clamp(24px, 4.4vw, 40px); line-height:.96; font-weight:400; letter-spacing:.04em; text-transform:uppercase}
+  .summary{margin-top:12px; max-width:760px; font-size:13px; line-height:1.65; color:rgba(255,255,255,.60)}
+  .meta{display:flex; flex-wrap:wrap; gap:10px 18px; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.40); margin-top:14px}
+
+  .nav-row{
+    width:var(--hero-width); margin:18px auto 0; display:flex; flex-wrap:wrap; gap:10px;
+  }
+  .nav-btn{
+    border:1px solid rgba(255,255,255,0.10); background:rgba(9,12,16,0.38); color:rgba(255,255,255,0.52);
+    padding:12px 16px; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; cursor:none;
+    transition:color .2s ease, border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .nav-btn:hover{color:rgba(255,255,255,0.9); border-color:rgba(var(--accent),0.36); transform:translateY(-1px)}
+  .nav-btn.active{color:rgba(255,255,255,0.96); border-color:rgba(255,255,255,0.38); background:rgba(255,255,255,0.06)}
+
+  .panel-anchor{width:var(--hero-width); margin:14px auto 0}
+  .expand-shell{
+    max-height:0; overflow:hidden; opacity:0; transition:opacity .24s ease;
+    overflow-anchor:none;
+  }
+  .expand-shell.open{max-height:none; height:auto; opacity:1; overflow:visible}
+  .expand-frame{
+    border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(14px); position:relative;
+  }
+  .expand-frame::before,.expand-frame::after{content:""; position:absolute; width:18px; height:18px; border-color:rgba(var(--accent),0.5)}
+  .expand-frame::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid}
+  .expand-frame::after{right:-1px; bottom:-1px; border-right:1px solid; border-bottom:1px solid}
+  .expand-head{display:none; margin:0; padding:0; height:0; overflow:hidden; border:none}
+  .expand-title{font-size:13px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(255,255,255,0.90)}
+  .expand-meta{white-space:nowrap; font-size:10px; line-height:1.9; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.44)}
+  .expand-body{padding:16px}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px}
+  .cards.single-large{
+  grid-template-columns:460px; /* SIZE FOR THESIS + ABOUT SINGLE-CARD PANELS */
+  justify-content:center;
+}
+  .cards.single-card{
+  grid-template-columns:320px;
+  justify-content:center;
+}
+  .card{border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.018); transition:border-color .22s ease, transform .22s ease, background .22s ease; min-height:100%}
+  .card:hover{transform:translateY(-3px); border-color:rgba(var(--accent),0.34); background:rgba(255,255,255,0.03)}
+  .card.clickable{cursor:pointer}
+  .media{aspect-ratio:16/9; background:rgba(0,0,0,0.35); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; overflow:hidden}
+  .media img,.media video{width:100%; height:100%; object-fit:cover; display:block}
+  .card-copy{padding:14px; display:grid; gap:9px}
+  .card-title{font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.88)}
+  .card-desc{font-size:12px; line-height:1.65; color:rgba(255,255,255,0.46)}
+  .card-link{font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(var(--accent),0.82)}
+
+  .detail-shell{display:none; margin-top:16px; transform-origin:top center}
+  .detail-shell.open{display:block}
+  .grow-down{animation:growDown .72s cubic-bezier(.22,.7,.18,1) both}
+  @keyframes growDown{
+    0%{opacity:0; transform:translateY(-10px) scaleY(.965);}
+    100%{opacity:1; transform:translateY(0) scaleY(1);}
+  }
+  .detail-frame{
+    border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);
+    position:relative; padding:20px;
+    max-width:1200px; margin:0 auto;
+  }
+  .detail-frame::before,.detail-frame::after{content:""; position:absolute; width:16px; height:16px; border-color:rgba(var(--accent),0.45)}
+  .detail-frame::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid}
+  .detail-frame::after{right:-1px; bottom:-1px; border-right:1px solid; border-bottom:1px solid}
+  /* First image in each detail is always full-width */
+   .detail-frame .detail-top .detail-hero:first-child,
+  .detail-frame .spatial-case > section:first-child:not(.split) .spatial-media-lg,
+  .detail-frame .spatial-case > section:first-child:not(.split) .spatial-media-md,
+  .detail-frame .arch-hero .arch-hero-media{
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  /* Hero top grid becomes stacked for first image full-width */
+  .detail-top{display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px}
+  .detail-hero{aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:rgba(0,0,0,0.32)}
+  .detail-hero img,.detail-hero video{width:100%; height:100%; object-fit:contain; display:block}
+  .detail-meta{display:grid; gap:10px; align-content:start}
+  .detail-kicker{font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(var(--accent),.58)}
+  .detail-title{font-size:16px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.86); font-weight:300}
+  .detail-copy{font-size:12px; line-height:1.7; color:rgba(255,255,255,.46)}
+  .detail-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:12px}
+  .detail-block{min-height:118px; border:1px solid rgba(255,255,255,0.06); padding:12px; background:rgba(255,255,255,0.015)}
+  .detail-block-title{font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:rgba(var(--accent),.56); margin-bottom:8px}
+  .detail-block-copy{font-size:11px; line-height:1.6; color:rgba(255,255,255,.34)}
+  .detail-close-row{display:flex; justify-content:flex-end; margin-top:14px}
+  .detail-close{border:none; background:none; color:rgba(255,255,255,.42); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; cursor:pointer}
+  .detail-close:hover{color:rgba(255,255,255,.84)}
+  .about-panel{
+    display:grid;
+    gap:20px;
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(240px,0.85fr);
+    gap:18px;
+    align-items:start;
+  }
+  .about-title{
+    font-size:18px;
+    letter-spacing:0.11em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.9);
+    font-weight:300;
+    margin-bottom:12px;
+  }
+  .about-kicker{
+    font-size:12px;
+    line-height:1.8;
+    color:rgba(255,255,255,0.78);
+    font-style:italic;
+    margin-bottom:18px;
+  }
+  .about-copy{
+    font-size:12px;
+    line-height:1.72;
+    color:rgba(255,255,255,0.48);
+    font-weight:300;
+  }
+  .about-copy + .about-copy{margin-top:14px}
+  .about-side,
+  .about-card,
+  .about-contact-card,
+  .about-logo-chip{
+    border:1px solid rgba(255,255,255,0.06);
+    background:rgba(255,255,255,0.015);
+  }
+  .about-side{
+    padding:14px;
+    display:grid;
+    gap:8px;
+  }
+  .about-side-label,
+  .about-section-title,
+  .about-contact-label,
+  .about-logo-label{
+    font-family:'DM Mono',monospace;
+    font-size:9px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:rgba(var(--accent),.58);
+  }
+  .about-side-copy,
+  .about-highlight-copy,
+  .about-card-copy,
+  .about-contact-value{
+    font-size:12px;
+    line-height:1.72;
+    color:rgba(255,255,255,0.48);
+    font-weight:300;
+  }
+  .about-section{display:grid; gap:10px}
+  .about-highlights{display:grid; gap:8px}
+  .about-highlight{
+    display:grid;
+    grid-template-columns:16px minmax(0,1fr);
+    gap:12px;
+    align-items:start;
+  }
+  .about-highlight-dot{
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:rgba(var(--accent),0.95);
+    margin-top:8px;
+  }
+  .about-two{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+  .about-card{padding:14px}
+  .about-card-title{
+    font-size:14px;
+    letter-spacing:.06em;
+    color:rgba(255,255,255,0.86);
+    margin-bottom:8px;
+    font-weight:300;
+  }
+  .about-contact{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+  }
+  .about-contact-card{padding:14px}
+  .about-contact-value a:hover{color:rgba(var(--accent),0.92)}
+  .about-logo-group{display:grid; gap:14px}
+  .about-logo-strip{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:10px;
+  }
+  .about-logo-chip{
+    min-height:66px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px;
+  }
+  .about-logo-chip img{
+    max-width:100%;
+    max-height:34px;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    filter:grayscale(1);
+    opacity:.88;
+  }
+  @media(max-width:960px){
+    .about-grid,.about-two,.about-contact,.about-logo-strip{grid-template-columns:1fr}
   }
 
-  #scan-line {
-    position: absolute;
-    bottom: 48px;
-    left: 56px;
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.15);
-    opacity: 0;
-    transition: opacity 0.5s;
+
+  .section{position:relative; z-index:2; width:var(--content-width); margin:0 auto; padding:24px 0 72px}
+  .section-frame{border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(14px); position:relative}
+  .section-frame::before,.section-frame::after{content:""; position:absolute; width:18px; height:18px; border-color:rgba(var(--accent),0.5)}
+  .section-frame::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid}
+  .section-frame::after{right:-1px; bottom:-1px; border-right:1px solid; border-bottom:1px solid}
+  .section-head{padding:18px 20px 14px; border-bottom:1px solid rgba(255,255,255,0.06); display:grid; gap:10px}
+  .section-title{font-size:13px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(255,255,255,0.90)}
+  .section-meta{white-space:pre-line; font-size:10px; line-height:1.9; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.44)}
+  .section-body{padding:16px}
+
+  .site-footer{width:var(--content-width); margin:22px auto 0; padding:0 0 32px; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.32); text-align:center}
+
+  
+  #reticle{
+    position:fixed; left:0; top:0; width:20px; height:20px;
+    pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
   }
+  #reticle::before{
+  content:""; position:absolute; inset:0;
+  border:1px solid rgba(245,245,245,.78); border-radius:50%;
+}
+#reticle::after{
+  content:""; position:absolute; inset:5px;
+  border:1px solid rgba(245,245,245,.45); border-radius:50%;
+  }
+
+  .cursor-trail{
+    position:fixed; border-radius:50%; pointer-events:none; z-index:9998;
+    transform:translate(-50%,-50%);
+    animation:trailFade 2.0s ease-out forwards;
+    background:rgba(var(--accent),0.55);
+  }
+  .cursor-trail.dark{background:rgba(18,18,22,0.55);}
+  @keyframes trailFade{
+    0%{opacity:1;}
+    50%{opacity:0.35;}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(0.08);}
+  }
+  /* Click-capture bracket */
+  .click-bracket{
+    position:fixed; pointer-events:none; z-index:9997;
+    width:26px; height:26px; transform:translate(-50%,-50%);
+    animation:bracketFade 1.5s ease-out forwards;
+  }
+  .click-bracket::before{content:""; position:absolute; top:0; left:0; width:9px; height:9px; border-top:1.5px solid rgba(255,255,255,.9); border-left:1.5px solid rgba(255,255,255,.9);}
+  .click-bracket::after{content:""; position:absolute; bottom:0; right:0; width:9px; height:9px; border-bottom:1.5px solid rgba(255,255,255,.9); border-right:1.5px solid rgba(255,255,255,.9);}
+  .click-bracket .cb-tr{position:absolute; top:0; right:0; width:9px; height:9px; border-top:1.5px solid rgba(255,255,255,.9); border-right:1.5px solid rgba(255,255,255,.9);}
+  .click-bracket .cb-bl{position:absolute; bottom:0; left:0; width:9px; height:9px; border-bottom:1.5px solid rgba(255,255,255,.9); border-left:1.5px solid rgba(255,255,255,.9);}
+   @keyframes bracketFade{
+    0%{opacity:1; transform:translate(-50%,-50%) scale(1.4);}
+    20%{opacity:0.92; transform:translate(-50%,-50%) scale(1.1);}
+    70%{opacity:0.7; transform:translate(-50%,-50%) scale(0.95);}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(0.7);}
+  }
+
+  @media (max-width:900px){
+    .header-inner{grid-template-columns:1fr; padding:18px 0}
+    .header-left-controls,.header-controls{display:none}
+    .hero-overlay-copy{left:18px; right:18px; bottom:18px}
+    .hero-copy{transform:translateY(0)}
+    .summary{font-size:12px; max-width:440px}
+    .detail-top,.detail-grid{grid-template-columns:1fr}
+    #name{font-size:18px}
+    #name-sub{font-size:9px}
+    :root{--header-h:122px}
+  }
+
+  /* Spatial case study layout (ported from 299) */
+  .spatial-case{display:grid; gap:28px}
+  .spatial-section{display:grid; gap:14px}
+  .spatial-section.split{grid-template-columns:minmax(0,1.15fr) minmax(260px,0.85fr); gap:20px; align-items:start}
+  .reveal-block{
+    opacity:0;
+    transform:translateY(26px);
+    transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1);
+    will-change:opacity, transform;
+  }
+  .reveal-block.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .tone-panel{
+    position:relative;
+    padding:16px;
+    border:1px solid rgba(255,255,255,.06);
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012));
+  }
+  .tone-panel.tone-deep{
+    background:linear-gradient(180deg, rgba(10,14,22,.94), rgba(6,8,12,.98));
+  }
+  .tone-panel.tone-soft{
+    background:linear-gradient(180deg, rgba(255,255,255,.028), rgba(255,255,255,.01));
+  }
+  .tone-panel.tone-blue{
+    background:linear-gradient(180deg, rgba(7,17,26,.96), rgba(5,9,14,.98));
+  }
+  .spatial-eyebrow{font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(100,200,255,.58)}
+  .spatial-headline{font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.86); font-weight:300}
+  .spatial-copy{font-size:12px; line-height:1.7; color:rgba(255,255,255,.46); font-weight:300}
+  .spatial-caption{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.32)}
+  .spatial-toolline{font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:rgba(100,200,255,.42)}
+  .spatial-stack{display:grid; gap:10px; align-content:start}
+  .spatial-media-lg,.spatial-media-md,.spatial-media-sm{
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(0,0,0,.32);
+    overflow:hidden; display:flex; align-items:center; justify-content:center;
+  }
+  .spatial-media-lg{aspect-ratio:16/9}
+  .spatial-media-md{aspect-ratio:16/9}
+  .spatial-media-sm{aspect-ratio:4/3}
+  .spatial-media-lg img,.spatial-media-md img,.spatial-media-sm img,
+  .spatial-media-lg video,.spatial-media-md video,.spatial-media-sm video{
+    width:100%; height:100%; object-fit:contain; display:block;
+  }
+  .spatial-grid-2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+  .spatial-grid-3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+  .spatial-pullquote{padding:14px 16px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.015); font-size:12px; line-height:1.7; color:rgba(255,255,255,.52)}
+  .threshold-space{padding:18px; border:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg,rgba(6,10,14,.92),rgba(4,6,9,.96))}
+  .drone-bob-stage{position:relative; min-height:220px; overflow:visible}
+  .drone-bob{position:relative; top:-60px; left:50%; width:55%; max-width:200px; transform:translateX(-50%); pointer-events:none; animation:droneBob 6.5s ease-in-out infinite alternate; filter:drop-shadow(0 14px 22px rgba(0,0,0,.28))}
+  @keyframes droneBob{0%{transform:translateX(-50%) translate3d(0,0,0)} 25%{transform:translateX(-50%) translate3d(8px,-14px,0)} 50%{transform:translateX(-50%) translate3d(0,-110px,0)} 75%{transform:translateX(-50%) translate3d(-8px,-14px,0)} 100%{transform:translateX(-50%) translate3d(0,0,0)}}
+  .compare-slider{position:relative; aspect-ratio:16/9; border:1px solid rgba(255,255,255,.08); overflow:hidden; background:rgba(0,0,0,.34)}
+  .compare-slider img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; pointer-events:none; user-select:none}
+  .compare-slider .compare-after{clip-path:inset(0 0 0 50%)}
+  .compare-slider .compare-divider{position:absolute; top:0; bottom:0; left:50%; width:1px; background:rgba(110,220,255,.82); box-shadow:0 0 12px rgba(110,220,255,.22); pointer-events:none}
+  .compare-slider .compare-handle{position:absolute; top:50%; left:50%; width:32px; height:32px; transform:translate(-50%,-50%); border:1px solid rgba(110,220,255,.7); border-radius:999px; background:rgba(7,18,24,.82); pointer-events:none}
+  .compare-slider input[type=range]{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:ew-resize; z-index:3}
+  .arch-hero{display:grid; grid-template-columns:1.2fr 0.8fr; gap:18px; align-items:start}
+  .arch-hero-media{aspect-ratio:16/9; border:1px solid rgba(255,255,255,.08); overflow:hidden; background:rgba(0,0,0,.32); display:flex; align-items:center; justify-content:center}
+  .arch-hero-media img{width:100%; height:100%; object-fit:contain; display:block}
+  .arch-text-card{display:grid; gap:10px; align-content:start}
+  .arch-row-2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:start}
+  .arch-row-2.tight{grid-template-columns:0.8fr 1.2fr}
+  .arch-media-card{display:grid; gap:8px}
+  .arch-wide-media{aspect-ratio:16/9; border:1px solid rgba(255,255,255,.08); overflow:hidden; background:rgba(0,0,0,.32); display:flex; align-items:center; justify-content:center}
+  .arch-wide-media img{width:100%; height:100%; object-fit:contain; display:block}
+  .arch-feature-media{aspect-ratio:4/3; border:1px solid rgba(255,255,255,.08); overflow:hidden; background:rgba(0,0,0,.32); display:flex; align-items:center; justify-content:center}
+  .arch-feature-media img{width:100%; height:100%; object-fit:contain; display:block}
+  .arch-media-card,
+  .arch-text-card{align-self:start}
+  .arch-wide-media,
+  .arch-feature-media,
+  .arch-hero-media{background:rgba(0,0,0,.26)}
+  .arch-doc-block{
+    display:grid;
+    gap:12px;
+    margin-top:8px;
+  }
+  @media(max-width:960px){
+    .spatial-section.split,.spatial-grid-2,.spatial-grid-3,.arch-hero,.arch-row-2,.arch-row-2.tight{grid-template-columns:1fr}
+  }
+
+
 </style>
 </head>
 <body>
-<div id="canvas-container">
-  <canvas id="grain"></canvas>
-  <div id="loading">Loading</div>
-
-  <svg id="reticle" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-    <!-- Outer pulse ring -->
-    <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5">
-      <animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.3;0.08;0.3" dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Inner ring -->
-    <circle cx="20" cy="20" r="8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-    <!-- Cross hairs -->
-    <line x1="20" y1="2" x2="20" y2="11" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
-    <line x1="20" y1="29" x2="20" y2="38" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
-    <line x1="2" y1="20" x2="11" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
-    <line x1="29" y1="20" x2="38" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
-    <!-- Corner ticks -->
-    <line x1="14" y1="14" x2="16" y2="14" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="14" y1="14" x2="14" y2="16" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="26" y1="14" x2="24" y2="14" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="26" y1="14" x2="26" y2="16" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="14" y1="26" x2="16" y2="26" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="14" y1="26" x2="14" y2="24" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="26" y1="26" x2="24" y2="26" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <line x1="26" y1="26" x2="26" y2="24" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
-    <!-- Center dot -->
-    <circle cx="20" cy="20" r="0.8" fill="rgba(255,255,255,0.6)"/>
-  </svg>
-
-  <div id="project-tag"></div>
-  <div id="scan-line">--</div>
-
-  <div id="ui">
-    <div id="top-bar">
-      <div id="name">Nick Lowe<br><span style="color:rgba(255,255,255,0.2)">Technical Artist</span></div>
-      <div id="role">Spatial Design<br>XR &amp; Architecture</div>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left-controls">
+      <button class="audio-toggle mono" id="audio-toggle" type="button" aria-pressed="true">
+        <span class="audio-dot"></span>
+        <span class="audio-state">Audio On</span>
+      </button>
     </div>
-    <div id="bottom-bar">
-      <div></div>
-      <div id="hint">Move to explore</div>
+    <a href="index.html" class="brand">
+      <div id="name">Nicholas Lowe</div>
+      <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
+    </a>
+    <div class="header-controls" id="header-controls">
+      <div class="contact-menu-wrap" id="contact-menu-wrap">
+        <button class="contact-trigger mono" id="contact-trigger" type="button" aria-expanded="false">Contact</button>
+        <div class="contact-dropdown" id="contact-dropdown">
+          <a class="contact-link-item mono" href="https://www.linkedin.com/in/nicholas-lowe-2a400135/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="contact-link-item mono" href="https://github.com/whiteylowe" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="contact-link-item mono" href="mailto:nicklowe3d@gmail.com">Email</a>
+          <div class="pw-row" id="pw-row">
+            <span class="pw-label mono">Password Protected</span>
+            <input id="pw-input" class="pw-input mono" type="password" placeholder="Password" maxlength="24" />
+            <button class="pw-lock" id="pw-lock" type="button" aria-label="Locked">
+              <span class="pw-lock-icon"></span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</header>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<main>
+  <section class="hero-wrap">
+    <div class="hero-stage" id="hero-stage">
+      <div class="hero-videos" id="hero-videos"></div>
+      <img id="hero-glasses" src="./images/Hero_Back_Glasses.png" alt="Glasses overlay">
+      <img id="hero-frame" src="./images/Hero_Back_Frame.png" alt="Hero frame overlay">
+      <canvas id="swarm-canvas"></canvas>
+      <div class="hero-mask" id="hero-mask-overlay">
+        <button class="mask-zone" id="mz-spatial" data-zone="1" aria-label="Spatial Designs" style="left:5%;bottom:18%;width:26%;height:14%;"><span class="zone-glint"></span></button>
+        <button class="mask-zone" id="mz-about" data-zone="3" aria-label="About" style="left:42%;bottom:20%;width:18%;height:28%;"><span class="zone-glint"></span></button>
+        <button class="mask-zone" id="mz-xr" data-zone="0" aria-label="XR Systems" style="right:14%;bottom:22%;width:18%;height:12%;"><span class="zone-glint"></span></button>
+        <button class="mask-zone" id="mz-thesis" data-zone="2" aria-label="Thesis" style="right:3%;top:31%;width:13%;height:22%;"><span class="zone-glint"></span></button>
+      </div>
+      <div class="hero-overlay-copy">
+        <div class="hero-copy">
+          <div class="eyebrow mono" id="hero-eyebrow">XR Systems</div>
+          <h1 class="headline" id="hero-title">Perceptual systems for XR</h1>
+          <p class="summary" id="hero-summary">Research-driven visual work spanning dimming, overlays, sensing, and interaction behaviors.</p>
+          <div class="meta mono" id="hero-meta"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row" id="nav-row"></div>
+
+    <div class="panel-anchor">
+      <div class="expand-shell" id="expand-shell">
+        <div class="expand-frame">
+          <div class="expand-head">
+
+            <div class="expand-title mono" id="expand-title">XR Systems</div>
+            <div class="expand-meta mono" id="expand-meta"></div>
+          </div>
+          <div class="expand-body">
+            <div class="cards" id="expand-cards"></div>
+            <div class="detail-shell" id="detail-shell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer mono">Site constructed by Nicholas Lowe © 2026</footer>
 
 <script>
 const PROJECTS = [
-  { name: 'Campus Aperture Theater', image: './images/Campus_Aperture_Theater.png' },
-  { name: 'Camp Model Apertures',    image: './videos/Signal_Lock_Final.mp4' },
-  { name: 'Campus Obscura Pinhole',  image: './gifs/Naoko_breakdown_animation.gif' },
+  {
+    name: 'XR Systems',
+    slug: 'xr',
+    eyebrow: 'XR Systems',
+    title: 'PERCEPTUAL XR SYSTEMS.',
+    summary: 'Real time interaction shaped through sensing, gaze, and visual feedback.',
+    meta: 'Perceptual Feedback • Visual Prototyping • Spatial Interaction',
+    heroVideo: './videos/Hero_Back_Xr.mp4',
+    sectionMeta: 'Perceptual Feedback\nVisual Prototyping\nSpatial Interaction',
+    cards: [
+      { title: 'Signal Lock', desc: 'Targeting, scanning, and readable control logic for a defense-adjacent interface study.', link: 'signal-lock.html', mediaType: 'video', media: './videos/X_Signal_Lock_2.mp4' },
+      { title: 'Spatial Companion', desc: 'Persistent presence, state expression, and lightweight augmented behavior.', link: 'spatial-companion.html', mediaType: 'video', media: './videos/X_Spatial_Dance.mp4' },
+      { title: 'Mixed Reality', desc: 'Dimming studies, object placement, and interface behavior tests.', link: null, mediaType: 'image', media: './images/About_Hands.jpg' }
+    ]
+  },
+  {
+    name: 'Spatial Designs',
+    slug: 'spatial',
+    eyebrow: 'Spatial Designs',
+    title: 'WORLD BUILDING AND SPATIAL DESIGN.',
+    summary: 'Real time environments built for clarity, composition, and spatial readability.',
+    meta: 'M.Arch UF • M.EAE Utah • Shipped Steam Game',
+    heroVideo: './videos/Hero_Back_Architecture.mp4',
+    sectionMeta: 'M.Arch UF / M.EAE Utah\nAIA Bronze Medal\nShipped Steam Game',
+    cards: [
+      { title: 'Midnight Miso', desc: 'Dense nocturnal environment focused on routing, vertical layering, and cinematic lighting.', link: null, mediaType: 'video', media: './videos/A_Midnight.mp4' },
+      { title: 'Naoko Shrine', desc: 'Focused study in lighting, material, and spatial sequencing within a stylized forest shrine.', link: null, mediaType: 'video', media: './videos/A_Naoko_Flyby.mp4' },
+      { title: 'To Hell With It', desc: 'Shipped environment work combining authored atmosphere, gameplay readability, and stylized lighting.', link: null, mediaType: 'image', media: './images/SD_THWT_Sintral.jpg' },
+      { title: 'Architecture', desc: 'Architectural visualization focused on daylight, composition, and spatial proportion.', link: null, mediaType: 'image', media: './images/SD_A_Craft.jpg' }
+    ]
+  },
+  {
+    name: 'Thesis',
+    slug: 'thesis',
+    eyebrow: 'Thesis',
+    title: 'ARCHITECTURE AS CINEMATIC PERCEPTION.',
+    summary: 'Campus Obscura explores framing, optics, virtual reconstruction, and phenomenological space.',
+    meta: 'Perceptual Systems • Computational Design • Phenomenology & Space',
+    heroVideo: './videos/Hero_Back_Thesis.mp4',
+    sectionMeta: 'Perceptual Systems\nComputational Design\nPhenomenology & Space',
+    cards: [
+      { title: 'Campus Obscura', desc: 'Pinhole optics, particle systems, and cinematic montage as architectural research.', link: 'campus-obscura.html', mediaType: 'image', media: './images/Thesis_Panel_1.png' }
+    ]
+  },
+  {
+    name: 'About',
+    slug: 'about',
+    eyebrow: 'About',
+    title: 'TECHNICAL ART FOR PERCEPTUAL SYSTEMS.',
+    summary: 'Building interaction systems, environments, and visual tools across Unreal, XR, and game development.',
+    meta: 'Technical Artist • XR Systems • Architecture to Real-time',
+    heroVideo: './videos/Hero_Back_About.mp4',
+    sectionMeta: 'Technical Artist\nXR Systems\nArchitecture to Real-time',
+    cards: [
+      { title: 'About', desc: 'Former Meta Reality Labs technical artist with shipped game, architectural, and teaching experience.', link: null, mediaType: 'image', media: './images/About_Hands.jpg' }
+    ]
+  }
 ];
 
-const CONFIG = {
-  glbPath: './assets/RayBan_Effects_2026.glb',
-  lensLeft: 'Lens_L',
-  lensRight: 'Lens_R',
-  imageScale: 1.4,
-  rotationX: 12,
-  rotationY: 18,
-  parallaxStrength: 0.08,
+const SPATIAL_DETAIL = {
+  'Midnight Miso': `
+    <div class="detail-frame">
+      <div class="detail-top">
+        <div class="detail-hero"><img src="./images/SD_Midnight_Miso_Hero.png" alt="Midnight Miso hero still"></div>
+        <div class="detail-meta">
+          <div class="detail-kicker">Spatial Designs / Mini case study</div>
+          <div class="detail-title">Midnight Miso</div>
+          <div class="detail-copy">Autonomous food system embedded in dense urban space. A network of agents navigates layered architecture through position, visibility, routing, and proximity across a compressed vertical city block.</div>
+          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Environment art · Spatial ordering · Embodied UI</div>
+        </div>
+      </div>
+      <div class="spatial-case" style="margin-top:16px">
+        <section class="spatial-section split">
+          <div class="spatial-media-md"><video src="./videos/A_Midnight.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">System reveal</div>
+            <div class="spatial-headline">Spatial Ordering System</div>
+            <div class="spatial-copy">A network of autonomous agents navigating layered architecture. Orders are resolved through position, visibility, routing, and proximity across a compressed vertical city block.</div>
+          </div>
+        </section>
+        <section class="spatial-section split">
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Agent design</div>
+            <div class="spatial-headline">Drone beauty and identity</div>
+            <div class="spatial-copy">A modular delivery agent designed to carry, signal, and negotiate space. The drone acts as both courier and interface, giving the world a clear embodied actor.</div>
+          </div>
+          <div class="drone-bob-stage">
+            <img class="drone-bob" src="./images/SD_Drone_2.png" alt="Drone beauty render">
+          </div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">Construction</div>
+          <div class="spatial-headline">Materials, signage, and modular architecture</div>
+          <div class="spatial-grid-2">
+            <div class="spatial-media-sm"><img src="./images/SD_Process.png" alt="Process breakdown"></div>
+            <div class="spatial-media-sm"><img src="./images/SD_Process_Models.png" alt="Process models"></div>
+          </div>
+          <div class="spatial-copy">Materials, signage, and modular architecture build atmosphere without losing legibility.</div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">World scale</div>
+          <div class="spatial-headline">Drone instances and system density</div>
+          <div class="spatial-media-lg"><img src="./gifs/SD_Drone_Fly.gif" alt="Drone density gif"></div>
+          <div class="spatial-caption">Multiple agents operating together across the same environment.</div>
+        </section>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`,
+
+  'Naoko Shrine': `
+    <div class="detail-frame">
+      <div class="detail-top">
+        <div class="detail-hero"><img src="./images/SD_Naoko_Shrine.png" alt="Naoko Shrine volumetrics and lighting"></div>
+        <div class="detail-meta">
+          <div class="detail-kicker">Spatial Designs / Environment study</div>
+          <div class="detail-title">Naoko Shrine</div>
+          <div class="detail-copy">Atmospheric environment exploring perception, light, and spatial hierarchy in a forest shrine setting.</div>
+          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Environment art · Perceptual design · Lighting strategy</div>
+        </div>
+      </div>
+      <div class="spatial-case" style="margin-top:16px">
+        <section class="spatial-section split">
+          <div class="spatial-media-md"><img src="./gifs/SD_Naoko_Breakdown_Animation.gif" alt="Naoko Shrine perceptual breakdown animation"></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Perceptual breakdown</div>
+            <div class="spatial-headline">Perceptual Design Breakdown</div>
+            <div class="spatial-copy">Lighting, contrast, and framing guide attention through the environment. Visual hierarchy is established through depth, occlusion, and tonal separation.</div>
+            <div class="spatial-toolline">Focus: Visual hierarchy · Attention design · Lighting strategy · Spatial UX</div>
+          </div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">Material + foliage system</div>
+          <div class="spatial-headline">Tree unwrap and foliage optimization</div>
+          <div class="spatial-grid-2">
+            <div class="spatial-media-md"><img src="./images/SD_Tree_Unwrap.jpg" alt="Tree unwrap and UV layout"></div>
+            <div class="spatial-media-md"><img src="./images/SD_Naoko_Tree_Foliage.jpg" alt="Naoko Shrine vertex foliage breakdown"></div>
+          </div>
+          <div class="spatial-copy">UV packing and alpha masking optimized for dense foliage in a real-time environment, balancing visual fidelity with performance constraints.</div>
+        </section>
+        <section class="spatial-section split">
+          <div class="spatial-media-md"><img src="./images/SD_Naoko_Process.png" alt="Naoko Shrine process and shrine gate sequencing"></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Spatial sequencing</div>
+            <div class="spatial-headline">Shrine Gates as Perceptual Anchors</div>
+            <div class="spatial-copy">Shrine gates are staged throughout the bamboo garden as orienting thresholds within a dense and labyrinthian field. Repeated along the path, they provide structure without relying on explicit signage.</div>
+            <div class="spatial-copy">These gates frame transitions, create rhythm through recurrence, and reinforce that the garden is unfolding in deliberate layers.</div>
+          </div>
+        </section>
+        <section class="spatial-section threshold-space">
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Threshold space · Entry sequence</div>
+            <div class="spatial-headline">Black Wing Cave</div>
+            <div class="spatial-copy">Black Wing Cave works as the compressed threshold before the shrine. Dense forest gives way to a tighter passage of rock, water, and a decaying bridge.</div>
+            <div class="spatial-toolline">Focus: Spatial sequencing · Compression · Tonal transition · Environment pacing</div>
+          </div>
+          <div class="spatial-media-lg"><img src="./images/SD_Cave_Panel_1.jpg" alt="Black Wing Cave threshold entrance"></div>
+          <div class="spatial-grid-2">
+            <div class="spatial-media-md"><img src="./images/SD_Cave_3.jpg" alt="Black Wing Cave material decay detail"></div>
+            <div class="spatial-media-md"><img src="./images/SD_Cave_4.jpg" alt="Black Wing Cave erosion and artifact detail"></div>
+          </div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Massing + light study</div>
+            <div class="spatial-headline">Grayscale to final lighting structure</div>
+            <div class="compare-slider" data-compare>
+              <img src="./images/SD_Cave_2.jpg" alt="Black Wing Cave grayscale study">
+              <img src="./images/SD_Cave_1.jpg" alt="Black Wing Cave final lighting" class="compare-after">
+              <div class="compare-divider"></div>
+              <div class="compare-handle"></div>
+              <input type="range" min="0" max="100" value="50" class="compare-range" aria-label="Compare grayscale and final lighting">
+            </div>
+            <div class="spatial-copy">Composition locked early in grayscale to establish pathing and value hierarchy. Lighting and fog take over the final pass.</div>
+          </div>
+          <div class="spatial-media-lg"><video src="./videos/A_Naoko_Flyby.mp4" muted loop playsinline preload="metadata" autoplay></video></div>
+        </section>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`,
+
+  'To Hell With It': `
+    <div class="detail-frame">
+      <div class="spatial-case" style="margin-top:4px">
+        <section class="spatial-section">
+          <div class="spatial-media-lg"><img src="./images/SD_THWT_Sintral.jpg" alt="To Hell With It final hero image"></div>
+        </section>
+        <section class="spatial-section split">
+          <div class="spatial-media-md"><video src="./videos/SD_THWT_Hero_3.mp4?v=2" autoplay muted loop playsinline preload="metadata"></video></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Spatial Designs / Shipped game</div>
+            <div class="spatial-headline">To Hell With It</div>
+            <div class="spatial-copy">Shipped Steam game environment work focused on playable atmosphere, readable framing, and a broad range of authored assets. The spaces had to hold up as playable areas, communicate tone quickly, and support the game as a complete authored world.</div>
+            <div class="spatial-toolline">Environment art · Level mood · Asset production · Shipped game</div>
+          </div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-media-md"><img src="./images/SD_THWT_Steam.jpg?v=2" alt="To Hell With It Steam listing"></div>
+          <div class="spatial-caption">A shipped Steam title where environment art guided navigation, mood, and moment-to-moment interaction.</div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">Framing + final composition</div>
+          <div class="spatial-headline">Greybox to final atmosphere</div>
+          <div class="spatial-grid-2">
+            <div class="spatial-media-md"><img src="./images/SD_THWT_Grey_4.jpg" alt="To Hell With It greybox massing"></div>
+            <div class="spatial-media-md"><img src="./images/SD_THWT_Gazebo.jpg" alt="To Hell With It final environment frame"></div>
+          </div>
+          <div class="spatial-copy">The scene evolved from grayscale massing and framing studies into a finished environment with material contrast, lighting, and depth.</div>
+        </section>
+        <section class="spatial-section split">
+          <div class="spatial-grid-2">
+            <div class="spatial-media-sm"><img src="./images/Blood_Mud_2.jpg" alt="Mud and ground material study"></div>
+            <div class="spatial-media-sm"><img src="./images/SD_THWT_Play.jpg" alt="Hero environment focal study"></div>
+          </div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Materials + focal variation</div>
+            <div class="spatial-headline">Surface language and focal staging</div>
+            <div class="spatial-copy">Ground breakup, mud response, and focal staging softened transitions without losing primary composition.</div>
+          </div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">Asset range</div>
+          <div class="spatial-headline">Hard surface to organic production</div>
+          <div class="spatial-grid-2">
+            <div class="spatial-media-sm"><img src="./images/SD_THWT_Arch.jpg" alt="Asset production sheet one"></div>
+            <div class="spatial-media-sm"><img src="./images/SD_THWT_Arch_1.jpg" alt="Asset production sheet two"></div>
+          </div>
+          <div class="spatial-copy">The asset work ranges from architectural forms and structural pieces to natural and weathered elements, supporting a cohesive world rather than a single hero prop.</div>
+        </section>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`,
+
+  'Mixed Reality': `
+    <div class="detail-frame">
+      <div class="detail-top">
+        <div class="detail-hero"><img src="./images/X_Dim_Demo.jpg" alt="Mixed Reality hero"></div>
+        <div class="detail-meta">
+          <div class="detail-kicker">XR Systems / Mixed Reality Prototypes</div>
+          <div class="detail-title">Mixed Reality</div>
+          <div class="detail-copy">Dimming studies, object placement, and interface behavior tests for lightweight AR environments.</div>
+          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Passthrough MR · Dimming · Object Placement · Interaction Behavior</div>
+        </div>
+      </div>
+      <div style="margin-top:18px; width:100%; aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#000;">
+        <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQFyMGypw-De7zlWaWidYRtkHpePq41Ui5wZQJidwK0tOWun0NLTfi-99N8vmfDd4KC6DfxJz3brkAC/pubembed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="display:block;width:100%;height:100%;"></iframe>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`,
+
+  'About': `
+    <div class="detail-frame">
+      <div class="about-panel">
+        <div class="about-grid reveal-block">
+          <div>
+            <div class="about-title">Technical art for perceptual systems</div>
+            <div class="about-kicker">Former Meta Reality Labs technical artist working across XR systems, environment design, and real time prototyping.</div>
+            <div class="about-copy">My work sits between visual design and system behavior. I build real time experiences that help emerging technology become legible, testable, and emotionally readable, especially in augmented and mixed reality contexts where interaction, sensing, and visual feedback need to work together.</div>
+            <div class="about-copy">That includes perceptual interface studies, lightweight XR prototypes, environment art, cinematic visualization, and the translation of ambiguous research ideas into concrete visual systems. My background moves from architecture to game development to XR, which gives me a strong spatial lens and a practical production mindset.</div>
+          </div>
+          <div class="about-side">
+            <div class="about-side-label">Focus</div>
+            <div class="about-side-copy">XR interaction systems, perceptual feedback, real time world building, environment art, motion behavior, and visual prototyping.</div>
+          </div>
+        </div>
+
+        <div class="about-section reveal-block">
+          <div class="about-section-title">Highlights</div>
+          <div class="about-highlights">
+            <div class="about-highlight">
+              <div class="about-highlight-dot"></div>
+              <div class="about-highlight-copy">Former Technical Artist at Meta Reality Labs, contributing to eye tracking, dimming, display, and perceptual interface explorations.</div>
+            </div>
+            <div class="about-highlight">
+              <div class="about-highlight-dot"></div>
+              <div class="about-highlight-copy">Lead Environment Artist on a shipped Steam title, with environment, asset, and visual production experience across game-ready spaces.</div>
+            </div>
+            <div class="about-highlight">
+              <div class="about-highlight-dot"></div>
+              <div class="about-highlight-copy">Dual background in architecture and game development, with teaching experience in digital design, modeling, and visualization.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-two reveal-block">
+          <div class="about-card">
+            <div class="about-card-title">Tools</div>
+            <div class="about-card-copy">Unreal Engine, Unity, Blender, Substance Painter, Adobe Creative Suite, Figma, real time rendering workflows, procedural systems, and rapid prototyping pipelines.</div>
+          </div>
+          <div class="about-card">
+            <div class="about-card-title">Approach</div>
+            <div class="about-card-copy">I focus on clarity under constraint: building work that communicates behavior, hierarchy, and interaction cleanly, whether that is a wearable AR concept, a real time environment, or a visual system for research storytelling.</div>
+          </div>
+        </div>
+
+        <div class="about-contact reveal-block">
+          <div class="about-contact-card">
+            <div class="about-contact-label">Website</div>
+            <div class="about-contact-value"><a href="https://www.nicklowe3d.com" target="_blank" rel="noopener noreferrer">nicklowe3d.com</a></div>
+          </div>
+          <div class="about-contact-card">
+            <div class="about-contact-label">LinkedIn</div>
+            <div class="about-contact-value"><a href="https://www.linkedin.com/in/nicholas-lowe-2a400135/" target="_blank" rel="noopener noreferrer">Nicholas Lowe</a></div>
+          </div>
+          <div class="about-contact-card">
+            <div class="about-contact-label">GitHub</div>
+            <div class="about-contact-value"><a href="https://github.com/whiteylowe" target="_blank" rel="noopener noreferrer">whiteylowe</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`,
+
+  'Architecture': `
+    <div class="detail-frame">
+      <div class="spatial-case" style="margin-top:4px">
+        <section class="spatial-section reveal-block tone-panel tone-deep">
+          <div class="spatial-media-lg"><img src="./images/SD_A_Craft.jpg" alt="American Craft Museum visualization"></div>
+          <div class="arch-text-card">
+            <div class="detail-kicker">Spatial Designs / Architecture</div>
+            <div class="detail-title">Architecture</div>
+            <div class="detail-copy">A curated set of architectural visualization studies focused on atmosphere, hierarchy, daylight, and how large-scale design intent is communicated through a single image.</div>
+            <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Visualization · Daylight · Material hierarchy · Built form</div>
+          </div>
+        </section>
+        <section class="spatial-section split reveal-block tone-panel tone-soft">
+          <div class="spatial-media-md"><img src="./images/SD_A_Adidas.jpg" alt="Adidas Concept Tower visualization"></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Urban scale</div>
+            <div class="spatial-headline">Adidas Concept Tower</div>
+            <div class="spatial-copy">Skyline-driven concept study focused on vertical identity, massing clarity, and a strong read at distance.</div>
+            <div class="spatial-toolline">Commercial identity · Skyline presence · Massing hierarchy</div>
+          </div>
+        </section>
+        <section class="spatial-section split reveal-block tone-panel tone-blue">
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Interior atmosphere</div>
+            <div class="spatial-headline">Takanada Sushi</div>
+            <div class="spatial-copy">Warm material contrast, controlled highlights, and focused composition build a quieter and more intimate interior read.</div>
+            <div class="spatial-toolline">Interior mood · Material contrast · Focal control</div>
+          </div>
+          <div class="spatial-media-md"><img src="./images/SD_A_Takanada.jpg" alt="Takanada Sushi interior visualization"></div>
+        </section>
+        <section class="spatial-section split reveal-block tone-panel tone-soft">
+          <div class="spatial-media-md"><img src="./images/SD_A_Lincoln.jpg" alt="27 Lincoln exterior visualization"></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Mixed use frontage</div>
+            <div class="spatial-headline">27 Lincoln</div>
+            <div class="spatial-copy">Layered frontage, planted edges, and repeated structural rhythm support a clear urban elevation and a believable residential-commercial mix.</div>
+            <div class="spatial-toolline">Mixed use · Layering · Rhythm · Streetscape</div>
+          </div>
+        </section>
+        <section class="spatial-section reveal-block tone-panel tone-deep">
+          <div class="spatial-media-lg"><img src="./images/SD_A_Pool.jpg" alt="Nexus Aquatics interior visualization"></div>
+          <div class="arch-text-card">
+            <div class="spatial-eyebrow">Program + atmosphere</div>
+            <div class="spatial-headline">Pool Hall</div>
+            <div class="spatial-copy">A full-width interior moment where material reflectance, daylight behavior, and long-span geometry hold the entire composition together.</div>
+            <div class="spatial-toolline">Atmosphere · Daylight · Reflection · Structural clarity</div>
+          </div>
+        </section>
+        <section class="spatial-section split reveal-block tone-panel tone-blue">
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Technical environment</div>
+            <div class="spatial-headline">Lumen Labs</div>
+            <div class="spatial-copy">Daylight, structural rhythm, and controlled depth organize a more technical program without losing visual atmosphere.</div>
+            <div class="spatial-toolline">Daylight structure · Interior hierarchy · Technical environment</div>
+          </div>
+          <div class="spatial-media-md"><img src="./images/SD_A_Labs.jpg" alt="Lumen Labs atrium visualization"></div>
+        </section>
+        <section class="spatial-section split reveal-block tone-panel tone-soft">
+          <div class="spatial-media-md"><img src="./images/SD_A_Interior.jpg" alt="Interior visualization"></div>
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Interior systems</div>
+            <div class="spatial-headline">Interior Study</div>
+            <div class="spatial-copy">Precision environments are still framed through experience. Material hierarchy, human scale, and believable light keep the work from reading as sterile documentation.</div>
+            <div class="spatial-toolline">Human scale · Material hierarchy · Spatial clarity</div>
+          </div>
+        </section>
+        <section class="spatial-section split reveal-block tone-panel tone-blue">
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Construction documentation</div>
+            <div class="spatial-headline">Drawing sets + detailing</div>
+            <div class="spatial-copy">Technical documentation connecting design intent to build conditions through details, conventions, and production-ready communication.</div>
+            <div class="spatial-toolline">Documentation · Detailing · Technical communication</div>
+          </div>
+          <div class="spatial-media-md"><img src="./images/A_Drawing.jpg" alt="Construction documentation drawing"></div>
+        </section>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`
 };
 
-let scene, camera, renderer;
-let glasses, lensL, lensR;
-let targetRotX = 0, targetRotY = 0;
-let currentRotX = 0, currentRotY = 0;
-let W = window.innerWidth, H = window.innerHeight;
-let mouseNX = 0, mouseRawX = 0, mouseRawY = 0;
-let parallaxX = 0, parallaxY = 0;
-let targetParallaxX = 0, targetParallaxY = 0;
-let preloadedTextures = [];
-let currentProject = 0;
-let isTransitioning = false;
+const stage = document.getElementById('hero-stage');
+const heroVideos = document.getElementById('hero-videos');
+const heroGlasses = document.getElementById('hero-glasses');
+const heroFrame = document.getElementById('hero-frame');
+const navRow = document.getElementById('nav-row');
+const expandShell = document.getElementById('expand-shell');
+const expandCards = document.getElementById('expand-cards');
+const detailShell = document.getElementById('detail-shell');
+const heroEyebrow = document.getElementById('hero-eyebrow');
+const heroTitle = document.getElementById('hero-title');
+const heroSummary = document.getElementById('hero-summary');
+const heroMeta = document.getElementById('hero-meta');
+const expandTitle = document.getElementById('expand-title');
+const expandMeta = document.getElementById('expand-meta');
+const canvas = document.getElementById('swarm-canvas');
+const ctx = canvas.getContext('2d');
 
-const reticle = document.getElementById('reticle');
-const projectTag = document.getElementById('project-tag');
-const scanLine = document.getElementById('scan-line');
+let current = 0;
+let activeZone = -1;
+let hoverZone = -1;
+let idleVideo = null;
+let sequenceVideo = null;
+let glassesShouldReturn = false;
+let reticleEl = null;
+let reticleDark = false;
+let particles = [];
+const cursor = {x:0,y:0,px:0,py:0,speed:0,angle:0};
 
-function init() {
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(38, W / H, 0.01, 100);
-  camera.position.set(0, 0, 2.8);
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(W, H);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
-  document.getElementById('canvas-container').prepend(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-  const keyLight = new THREE.DirectionalLight(0xd0d8ff, 2.2);
-  keyLight.position.set(-2, 3, 4); scene.add(keyLight);
-  const fillLight = new THREE.DirectionalLight(0xffeedd, 0.6);
-  fillLight.position.set(3, -1, 2); scene.add(fillLight);
-  const rimLight = new THREE.DirectionalLight(0x8888ff, 0.8);
-  rimLight.position.set(0, -2, -3); scene.add(rimLight);
+const contactMenuWrap = document.getElementById('contact-menu-wrap');
+const contactTrigger = document.getElementById('contact-trigger');
+const audioToggle = document.getElementById('audio-toggle');
+const audioState = audioToggle?.querySelector('.audio-state');
+const pwLock = document.getElementById('pw-lock');
+const pwInput = document.getElementById('pw-input');
 
-  preloadAll(() => loadGlasses());
-  setupGrain();
-  setupEvents();
-  animate();
+let audioEnabled = true;
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let soundCtx = null;
+
+function ensureAudio(){
+  if(!soundCtx && AudioCtx) soundCtx = new AudioCtx();
+  if(soundCtx && soundCtx.state === 'suspended') soundCtx.resume();
+  return soundCtx;
 }
 
-function buildCanvasTexture(img, projectName) {
-  const pad = CONFIG.imageScale;
-  const size = 1024;
-  const c = document.createElement('canvas');
-  c.width = size; c.height = size;
-  const ctx = c.getContext('2d');
+function setAudioState(on){
+  audioEnabled = on;
+  if(!audioToggle || !audioState) return;
+  audioToggle.classList.toggle('is-off', !on);
+  audioToggle.setAttribute('aria-pressed', String(on));
+  audioState.textContent = on ? 'Audio On' : 'Audio Off';
+}
+setAudioState(true);
 
-  function draw(liveSource) {
-    const source = liveSource || img;
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, size, size);
-    const aspect = source.naturalWidth / source.naturalHeight || source.width / source.height || 1.6;
-    let drawW = aspect >= 1 ? size / pad : (size / pad) * aspect;
-    let drawH = aspect >= 1 ? drawW / aspect : size / pad;
-    const ox = (size - drawW) / 2;
-    const oy = (size - drawH) / 2;
-    ctx.drawImage(source, ox, oy, drawW, drawH);
+function playClick(level = 1){
+  if(!audioEnabled) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
 
-    // Holographic label -- 3x bigger, glowing
-    const labelY = oy + drawH + 52;
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.letterSpacing = '6px';
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
 
-    // Glow layers
-    ctx.font = '300 32px "Inter", sans-serif';
-    ctx.fillStyle = 'rgba(140,200,255,0.12)';
-    for (let g = 8; g >= 1; g--) {
-      ctx.shadowColor = 'rgba(140,200,255,0.4)';
-      ctx.shadowBlur = g * 6;
-      ctx.fillText(projectName.toUpperCase(), size / 2, labelY);
-    }
+  osc.type = 'sine';
+  const base = level === 1 ? 320 : 420;
+  osc.frequency.setValueAtTime(base, now);
+  osc.frequency.exponentialRampToValueAtTime(base * 0.7, now + 0.06);
 
-    // Main text
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = 'rgba(180,220,255,0.75)';
-    ctx.fillText(projectName.toUpperCase(), size / 2, labelY);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(level === 1 ? 0.018 : 0.028, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
 
-    // Thin rule above
-    ctx.strokeStyle = 'rgba(140,200,255,0.2)';
-    ctx.lineWidth = 0.5;
-    ctx.shadowBlur = 4;
-    ctx.shadowColor = 'rgba(140,200,255,0.4)';
-    ctx.beginPath();
-    ctx.moveTo(ox + drawW * 0.15, oy + drawH + 20);
-    ctx.lineTo(ox + drawW * 0.85, oy + drawH + 20);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  draw();
-  const texture = new THREE.CanvasTexture(c);
-  texture.encoding = THREE.sRGBEncoding;
-  texture.flipY = false;
-
-  // For GIFs -- use a live DOM img so browser handles animation
-  if (img.src && img.src.toLowerCase().endsWith('.gif')) {
-    const liveImg = document.createElement('img');
-    liveImg.style.cssText = 'position:fixed;opacity:0;pointer-events:none;width:1px;height:1px;';
-    liveImg.src = img.src;
-    document.body.appendChild(liveImg);
-    setInterval(() => {
-      draw(liveImg);
-      texture.needsUpdate = true;
-    }, 50);
-  }
-
-  return texture;
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.09);
 }
 
-function buildVideoTexture(project) {
-  const video = document.createElement('video');
-  video.src = project.image;
-  video.loop = true;
-  video.muted = true;
-  video.playsInline = true;
-  video.autoplay = true;
-  video.style.cssText = 'position:fixed;opacity:0;pointer-events:none;width:1px;height:1px;';
-  document.body.appendChild(video);
-  video.play();
+function playError(){
+  if(!audioEnabled) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
 
-  // Overlay the label on a canvas on top of the video texture
-  const size = 1024;
-  const c = document.createElement('canvas');
-  c.width = size; c.height = size;
-  const ctx = c.getContext('2d');
-  const pad = CONFIG.imageScale;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
 
-  const texture = new THREE.CanvasTexture(c);
-  texture.encoding = THREE.sRGBEncoding;
-  texture.flipY = false;
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(220, now);
+  osc.frequency.linearRampToValueAtTime(180, now + 0.12);
 
-  function drawFrame() {
-    if (video.readyState >= 2) {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, size, size);
-      const aspect = video.videoWidth / video.videoHeight || 1.77;
-      let drawW = aspect >= 1 ? size / pad : (size / pad) * aspect;
-      let drawH = aspect >= 1 ? drawW / aspect : size / pad;
-      const ox = (size - drawW) / 2;
-      const oy = (size - drawH) / 2;
-      ctx.drawImage(video, ox, oy, drawW, drawH);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.024, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
 
-      // Holographic label
-      const labelY = oy + drawH + 100;
-      ctx.save();
-      ctx.textAlign = 'center';
-      ctx.font = '300 64px "Inter", sans-serif';
-      ctx.shadowColor = 'rgba(140,200,255,0.4)';
-      ctx.shadowBlur = 20;
-      ctx.fillStyle = 'rgba(180,220,255,0.75)';
-      ctx.fillText(project.name.toUpperCase(), size / 2, labelY);
-      ctx.strokeStyle = 'rgba(140,200,255,0.2)';
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(ox + drawW * 0.15, oy + drawH + 20);
-      ctx.lineTo(ox + drawW * 0.85, oy + drawH + 20);
-      ctx.stroke();
-      ctx.restore();
-      texture.needsUpdate = true;
-    }
-    requestAnimationFrame(drawFrame);
-  }
-  drawFrame();
-  return texture;
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.15);
 }
 
-function preloadAll(callback) {
-  let total = PROJECTS.length;
-  let loaded = 0;
+audioToggle?.addEventListener('click', ()=>{
+  const next = !audioEnabled;
+  setAudioState(next);
+  if(next) playClick(1);
+});
 
-  PROJECTS.forEach((p, i) => {
-    if (p.type === 'video') {
-      // Don't wait for video -- set placeholder and count as loaded
-      preloadedTextures[i] = null;
-      if (++loaded === total) callback();
-    } else {
-      const img = new Image();
-      img.onload = () => {
-        preloadedTextures[i] = buildCanvasTexture(img, p.name);
-        if (++loaded === total) callback();
-      };
-      img.onerror = () => {
-        preloadedTextures[i] = null;
-        if (++loaded === total) callback();
-      };
-      img.src = p.image;
-    }
+contactTrigger?.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  const open = !contactMenuWrap.classList.contains('open');
+  contactMenuWrap.classList.toggle('open', open);
+  contactTrigger.setAttribute('aria-expanded', String(open));
+  playClick(2);
+});
+
+document.addEventListener('click', (e)=>{
+  if(contactMenuWrap && !contactMenuWrap.contains(e.target)){
+    contactMenuWrap.classList.remove('open');
+    contactTrigger?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+pwLock?.addEventListener('click', ()=>{
+  pwLock.classList.remove('shake');
+  void pwLock.offsetWidth;
+  pwLock.classList.add('shake');
+  playError();
+});
+
+pwInput?.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){
+    pwLock?.classList.remove('shake');
+    void pwLock?.offsetWidth;
+    pwLock?.classList.add('shake');
+    playError();
+  }
+});
+
+function hideGlassesForAbout(index){
+  if(!heroGlasses) return;
+  heroGlasses.classList.remove('glasses-return');
+  if(index === 3){
+    heroGlasses.classList.add('glasses-hidden');
+    glassesShouldReturn = true;
+  } else {
+    heroGlasses.classList.remove('glasses-hidden');
+    glassesShouldReturn = false;
+  }
+}
+
+function restoreGlassesOnIdle(){
+  if(!heroGlasses || !glassesShouldReturn) return;
+  heroGlasses.classList.remove('glasses-return');
+  heroGlasses.classList.remove('glasses-hidden');
+  void heroGlasses.offsetWidth;
+  heroGlasses.classList.add('glasses-return');
+  glassesShouldReturn = false;
+}
+
+function flashHeroFrame(){
+  if(!heroFrame) return;
+  heroFrame.classList.remove('frame-flash');
+  void heroFrame.offsetWidth;
+  heroFrame.classList.add('frame-flash');
+}
+
+function makeMedia(card, autoplay = true){
+  if(card.mediaType === 'video'){
+    return `<video ${autoplay ? 'autoplay' : ''} muted loop playsinline preload="metadata"><source src="${card.media}" type="video/mp4"></video>`;
+  }
+  return `<img src="${card.media}" alt="${card.title}">`;
+}
+
+function ensureHeroVideos(){
+  heroVideos.innerHTML = '';
+  const idle = document.createElement('video');
+  idle.className = 'hero-video active';
+  idle.id = 'hero-video-idle';
+  idle.muted = true; idle.loop = true; idle.playsInline = true; idle.preload = 'auto';
+  idle.src = './videos/Hero_Back_Idle.mp4';
+  heroVideos.appendChild(idle);
+  idleVideo = idle;
+
+  PROJECTS.forEach((project, index) => {
+    const video = document.createElement('video');
+    video.className = 'hero-video';
+    video.id = `hero-video-${index}`;
+    video.muted = true;
+    video.loop = false;
+    video.playsInline = true;
+    video.preload = 'auto';
+    video.src = project.heroVideo;
+    video.addEventListener('ended', returnToIdle);
+    heroVideos.appendChild(video);
+  });
+
+  idleVideo.play().catch(()=>{});
+}
+
+function returnToIdle(){
+  document.querySelectorAll('.hero-video').forEach(v => {
+    if(v !== idleVideo){ v.pause(); v.classList.remove('active'); }
+  });
+  sequenceVideo = null;
+  if(idleVideo){
+    idleVideo.classList.add('active');
+    idleVideo.loop = true;
+    idleVideo.play().catch(()=>{});
+  }
+  restoreGlassesOnIdle();
+}
+
+function playHeroSequence(index){
+  const next = document.getElementById(`hero-video-${index}`);
+  if(!next) return;
+  if(idleVideo){ idleVideo.pause(); idleVideo.classList.remove('active'); }
+  document.querySelectorAll('.hero-video').forEach(v => { if(v !== next && v !== idleVideo){ v.pause(); v.classList.remove('active'); } });
+  sequenceVideo = next;
+  next.currentTime = 0;
+  next.loop = false;
+  next.classList.add('active');
+  next.play().catch(()=>{});
+}
+
+function renderCards(target, cards, clickableDetail = false){
+  target.innerHTML = cards.map(card => {
+    const inner = `
+      <article class="card ${clickableDetail ? 'clickable' : ''}" data-card-title="${card.title}">
+        <div class="media">${makeMedia(card)}</div>
+        <div class="card-copy">
+          <div class="card-title mono">${card.title}</div>
+          <div class="card-desc">${card.desc}</div>
+          <div class="card-link mono">${card.link ? 'Open project' : clickableDetail ? 'VIEW PROJECT' : 'Curated preview'}</div>
+        </div>
+      </article>`;
+    return card.link ? `<a href="${card.link}">${inner}</a>` : inner;
+  }).join('');
+}
+
+function easeInOutCubic(t){
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function smoothScrollToY(targetY, duration = 1280){
+  const startY = window.scrollY || window.pageYOffset;
+  const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const endY = Math.max(0, Math.min(targetY, maxY));
+  const delta = endY - startY;
+  if(Math.abs(delta) < 2){
+    window.scrollTo(0, endY);
+    return Promise.resolve();
+  }
+  return new Promise(resolve => {
+    const start = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = easeInOutCubic(t);
+      window.scrollTo(0, startY + delta * eased);
+      if(t < 1) requestAnimationFrame(step);
+      else resolve();
+    };
+    requestAnimationFrame(step);
   });
 }
 
-function loadGlasses() {
-  const loader = new THREE.GLTFLoader();
-  loader.load(CONFIG.glbPath,
-    (gltf) => {
-      glasses = gltf.scene;
-      const box = new THREE.Box3().setFromObject(glasses);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      const scale = 1.4 / Math.max(size.x, size.y, size.z);
-      glasses.position.sub(center.multiplyScalar(scale));
-      glasses.scale.setScalar(scale);
-
-      lensL = glasses.getObjectByName(CONFIG.lensLeft);
-      lensR = glasses.getObjectByName(CONFIG.lensRight);
-      applyTexture(lensL, preloadedTextures[0] || null, 1.0);
-      applyTexture(lensR, preloadedTextures[0] || null, 1.0);
-
-      glasses.traverse((child) => {
-        if (child.isMesh && child.name !== CONFIG.lensLeft && child.name !== CONFIG.lensRight) {
-          child.material = new THREE.MeshStandardMaterial({ color: 0x111114, metalness: 0.92, roughness: 0.22 });
-        }
-      });
-
-      scene.add(glasses);
-      document.getElementById('loading').style.display = 'none';
-      scanLine.style.opacity = '1';
-      scanLine.textContent = PROJECTS[0].name;
-    },
-    (xhr) => { document.getElementById('loading').textContent = `Loading ${Math.round(xhr.loaded / xhr.total * 100)}%`; },
-    (err) => { console.error(err); document.getElementById('loading').textContent = 'Error loading model'; }
-  );
+function scrollCategoryIntoPlace(){
+  const rect = expandShell.getBoundingClientRect();
+  const desiredBottom = window.innerHeight - 18;
+  const targetTop = window.scrollY + rect.bottom - desiredBottom;
+  return smoothScrollToY(targetTop, 1320);
 }
 
-function applyTexture(mesh, texture, opacity) {
-  if (!mesh) return;
-  mesh.material = new THREE.MeshStandardMaterial({
-    map: texture,
-    transparent: true,
-    opacity: opacity !== undefined ? opacity : 1.0,
-    roughness: 0.08,
-    metalness: 0.3,
-    side: THREE.FrontSide,
+function scrollDetailIntoPlace(){
+  const headerOffset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 112;
+  const targetTop = window.scrollY + expandShell.getBoundingClientRect().top - headerOffset - 12;
+  return smoothScrollToY(targetTop, 1360);
+}
+
+function openDetail(card){
+  const html = SPATIAL_DETAIL[card.title];
+  if(!html) return;
+  detailShell.innerHTML = html;
+  detailShell.classList.add('open');
+  // init compare sliders
+  detailShell.querySelectorAll('[data-compare]').forEach(slider => {
+    const range = slider.querySelector('.compare-range');
+    const after = slider.querySelector('.compare-after');
+    const divider = slider.querySelector('.compare-divider');
+    const handle = slider.querySelector('.compare-handle');
+    if(!range||!after||!divider||!handle) return;
+    const update = () => {
+      const v = Number(range.value)||50;
+      after.style.clipPath = `inset(0 0 0 ${v}%)`;
+      divider.style.left = `${v}%`;
+      handle.style.left = `${v}%`;
+    };
+    range.addEventListener('input', update); update();
+  });
+  initRevealBlocks(detailShell);
+  detailShell.querySelector('.detail-close')?.addEventListener('click', () => {
+    detailShell.classList.remove('open');
+    detailShell.innerHTML = '';
+  });
+  requestAnimationFrame(() => {
+    scrollDetailIntoPlace();
   });
 }
 
-function crossfadeTo(index) {
-  if (isTransitioning || index === currentProject) return;
-  isTransitioning = true;
-
-  // Update label immediately
-  projectTag.textContent = PROJECTS[index].name;
-  scanLine.textContent = PROJECTS[index].name;
-
-  let opacity = 1.0;
-  const fadeOut = setInterval(() => {
-    opacity = Math.max(0, opacity - 0.08);
-    if (lensL && lensL.material) lensL.material.opacity = opacity;
-    if (lensR && lensR.material) lensR.material.opacity = opacity;
-    if (opacity <= 0) {
-      clearInterval(fadeOut);
-      currentProject = index;
-      const p = PROJECTS[index];
-      if (p.type === 'video' && !preloadedTextures[index]) {
-        preloadedTextures[index] = buildVideoTexture(p);
+function initRevealBlocks(scope){
+  const blocks = Array.from(scope.querySelectorAll('.reveal-block'));
+  if(!blocks.length) return;
+  if(!('IntersectionObserver' in window)){
+    blocks.forEach(block => block.classList.add('is-visible'));
+    return;
+  }
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
       }
-      applyTexture(lensL, preloadedTextures[index], 0);
-      applyTexture(lensR, preloadedTextures[index], 0);
-      let op2 = 0;
-      const fadeIn = setInterval(() => {
-        op2 = Math.min(1.0, op2 + 0.05);
-        if (lensL && lensL.material) lensL.material.opacity = op2;
-        if (lensR && lensR.material) lensR.material.opacity = op2;
-        if (op2 >= 1.0) { clearInterval(fadeIn); isTransitioning = false; }
-      }, 16);
-    }
-  }, 16);
-}
-
-function setupEvents() {
-  window.addEventListener('mousemove', (e) => {
-    mouseRawX = e.clientX;
-    mouseRawY = e.clientY;
-    mouseNX = e.clientX / W;
-
-    // Reticle position
-    reticle.style.left = e.clientX + 'px';
-    reticle.style.top = e.clientY + 'px';
-    projectTag.style.left = e.clientX + 'px';
-    projectTag.style.top = e.clientY + 'px';
-
-    const nx = (e.clientX / W) * 2 - 1;
-    const ny = (e.clientY / H) * 2 - 1;
-    targetRotY = -nx * (CONFIG.rotationY * Math.PI / 180);
-    targetRotX = ny * (CONFIG.rotationX * Math.PI / 180);
-
-    // Parallax -- subtle offset opposite to rotation
-    targetParallaxX = -nx * CONFIG.parallaxStrength;
-    targetParallaxY = ny * CONFIG.parallaxStrength;
-
-    // Zone detection
-    const zone = Math.min(Math.floor(mouseNX * PROJECTS.length), PROJECTS.length - 1);
-    if (zone !== currentProject) crossfadeTo(zone);
-
-    // Show project tag near cursor
-    projectTag.textContent = PROJECTS[zone].name;
-    projectTag.style.opacity = '1';
-  });
-
-  window.addEventListener('resize', () => {
-    W = window.innerWidth; H = window.innerHeight;
-    camera.aspect = W / H; camera.updateProjectionMatrix(); renderer.setSize(W, H);
+    });
+  }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  blocks.forEach((block, index)=>{
+    block.style.transitionDelay = `${Math.min(index * 70, 280)}ms`;
+    observer.observe(block);
   });
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-  currentRotX += (targetRotX - currentRotX) * 0.05;
-  currentRotY += (targetRotY - currentRotY) * 0.05;
-  parallaxX += (targetParallaxX - parallaxX) * 0.04;
-  parallaxY += (targetParallaxY - parallaxY) * 0.04;
+function bindSpatialDetails(){
+  expandCards.querySelectorAll('.card.clickable').forEach(cardEl => {
+    cardEl.addEventListener('click', () => {
+      playClick(2);
+      const title = cardEl.dataset.cardTitle;
+      const card = PROJECTS[current].cards.find(c => c.title === title);
+      if(card) openDetail(card);
+    });
+  });
+}
 
-  if (glasses) {
-    glasses.rotation.x = currentRotX;
-    glasses.rotation.y = -currentRotY;
+function renderProject(index, {openPanel = false, source = 'nav'} = {}){
+  current = index;
+  const p = PROJECTS[index];
+
+  heroEyebrow.textContent = p.eyebrow;
+  heroTitle.textContent = p.title;
+  heroSummary.textContent = p.summary;
+  heroMeta.innerHTML = p.meta.split(' • ').map(item => `<span>${item}</span>`).join('');
+
+  expandTitle.textContent = p.name;
+  expandMeta.textContent = p.sectionMeta;
+
+  renderCards(expandCards, p.cards, p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about');
+
+  expandCards.classList.remove('single-card', 'single-large');
+
+  if(p.slug === 'thesis' || p.slug === 'about'){
+    expandCards.classList.add('single-large');
+  } else if(p.cards.length === 1){
+    expandCards.classList.add('single-card');
   }
 
-  // Apply parallax to lens texture offset -- subtle, centered around 0.5
-  [lensL, lensR].forEach(mesh => {
-    if (mesh && mesh.material && mesh.material.map) {
-      mesh.material.map.offset.set(parallaxX, parallaxY);
-      mesh.material.map.needsUpdate = true;
-    }
-  });
+  detailShell.classList.remove('open');
+  detailShell.innerHTML = '';
 
-  renderer.render(scene, camera);
-}
+  [...navRow.children].forEach((btn, i) =>
+    btn.classList.toggle('active', i === index)
+  );
 
-function setupGrain() {
-  const canvas = document.getElementById('grain');
-  const ctx = canvas.getContext('2d');
-  function drawGrain() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const imgData = ctx.createImageData(canvas.width, canvas.height);
-    const data = imgData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const v = Math.random() * 255;
-      data[i] = data[i+1] = data[i+2] = v; data[i+3] = 255;
-    }
-    ctx.putImageData(imgData, 0, 0);
-    setTimeout(drawGrain, 80);
+  document.querySelectorAll('.mask-zone').forEach((zone, i) =>
+    zone.classList.toggle('active', i === index && source === 'mask')
+  );
+
+  if(openPanel){
+    expandShell.classList.add('open');
+    requestAnimationFrame(() => {
+      scrollCategoryIntoPlace();
+    });
+  } else {
+    expandShell.classList.remove('open');
   }
-  drawGrain();
+
+  if(p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about'){
+    bindSpatialDetails();
+  }
 }
 
-init();
+PROJECTS.forEach((project, index) => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn mono'; btn.type = 'button'; btn.textContent = project.name;
+  btn.addEventListener('click', () => { playClick(2); activeZone = index; renderProject(index, {openPanel:true, source:'nav'}); playHeroSequence(index); hideGlassesForAbout(index); flashHeroFrame(); });
+  navRow.appendChild(btn);
+});
+
+document.querySelectorAll('.mask-zone').forEach(zone => {
+  zone.addEventListener('click', () => {
+    playClick(2);
+    const index = Number(zone.dataset.zone);
+    activeZone = index;
+    renderProject(index, {openPanel:true, source:'mask'});
+    playHeroSequence(index);
+    hideGlassesForAbout(index);
+    flashHeroFrame();
+  });
+});
+
+
+stage.addEventListener('click', (e) => {
+  if(
+    e.target.closest('.mask-zone') ||
+    e.target.closest('.nav-btn') ||
+    e.target.closest('.card') ||
+    e.target.closest('.contact-trigger') ||
+    e.target.closest('.audio-toggle')
+  ) return;
+  if(e.target.closest('#hero-stage')) playClick(1);
+});
+
+function stageRect(){ return stage.getBoundingClientRect(); }
+function resizeCanvas(){ const r=stageRect(); canvas.width=Math.max(1,Math.round(r.width)); canvas.height=Math.max(1,Math.round(r.height)); }
+function zoneCenterPx(zone){
+  const map={1:'mz-spatial',3:'mz-about',0:'mz-xr',2:'mz-thesis'};
+  const el=document.getElementById(map[zone]);
+  const r=stageRect();
+  const er=el.getBoundingClientRect();
+  return {x:er.left-r.left+er.width/2,y:er.top-r.top+er.height/2,w:er.width,h:er.height};
+}
+
+// Click attraction points
+const clickPoints = [];
+let clickBoostGlobal = 0;
+function addClickPoint(x, y){
+  clickBoostGlobal = 1.0;
+  clickPoints.push({x, y, t: performance.now()});
+  if(clickPoints.length > 8) clickPoints.shift();
+}
+
+function targetFor(zone, i, t){
+  const c = zoneCenterPx(zone);
+  const pct = i / particles.length;
+  // Zone 1: Spatial Designs — rotating diamond outline, slow Y-axis orbit
+  if(zone === 1){
+    const cosOrbit = Math.cos(t * 0.06);
+    const r = 54;
+    const edge = Math.floor(pct * 4), ep = (pct * 4) % 1;
+    let px, py;
+    if(edge===0){px=-r+ep*2*r; py=r-ep*2*r;}
+    else if(edge===1){px=r-ep*2*r; py=-r+ep*2*r;}
+    else if(edge===2){px=-r+ep*r; py=-(r-ep*r);}
+    else{px=ep*r; py=-r*(1-ep);}
+    return {x: c.x + px*cosOrbit, y: c.y + py};
+  }
+  // Zone 3: About — torus/donut, particles flow around exterior
+  if(zone === 3){
+    const torusR=38, tubeR=10;
+    const theta = pct * Math.PI * 2+ t * 0.5;
+    const phi = (i * 2.618) % (Math.PI * 2);
+    return {x: c.x + (torusR + tubeR*Math.cos(phi))*Math.cos(theta),
+            y: c.y + tubeR*Math.sin(phi)};
+  }
+  // Zone 0: XR — skinny-bottom cylinder, particles flow bottom to top
+  if(zone === 0){
+    const hFrac = pct;
+    const cylH = 80, topR = 30, botR = 8;
+    const rad = botR + (topR-botR)*hFrac;
+    const angle = (i*2.618)%(Math.PI*2) + t*0.35;
+    return {x: c.x + Math.cos(angle)*rad, y: c.y + (cylH*0.5) - hFrac*cylH};
+  }
+  // Zone 2: Thesis — flowing sine wave, travels with individual offsets
+  if(zone === 2){
+    const span = 160;
+    const xPos = (pct - 0.5)*span;
+    const waveY = Math.sin(xPos*0.055 + t*1.1 + i*0.08) * 22;
+    return {x: c.x + xPos, y: c.y + waveY};
+  }
+  return {x: cursor.x, y: cursor.y};
+}
+
+function initBoids(){
+  resizeCanvas();
+  particles = [];
+  cursor.x = canvas.width*0.5; cursor.y = canvas.height*0.5;
+  cursor.px = cursor.x; cursor.py = cursor.y;
+  for(let i=0; i<100; i++){
+    const angle = Math.random()*Math.PI*2;
+    const baseSpd = 0.8 + Math.random()*1.8;
+    particles.push({
+      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+      vx: Math.cos(angle)*baseSpd, vy: Math.sin(angle)*baseSpd,
+      size: 2.0 + Math.random()*1.1,
+      maxSpeed: baseSpd, baseMax: baseSpd,
+      hueOn: Math.random() < 0.10,
+      isWhite: i % 2 === 0,
+      wanderAngle: Math.random() * Math.PI * 2,
+      wanderRate: 0.008 + Math.random() * 0.018
+    });
+  }
+}
+
+function animateBoids(){
+  requestAnimationFrame(animateBoids);
+  const t = performance.now()*0.001;
+  const now = performance.now();
+  const active = activeZone >= 0 ? activeZone : hoverZone;
+
+  clickBoostGlobal = Math.max(0, clickBoostGlobal - 0.012);
+  while(clickPoints.length && now - clickPoints[0].t > 4000) clickPoints.shift();
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for(let i=0; i<particles.length; i++){
+    const b = particles[i];
+    let sepX=0, sepY=0, aliX=0, aliY=0, cohX=0, cohY=0, n=0;
+    for(let j=0; j<particles.length; j++){
+      if(i===j) continue;
+      const o=particles[j], dx=o.x-b.x, dy=o.y-b.y, d2=dx*dx+dy*dy;
+      if(d2<2500){
+        n++; aliX+=o.vx; aliY+=o.vy; cohX+=o.x; cohY+=o.y;
+        if(d2<700&&d2>0){const inv=1/(Math.sqrt(d2)+0.1); sepX-=dx*inv*0.001; sepY-=dy*inv*0.001;}
+      }
+    }
+    let steerX=0, steerY=0;
+    if(n>0){
+      const aMag=Math.hypot(aliX,aliY)||1;
+      steerX+=(aliX/aMag*b.maxSpeed-b.vx)*0.001;
+      steerY+=(aliY/aMag*b.maxSpeed-b.vy)*0.000;
+      steerX+=((cohX/n)-b.x)*0.00000;
+      steerY+=((cohY/n)-b.y)*0.00001;
+    }
+    steerX+=sepX; steerY+=sepY;
+
+    let tx=cursor.x, ty=cursor.y;
+    let attract = 0.002 + Math.min(0.010, cursor.speed/1200);
+    if(active>=0){
+      const tt=targetFor(active,i,t); tx=tt.x; ty=tt.y;
+      const d=Math.hypot(tx-b.x,ty-b.y);
+      if(d < 10){
+        b.wanderAngle += (Math.random()-0.5) * 0.8;
+        attract = 0.001;
+        b.maxSpeed = b.baseMax * 0.1;
+      } else {
+        attract = d>40 ? 0.022 : 0.014;
+        b.maxSpeed = b.baseMax;
+      }
+    } else {
+      b.maxSpeed = b.baseMax;
+    }
+    steerX+=(tx-b.x)*attract; steerY+=(ty-b.y)*attract;
+
+    // Click boost — steering only, never overwrites maxSpeed
+    if(clickPoints.length>0){
+      for(const cp of clickPoints){
+        const age=(now-cp.t)/4000;
+        const str=(1-age)*0.032;
+        steerX+=(cp.x-b.x)*str; steerY+=(cp.y-b.y)*str;
+      }
+    }
+
+    // Wander applied BEFORE velocity update
+    b.wanderAngle += (Math.random() - 0.5) * 0.22 + b.wanderRate;
+    steerX += Math.cos(b.wanderAngle) * 0.12;
+    steerY += Math.sin(b.wanderAngle) * 0.12;
+
+    b.vx+=steerX; b.vy+=steerY;
+    const sp=Math.hypot(b.vx,b.vy)||1;
+    if(sp>b.maxSpeed){b.vx=b.vx/sp*b.maxSpeed; b.vy=b.vy/sp*b.maxSpeed;}
+    else if(sp<0.4){b.vx=b.vx/sp*0.4; b.vy=b.vy/sp*0.4;}
+
+    b.x+=b.vx; b.y+=b.vy;
+    if(b.x<-14) b.x=canvas.width+14; else if(b.x>canvas.width+14) b.x=-14;
+    if(b.y<-14) b.y=canvas.height+14; else if(b.y>canvas.height+14) b.y=-14;
+
+    const inZone=active>=0, brighten=inZone&&b.hueOn;
+    ctx.globalAlpha = inZone ? 0.35 : 0.65;
+    ctx.shadowBlur = brighten ? 5 : 0;
+    ctx.shadowColor = brighten ? 'rgba(255,255,255,0.28)' : 'transparent';
+    ctx.fillStyle = b.isWhite ? 'rgba(240,245,255,0.90)' : 'rgba(16,16,20,0.90)';
+    ctx.beginPath(); ctx.arc(b.x, b.y, b.size, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1; ctx.shadowBlur=0;
+}
+
+function ensureReticle(){
+  if(document.getElementById('reticle')) return;
+  reticleEl = document.createElement('div');
+  reticleEl.id = 'reticle';
+  document.body.appendChild(reticleEl);
+}
+
+const probeCanvas = document.createElement('canvas'); probeCanvas.width = 1; probeCanvas.height = 1; const probeCtx = probeCanvas.getContext('2d', {willReadFrequently:true});
+function sampleBrightness(){
+  const video = sequenceVideo && sequenceVideo.classList.contains('active') ? sequenceVideo : idleVideo;
+  if(!video || video.readyState < 2) return 0.25;
+  const r = stageRect();
+  let x = Math.max(0, Math.min(video.videoWidth - 1, Math.round((cursor.x / Math.max(1,r.width)) * video.videoWidth)));
+  let y = Math.max(0, Math.min(video.videoHeight - 1, Math.round((cursor.y / Math.max(1,r.height)) * video.videoHeight)));
+  try{
+    probeCtx.drawImage(video, x, y, 1, 1, 0, 0, 1, 1);
+    const d = probeCtx.getImageData(0,0,1,1).data;
+    return (0.2126*d[0] + 0.7152*d[1] + 0.0722*d[2]) / 255;
+  }catch(e){ return 0.25; }
+}
+
+function updateReticle(e){
+  if(!reticleEl) return;
+  reticleEl.style.left = e.clientX + 'px'; reticleEl.style.top = e.clientY + 'px';
+  const dx=e.clientX-cursor.px, dy=e.clientY-cursor.py;
+  cursor.angle = Math.atan2(dy,dx||0);
+  const bright = sampleBrightness() > 0.5;
+  reticleDark = bright;
+  reticleEl.classList.toggle('dark', reticleDark);
+  spawnTrail(e.clientX, e.clientY);
+}
+
+function spawnTrail(x,y){
+  const trail = document.createElement('div');
+  trail.className = 'cursor-trail' + (reticleDark ? ' dark' : '');
+  const s = 4 + Math.random() * 4;
+  trail.style.width = s + 'px';
+  trail.style.height = s + 'px';
+  trail.style.left = (x + (Math.random()-0.5)*2) + 'px';
+  trail.style.top  = (y + (Math.random()-0.5)*2) + 'px';
+  trail.style.opacity = (0.4 + Math.random()*0.4) + '';
+  document.body.appendChild(trail);
+  setTimeout(()=>trail.remove(), 2000);
+}
+
+function bindMaskZones(){
+  document.querySelectorAll('.mask-zone').forEach(el => {
+    const zone = Number(el.dataset.zone);
+    el.addEventListener('mouseenter', ()=>{ hoverZone = zone; document.querySelectorAll('.mask-zone').forEach(z=>z.classList.remove('active')); el.classList.add('active'); });
+    el.addEventListener('mouseleave', ()=>{ hoverZone = -1; if(activeZone !== zone) el.classList.remove('active'); });
+    el.addEventListener('click', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      activeZone = zone;
+      renderProject(zone, {openPanel: true, source:'mask'});
+      playHeroSequence(zone);
+      hideGlassesForAbout(zone);
+    });
+  });
+}
+
+// Ambient glint pulser — one zone at a time, 3-6s downtime
+(function glintPulser(){
+  const zones = document.querySelectorAll('.mask-zone');
+  function pulse(){
+    const delay = 3000 + Math.random()*3000;
+    setTimeout(()=>{
+      const eligible = [...zones].filter(z => !z.matches(':hover') && !z.classList.contains('active'));
+      if(eligible.length){
+        const el = eligible[Math.floor(Math.random()*eligible.length)];
+        const glint = el.querySelector('.zone-glint');
+        if(glint){
+          glint.classList.remove('ambient-pulse');
+          void glint.offsetWidth; // reflow to restart
+          glint.classList.add('ambient-pulse');
+          glint.addEventListener('animationend', ()=>glint.classList.remove('ambient-pulse'), {once:true});
+        }
+      }
+      pulse();
+    }, delay);
+  }
+  pulse();
+})();
+
+// Click bracket spawner (on hero stage)
+function spawnClickBracket(cx, cy){
+  const b = document.createElement('div');
+  b.className = 'click-bracket';
+  b.innerHTML = '<span class="cb-tr"></span><span class="cb-bl"></span>';
+  b.style.left = cx + 'px'; b.style.top = cy + 'px';
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(), 1600);
+}
+
+document.addEventListener('click', (e)=>{
+  const inMask = e.target.closest && e.target.closest('.mask-zone');
+  const inNav = e.target.closest && e.target.closest('.nav-row');
+  const inPanel = e.target.closest && e.target.closest('.expand-frame');
+  // Spawn click bracket and boost particles on hero stage clicks
+  const inStage = e.target.closest && e.target.closest('#hero-stage');
+  if(inStage){
+    spawnClickBracket(e.clientX, e.clientY);
+    const r = stageRect();
+    addClickPoint(e.clientX - r.left, e.clientY - r.top);
+  }
+  if(inMask || inNav || inPanel) return;
+  activeZone = -1; hoverZone = -1;
+  document.querySelectorAll('.mask-zone').forEach(z=>z.classList.remove('active'));
+  expandShell.classList.remove('open'); detailShell.classList.remove('open'); detailShell.innerHTML='';
+  returnToIdle();
+});
+
+window.addEventListener('mousemove', (e)=>{
+  const r = stageRect();
+  cursor.px = cursor.x; cursor.py = cursor.y;
+  cursor.x = e.clientX - r.left; cursor.y = e.clientY - r.top;
+  cursor.speed = Math.hypot(cursor.x - cursor.px, cursor.y - cursor.py);
+  updateReticle(e);
+}, {passive:true});
+window.addEventListener('resize', resizeCanvas);
+
+ensureHeroVideos();
+ensureReticle();
+renderProject(0);
+bindMaskZones();
+initBoids();
+resizeCanvas();
+animateBoids();
 </script>
+
+
+
+
 </body>
 </html>

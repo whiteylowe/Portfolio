@@ -3,997 +3,863 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signal Lock — Nicholas Lowe</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<title>Signal Lock -- Nicholas Lowe</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   :root {
-    --bg: #060809;
-    --bg-2: #0c0f11;
-    --bg-3: #111518;
-    --bg-4: #161b1f;
-    --text: #c8d4d0;
-    --text-mid: #6b8078;
-    --text-dim: #2e3d38;
-    --accent: #4ade9a;
-    --accent-dim: #1a4d35;
-    --accent-glow: rgba(74,222,154,0.08);
-    --warn: #e8a838;
-    --warn-dim: #4a3510;
-    --rule: #141a17;
-    --rule-accent: #1f3028;
-    --mono: 'DM Mono', monospace;
-    --serif: 'EB Garamond', Georgia, serif;
+    --cyan: rgba(100,200,255,1);
+    --cyan-dim: rgba(100,200,255,0.5);
+    --cyan-faint: rgba(100,200,255,0.15);
+    --white: rgba(255,255,255,0.88);
+    --white-mid: rgba(255,255,255,0.5);
+    --white-dim: rgba(255,255,255,0.28);
+    --bg: #050507;
+    --border: rgba(255,255,255,0.07);
+  }
+  html { scroll-behavior:smooth; }
+
+  #cursor { position:fixed; width:6px; height:6px; border-radius:50%; background:rgba(100,200,255,0.9); pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width 0.2s,height 0.2s; }
+  #cursor.hover { width:20px; height:20px; background:transparent; border:1px solid rgba(100,200,255,0.6); }
+  #grain { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.032; mix-blend-mode:screen; z-index:500; }
+
+  body { background:var(--bg); color:#fff; font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; cursor:none; }
+
+  body { background:var(--bg); color:#fff; font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; cursor:none; }
+
+  #content { padding:184px 0 132px; max-width:1320px; margin:0 auto; }
+
+  /* Hero */
+  .hero { padding:72px 64px 64px; display:grid; grid-template-columns:1fr 440px; gap:80px; align-items:end; border-bottom:1px solid var(--border); }
+  .hero-eyebrow { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.35em; text-transform:uppercase; color:var(--cyan-dim); margin-bottom:22px; }
+  .hero-title { font-size:56px; letter-spacing:0.06em; text-transform:uppercase; font-weight:300; color:var(--white); line-height:1.0; margin-bottom:16px; }
+  .hero-subtitle { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:36px; }
+  .hero-meta-block { margin-bottom:24px; }
+  .hero-meta-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); margin-bottom:7px; }
+  .hero-meta-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.75; }
+
+  /* Section */
+  .section { padding:0 64px; margin-bottom:88px; }
+  .section-label { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.35em; text-transform:uppercase; color:var(--cyan-dim); margin-bottom:32px; padding-bottom:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:16px; }
+  .section-label::before { content:''; width:18px; height:1px; background:var(--cyan-dim); }
+
+  /* Video */
+  .video-wrap { width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; border:1px solid var(--border); position:relative; }
+  .video-wrap video { width:100%; height:100%; object-fit:contain; display:block; background:#000; transform: scale(0.9);}
+
+  /* First video subtle tilt */
+  .video-wrap.tilt-video {
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+    transform-origin: center center;
+  }
+  .video-wrap.tilt-video video {
+    transition: transform 0.18s ease-out;
+    will-change: transform;
+  }
+  .video-wrap.tilt-video:hover {
+    box-shadow: 0 18px 45px rgba(0,0,0,0.28);
   }
 
-  html { scroll-behavior: smooth; }
+  /* Exploration grid */
+  .pef-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); }
+  .pef-cell { background:var(--bg); padding:36px 32px; }
+  .pef-key { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; }
+  .pef-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.8; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-    cursor: crosshair;
+  /* Feature cards -- full bleed, no side padding */
+  .feature-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+  .feature-card { background:var(--bg); }
+  .feature-img { width:100%; aspect-ratio:1/1; overflow:hidden; background:#080810; display:flex; align-items:center; justify-content:center; }
+  .feature-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .placeholder-cell { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.15em; color:rgba(255,255,255,0.1); text-transform:uppercase; text-align:center; padding:20px; }
+  .feature-body { padding:22px 20px 28px; }
+  .feature-title { font-size:13px; letter-spacing:0.03em; color:var(--white); font-weight:400; margin-bottom:5px; }
+  .feature-sub { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:13px; }
+  .feature-text { font-size:12px; color:var(--white-dim); font-weight:300; line-height:1.72; }
+
+  /* Reticles */
+  .reticle-intro { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.8; margin-bottom:36px; max-width:640px; }
+  .reticle-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
+  .reticle-cell { aspect-ratio:1/1; background:#080810; overflow:hidden; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; }
+  .reticle-cell img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  .contain-media-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+  .contain-media-frame {
+    width:100%;
+    aspect-ratio:16/9;
+    border:1px solid var(--border);
+    background:#000;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .contain-media-frame img,
+  .contain-media-frame video {
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+    background:#000;
   }
 
-  /* SCANLINE OVERLAY */
-  body::before {
-    content: '';
+  /* Diagram */
+  .diagram-wrap { display:flex; justify-content:center; padding:32px 0; }
+
+  /* Implications */
+  .impl-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
+  .impl-lead { font-size:15px; color:var(--white); font-weight:300; line-height:1.8; margin-bottom:28px; }
+  .impl-list { list-style:none; display:flex; flex-direction:column; gap:16px; }
+  .impl-list li { font-size:13px; color:var(--white-dim); font-weight:300; line-height:1.72; padding-left:20px; position:relative; }
+  .impl-list li::before { content:'—'; position:absolute; left:0; color:var(--cyan-dim); }
+  .impl-quote { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.1em; line-height:2.0; color:var(--cyan-dim); border-left:1px solid var(--cyan-faint); padding-left:28px; }
+
+  /* Prototypes */
+  .proto-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
+  .proto-card { background:var(--bg); padding:40px 36px; }
+  .proto-title { font-size:16px; letter-spacing:0.03em; color:var(--white); font-weight:300; margin-bottom:10px; }
+  .proto-link { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan); text-decoration:none; display:inline-flex; align-items:center; gap:8px; margin-bottom:22px; transition:opacity 0.2s; }
+  .proto-link:hover { opacity:0.65; }
+  .proto-text { font-size:13px; color:var(--white-dim); font-weight:300; line-height:1.78; margin-bottom:10px; }
+  .proto-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan-dim); margin-top:16px; }
+  .proto-img { width:100%; height:240px; background:#080810; overflow:hidden; margin-top:28px; border:1px solid var(--border); }
+  .proto-img img { width:100%; height:100%; object-fit:cover; opacity:0.85; display:block; }
+  .proto-img-placeholder { display:flex; align-items:center; justify-content:center; height:100%; font-family:'DM Mono',monospace; font-size:8px; color:rgba(255,255,255,0.1); letter-spacing:0.15em; text-transform:uppercase; }
+
+  /* Tools */
+  .tools-strip { display:flex; gap:8px; flex-wrap:wrap; }
+  .tool-tag { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.2em; text-transform:uppercase; color:var(--cyan-dim); padding:5px 12px; border:1px solid var(--cyan-faint); }
+
+  /* Bottom nav */
+  .bottom-nav { padding:48px 64px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .nav-btn { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); background:none; border:none; cursor:none; display:flex; align-items:center; gap:8px; transition:color 0.2s; text-decoration:none; }
+  .nav-btn:hover { color:var(--cyan); }
+  .nav-label { font-size:8px; letter-spacing:0.2em; color:rgba(255,255,255,0.2); display:block; margin-bottom:3px; text-align:right; }
+
+  /* Scroll fade */
+  .fade-up { opacity:0; transform:translateY(18px); }
+
+/* exact shared header from index */
+body { cursor: none !important; }
+#ui {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  display: block;
+  padding: 16px 56px 0;
+  z-index: 1100;
+}
+#top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: all;
+}
+#name-block { position: relative; pointer-events: all; display: inline-block; text-decoration: none; }
+#right-block { position: relative; text-align: right; pointer-events: all; display: inline-block; text-decoration: none; }
+#name {
+  font-size: 15px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.5;
+  font-weight: 400;
+  cursor: none;
+  position: relative;
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+}
+#name::after {
+  content:'';
+  position:absolute;
+  bottom:-2px;
+  left:0;
+  width:100%;
+  height:1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(100,200,255,0.6) 50%, transparent 100%);
+  background-size: 200% 1px;
+  animation: nameSweep 3.5s ease-in-out infinite;
+}
+@keyframes nameSweep {
+  0% { background-position:200% 0; opacity:0.2; }
+  50% { background-position:0% 0; opacity:0.9; }
+  100% { background-position:-200% 0; opacity:0.2; }
+}
+#name-sub {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(100,200,255,0.45);
+  font-weight: 300;
+  margin-top: 5px;
+  transition: color 0.4s;
+  font-family: 'Inter', sans-serif;
+}
+#name-block:hover #name-sub { color: rgba(100,200,255,0.85); }
+#role {
+  font-family:'DM Mono', monospace;
+  font-size:10px;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.38);
+  font-weight:300;
+  line-height:1.5;
+  cursor:none;
+  transition:color 0.3s;
+  position:relative;
+  display:inline-block;
+}
+#role::after {
+  content:'';
+  position:absolute;
+  bottom:-2px;
+  right:0;
+  width:100%;
+  height:1px;
+  background: linear-gradient(270deg, transparent 0%, rgba(100,200,255,0.5) 50%, transparent 100%);
+  background-size: 200% 1px;
+  animation: roleSweep 4.5s ease-in-out infinite 2s;
+}
+@keyframes roleSweep {
+  0% { background-position:-200% 0; opacity:0.15; }
+  50% { background-position:100% 0; opacity:0.7; }
+  100% { background-position:400% 0; opacity:0.15; }
+}
+#right-block:hover #role { color:rgba(100,200,255,0.85); }
+
+.case-collapse-wrap {
+  position: fixed;
+  top: 118px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1095;
+}
+.case-collapse-btn {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(100,220,255,0.45);
+  background: rgba(7,18,24,0.84);
+  color: rgba(110,220,255,0.95);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  cursor: none;
+}
+.case-collapse-btn:hover {
+  color: rgba(195,240,255,1);
+  border-color: rgba(140,235,255,0.8);
+  background: rgba(10,28,38,0.92);
+  transform: translateY(-1px);
+}
+.case-collapse-btn::after {
+  content: 'Collapse';
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(100,200,255,0);
+  white-space: nowrap;
+  transition: color 0.18s ease;
+  pointer-events: none;
+}
+.case-collapse-btn:hover::after { color: rgba(100,200,255,0.68); }
+.case-collapse-glyph {
+  position: relative;
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+.case-collapse-glyph::before,
+.case-collapse-glyph::after {
+  content:'';
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+}
+.case-collapse-glyph::before {
+  top:0;
+  width:0;
+  height:0;
+  border-left:4px solid transparent;
+  border-right:4px solid transparent;
+  border-bottom:6px solid currentColor;
+}
+.case-collapse-glyph::after {
+  top:7px;
+  width:8px;
+  height:1px;
+  background: currentColor;
+  opacity:0.8;
+}
+
+
+
+.case-page-shell, #content, main.case-page-shell { max-width: 1320px !important; margin: 0 auto !important; }
+.case-scroll-top-wrap { display:flex; justify-content:center; padding: 0 0 72px; }
+.case-scroll-top-btn { position: relative; width: 24px; height: 24px; border: 1px solid rgba(100,220,255,0.45); background: rgba(7,18,24,0.84); color: rgba(110,220,255,0.95); display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03); transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; text-decoration:none; cursor:none; }
+.case-scroll-top-btn:hover { color: rgba(170,240,255,1); border-color: rgba(100,220,255,0.78); background: rgba(10,28,36,0.96); transform: translateY(-1px); }
+.case-scroll-top-glyph { position:relative; width:0; height:0; color: inherit; }
+.case-scroll-top-glyph::before,.case-scroll-top-glyph::after { content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+.case-scroll-top-glyph::before { width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-bottom:6px solid currentColor; margin-top:-3px; }
+.case-scroll-top-glyph::after { width:8px; height:1px; background: currentColor; margin-top:4px; opacity:0.82; }
+
+
+  /* Added signal lock split section */
+  .split-media-copy {
+    display:grid;
+    grid-template-columns:minmax(0,1.2fr) minmax(320px,0.8fr);
+    gap:28px;
+    align-items:start;
+  }
+  .split-copy-card {
+    border:1px solid var(--border);
+    padding:28px 26px;
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    background:rgba(255,255,255,0.015);
+  }
+  .split-copy-body {
+    font-size:13px;
+    color:var(--white-mid);
+    font-weight:300;
+    line-height:1.85;
+    margin-bottom:20px;
+  }
+  .split-copy-body p { margin-bottom:14px; }
+  .split-copy-body p:last-child { margin-bottom:0; }
+  .split-tools {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:auto;
+    padding-top:10px;
+  }
+
+  /* Perceptual systems spacing / taller portrait feeling */
+  .feature-grid {
+    gap:16px;
+    background:transparent;
+  }
+  .feature-card {
+    border:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+  }
+  .feature-img {
+    aspect-ratio: 4 / 5;
+  }
+  .feature-body {
+    padding:24px 22px 30px;
+  }
+
+  /* Interaction loop split */
+  .loop-split {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .loop-half {
+    border:1px solid var(--border);
+    background:#080810;
+    overflow:hidden;
+    aspect-ratio: 4 / 5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .loop-half img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    opacity:0.92;
+  }
+  .loop-half.left img { object-position:left center; }
+  .loop-half.right img { object-position:right center; }
+
+  @media (max-width: 980px) {
+    .split-media-copy,
+    .loop-split,
+    .feature-grid,
+    .proto-grid {
+      grid-template-columns:1fr;
+    }
+    .feature-img { aspect-ratio: 16 / 10; }
+  }
+
+
+
+  /* Cursor trail */
+  .cursor-trail {
     position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(100,200,255,0.32);
     pointer-events: none;
-    z-index: 1000;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 2.5rem;
-    background: rgba(6,8,9,0.92);
-    border-bottom: 1px solid var(--rule);
-    backdrop-filter: blur(8px);
-  }
-
-  .nav-logo {
-    font-size: 11px;
-    font-weight: 300;
-    letter-spacing: 0.15em;
-    color: var(--text-mid);
-    text-decoration: none;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .nav-logo::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-  }
-
-  .nav-right a {
-    font-size: 10px;
-    font-weight: 300;
-    letter-spacing: 0.12em;
-    color: var(--text-dim);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .nav-right a:hover { color: var(--accent); }
-
-  .nav-status {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    text-transform: uppercase;
-    border: 1px solid var(--accent-dim);
-    padding: 0.3rem 0.75rem;
-  }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 64px;
-  }
-
-  .hero-left {
-    padding: 5rem 2.5rem 4rem;
-    border-right: 1px solid var(--rule);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    position: relative;
-  }
-
-  .hero-left::before {
-    content: 'SGL-001 // CLASSIFIED';
-    position: absolute;
-    top: 5rem;
-    left: 2.5rem;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  .hero-classification {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--warn);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .hero-classification::before {
-    content: '';
-    display: block;
-    width: 20px;
-    height: 1px;
-    background: var(--warn);
-  }
-
-  .hero-title {
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 0.95;
-    color: var(--text);
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-  }
-
-  .hero-title span {
-    display: block;
-    color: var(--accent);
-  }
-
-  .hero-desc {
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--text-mid);
-    line-height: 1.8;
-    max-width: 38ch;
-    margin-bottom: 2.5rem;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 0.6rem 1.25rem;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-  }
-
-  .btn-primary:hover {
-    background: #6bebb0;
-  }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--text-mid);
-    border: 1px solid var(--rule-accent);
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--accent-dim);
-    color: var(--accent);
-  }
-
-  /* HUD PREVIEW */
-  .hero-right {
-    padding: 5rem 0 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hud-preview {
-    flex: 1;
-    background: var(--bg-2);
-    border-left: 1px solid var(--rule);
-    position: relative;
-    overflow: hidden;
-    min-height: 400px;
-  }
-
-  /* Animated HUD elements */
-  .hud-corner {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-  }
-
-  .hud-corner.tl { top: 16px; left: 16px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); }
-  .hud-corner.tr { top: 16px; right: 16px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
-  .hud-corner.bl { bottom: 16px; left: 16px; border-bottom: 1px solid var(--accent); border-left: 1px solid var(--accent); }
-  .hud-corner.br { bottom: 16px; right: 16px; border-bottom: 1px solid var(--accent); border-right: 1px solid var(--accent); }
-
-  .hud-crosshair {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    z-index: 9998;
     transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
+    box-shadow: 0 0 12px rgba(100,200,255,0.18);
+    animation: trailFade 0.55s ease-out forwards;
+  }
+  @keyframes trailFade {
+    0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.18); }
   }
 
-  .hud-crosshair::before,
-  .hud-crosshair::after {
-    content: '';
-    position: absolute;
-    background: var(--accent);
-    opacity: 0.6;
+  /* Locked prototype state */
+  .proto-link-locked {
+    font-family:'DM Mono',monospace;
+    font-size:9px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:#ff5454;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+    font-weight:400;
+  }
+  .lock-dot {
+    display:inline-block;
+    width:8px;
+    height:9px;
+    border:1.5px solid #ff5454;
+    border-radius:1px;
+    position:relative;
+    top:-1px;
+  }
+  .lock-dot::before {
+    content:'';
+    position:absolute;
+    top:-6px;
+    left:-1px;
+    width:8px;
+    height:6px;
+    border:1.5px solid #ff5454;
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
   }
 
-  .hud-crosshair::before {
-    width: 1px;
-    height: 100%;
-    left: 50%;
-    top: 0;
-  }
-
-  .hud-crosshair::after {
-    height: 1px;
-    width: 100%;
-    top: 50%;
-    left: 0;
-  }
-
-  .hud-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    border: 1px solid var(--accent-dim);
-    animation: rotate 12s linear infinite;
-  }
-
-  @keyframes rotate {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
-  }
-
-  .hud-ring-1 { width: 100px; height: 100px; animation-duration: 8s; }
-  .hud-ring-2 { width: 160px; height: 160px; animation-duration: 15s; animation-direction: reverse; border-style: dashed; }
-  .hud-ring-3 { width: 220px; height: 220px; animation-duration: 20s; opacity: 0.4; }
-
-  .hud-scan {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0.4;
-    animation: scan 3s ease-in-out infinite;
-  }
-
-  @keyframes scan {
-    0% { top: 0%; opacity: 0; }
-    10% { opacity: 0.4; }
-    90% { opacity: 0.4; }
-    100% { top: 100%; opacity: 0; }
-  }
-
-  .hud-data {
-    position: absolute;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    color: var(--text-mid);
-    line-height: 1.8;
-  }
-
-  .hud-data.tl { top: 40px; left: 20px; }
-  .hud-data.tr { top: 40px; right: 20px; text-align: right; }
-  .hud-data.bl { bottom: 40px; left: 20px; }
-  .hud-data.br { bottom: 40px; right: 20px; text-align: right; }
-
-  .hud-data span { color: var(--accent); display: block; }
-
-  /* IMAGE PLACEHOLDER with slot label */
-  .img-slot {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-2);
-  }
-
-  .img-slot-label {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 2;
-  }
-
-  /* HERO BOTTOM BAR */
-  .hero-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--rule);
-  }
-
-  .hero-bar-item {
-    padding: 1.25rem 2.5rem;
-    border-right: 1px solid var(--rule);
-  }
-
-  .hero-bar-item:last-child { border-right: none; }
-
-  .hero-bar-label {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 0.35rem;
-  }
-
-  .hero-bar-value {
-    font-size: 11px;
-    color: var(--text-mid);
-    font-weight: 300;
-  }
-
-  /* SECTION BASE */
-  .section {
-    padding: 5rem 2.5rem;
-    border-top: 1px solid var(--rule);
-  }
-
-  .section-tag {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 2.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .section-tag::after {
-    content: '';
-    flex: 1;
-    max-width: 60px;
-    height: 1px;
-    background: var(--accent-dim);
-  }
-
-  /* INTERFACE SHOWCASE */
-  .showcase {
-    background: var(--bg-2);
-  }
-
-  .showcase-inner {
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .showcase-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
-    padding: 2rem 2.5rem 1.5rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .showcase-title {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--text-mid);
-    text-transform: uppercase;
-  }
-
-  .showcase-mode {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    text-transform: uppercase;
-  }
-
-  .showcase-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .showcase-tab {
-    padding: 0.75rem 2.5rem;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    cursor: pointer;
-    border-right: 1px solid var(--rule);
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s;
-  }
-
-  .showcase-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-    background: var(--accent-glow);
-  }
-
-  .showcase-tab:hover:not(.active) { color: var(--text-mid); }
-
-  .showcase-view {
-    aspect-ratio: 16/9;
-    background: var(--bg-3);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Monocular HUD simulation */
-  .hud-mono {
-    width: 260px;
-    height: 180px;
-    border: 1px solid var(--accent-dim);
-    position: relative;
-    background: rgba(74,222,154,0.02);
-  }
-
-  .hud-mono-inner {
-    position: absolute;
-    inset: 8px;
-    border: 1px solid rgba(74,222,154,0.15);
-  }
-
-  .hud-mono-reticle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-  }
-
-  .hud-mono-reticle::before,
-  .hud-mono-reticle::after {
-    content: '';
-    position: absolute;
-    background: var(--accent);
-    opacity: 0.7;
-  }
-
-  .hud-mono-reticle::before { width: 1px; height: 100%; left: 50%; }
-  .hud-mono-reticle::after { height: 1px; width: 100%; top: 50%; }
-
-  .hud-readout {
-    position: absolute;
-    font-size: 8px;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    line-height: 1.6;
-  }
-
-  .hud-readout.top-left { top: 6px; left: 8px; }
-  .hud-readout.top-right { top: 6px; right: 8px; text-align: right; }
-  .hud-readout.bot-left { bottom: 6px; left: 8px; }
-  .hud-readout.bot-right { bottom: 6px; right: 8px; text-align: right; }
-
-  .showcase-caption {
-    padding: 1rem 2.5rem;
-    border-top: 1px solid var(--rule);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .showcase-caption-text {
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-  }
-
-  .showcase-caption-tag {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    color: var(--accent-dim);
-    text-transform: uppercase;
-  }
-
-  /* PROCESS / SPECS */
-  .specs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
-    margin-top: 2.5rem;
-  }
-
-  .spec-cell {
-    background: var(--bg);
-    padding: 2rem 2.5rem;
-  }
-
-  .spec-num {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--accent-dim);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
-  .spec-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 0.75rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .spec-body {
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--text-mid);
-    line-height: 1.8;
-  }
-
-  /* TECH STACK */
-  .stack-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 2.5rem;
-  }
-
-  .stack-tag {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-mid);
-    text-transform: uppercase;
-    border: 1px solid var(--rule-accent);
-    padding: 0.3rem 0.75rem;
-    transition: all 0.15s;
-  }
-
-  .stack-tag:hover {
-    border-color: var(--accent-dim);
-    color: var(--accent);
-  }
-
-  /* STATEMENT */
-  .statement-section {
-    background: var(--bg-2);
-  }
-
-  .statement-inner {
-    max-width: 900px;
-  }
-
-  .statement-text {
-    font-family: var(--serif);
-    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
-    font-style: italic;
-    line-height: 1.5;
-    color: var(--text);
-    margin-bottom: 2rem;
-  }
-
-  .statement-sub {
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--text-mid);
-    line-height: 1.85;
-    max-width: 60ch;
-  }
-
-  /* DATA STRIP */
-  .data-strip {
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    display: flex;
-    overflow: hidden;
-  }
-
-  .data-strip-item {
-    flex: 1;
-    padding: 1.5rem 2.5rem;
-    border-right: 1px solid var(--rule);
+  .loop-half {
     position: relative;
   }
-
-  .data-strip-item:last-child { border-right: none; }
-
-  .data-strip-num {
-    font-size: clamp(1.8rem, 3vw, 2.8rem);
-    font-weight: 500;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-    line-height: 1;
-    margin-bottom: 0.4rem;
+  .loop-half video {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    opacity:0.94;
   }
-
-  .data-strip-label {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    text-transform: uppercase;
+  .loop-placeholder {
+    position:absolute;
+    inset:auto 16px 14px 16px;
+    font-family:'DM Mono',monospace;
+    font-size:8px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.26);
+    text-align:center;
+    pointer-events:none;
   }
-
-  /* FOOTER */
-  footer {
-    padding: 2rem 2.5rem;
-    border-top: 1px solid var(--rule);
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    background: var(--bg-2);
-  }
-
-  .footer-back {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .footer-back:hover { color: var(--accent); }
-
-  .footer-center {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    text-align: center;
-  }
-
-  .footer-next {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-mid);
-    text-decoration: none;
-    text-transform: uppercase;
-    text-align: right;
-    transition: color 0.2s;
-    display: block;
-  }
-
-  .footer-next:hover { color: var(--accent); }
-
-  .footer-next-label {
-    display: block;
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 13px;
-    color: var(--text);
-    letter-spacing: 0;
-    text-transform: none;
-    margin-top: 0.2rem;
-  }
-
-  /* ANIMATIONS */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    .hero-grid { grid-template-columns: 1fr; }
-    .hero-right { display: none; }
-    .hero-bar { grid-template-columns: repeat(2, 1fr); }
-    .specs-grid { grid-template-columns: 1fr; }
-    .data-strip { flex-direction: column; }
-    footer { grid-template-columns: 1fr; gap: 1rem; }
-  }
+  .site-header{position:fixed;inset:0 0 auto 0;height:112px;z-index:50;background:linear-gradient(180deg,rgba(5,5,7,0.98),rgba(5,5,7,0.84) 72%,rgba(5,5,7,0.14));backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05);}
+  .site-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(100,200,255,0.22),transparent);}
+  .header-inner{width:min(1320px,calc(100vw - 64px));height:100%;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;}
+  .brand{justify-self:center;text-align:center;}
+  #name{font-size:22px;line-height:1;letter-spacing:0.28em;text-transform:uppercase;font-weight:400;display:inline-block;position:relative;}
+  #name::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:1px;background:linear-gradient(90deg,transparent,rgba(100,200,255,0.72),transparent);}
+  #name-sub{margin-top:14px;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(100,200,255,0.78);}
+  .contact{justify-self:end;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.50);}
+  .contact:hover{color:rgba(100,200,255,0.95);}
+  .mono{font-family:'DM Mono',monospace;}
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="#" class="nav-logo">NL / Nicholas Lowe</a>
-  <div class="nav-right">
-    <a href="#">Work</a>
-    <a href="#">Research</a>
-    <a href="#">About</a>
-    <span class="nav-status">Available</span>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div></div>
+   <a class="brand" href="index.html" style="text-decoration:none;color:inherit;cursor:pointer;">
+  <div id="name">Nicholas Lowe</div>
+  <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
+</a>
   </div>
-</nav>
+</header>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-grid">
 
-    <div class="hero-left">
-      <div class="hero-classification">Cinematic UI / Tactical Interface</div>
-      <h1 class="hero-title">Signal<span>Lock</span></h1>
-      <p class="hero-desc">A monocular HUD interface and 16:9 tactical control surface built in HTML/Canvas. Designed as a defense and surveillance aesthetic study — cinematic UI as perceptual instrument.</p>
-      <div class="hero-actions">
-        <a href="#" class="btn btn-primary">Launch Demo</a>
-        <a href="#" class="btn btn-ghost">View on GitHub</a>
+
+
+
+
+<canvas id="grain"></canvas>
+<div id="cursor"></div>
+
+<main id="content">
+<div id="top"></div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">XR Systems &nbsp;/&nbsp; Perceptual Interface</div>
+      <h1 class="hero-title">Signal<br>Lock</h1>
+      <div class="hero-subtitle">Multi-Surface Perceptual Interface Studies</div>
+      <div class="tools-strip">
+        <span class="tool-tag">HTML Canvas</span>
+        <span class="tool-tag">Procedural UI</span>
+        <span class="tool-tag">Motion Design</span>
+        <span class="tool-tag">Real-time Rendering</span>
       </div>
     </div>
+    <div>
+      <div class="hero-meta-block">
+        <div class="hero-meta-label">Problem</div>
+        <div class="hero-meta-text">Autonomous perception systems must resolve visual complexity while preserving operator clarity across both anchored devices and egocentric displays.</div>
+      </div>
+      <div class="hero-meta-block">
+        <div class="hero-meta-label">Focus</div>
+        <div class="hero-meta-text">Visual hierarchy, attention guidance, and interaction coherence across changing interface scales.</div>
+      </div>
+    </div>
+  </div>
 
-    <div class="hero-right">
-      <div class="hud-preview">
-        <div class="hud-corner tl"></div>
-        <div class="hud-corner tr"></div>
-        <div class="hud-corner bl"></div>
-        <div class="hud-corner br"></div>
-        <div class="hud-scan"></div>
-        <div class="hud-ring hud-ring-1"></div>
-        <div class="hud-ring hud-ring-2"></div>
-        <div class="hud-ring hud-ring-3"></div>
-        <div class="hud-crosshair"></div>
-        <div class="hud-data tl">
-          <span>AZ 247.4</span>
-          EL 12.8<br>
-          RNG 4.2KM
-        </div>
-        <div class="hud-data tr">
-          <span>LOCKED</span>
-          TGT 004<br>
-          CONF 94%
-        </div>
-        <div class="hud-data bl">
-          LAT 37.4419<br>
-          LON -122.143
-        </div>
-        <div class="hud-data br">
-          <span>REC</span>
-          FPS 60<br>
-          BUF 100%
-        </div>
+  <!-- Primary video -->
+  <div class="section" style="margin-top:64px;">
+    <div class="video-wrap tilt-video" id="signal-lock-hero-video">
+      <video autoplay muted loop playsinline>
+        <source src="./videos/X_Signal_Lock_1.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
 
-        <!-- IMAGE SLOT -->
-        <div class="img-slot" style="opacity:0.15;">
-          <div class="img-slot-label">
-            DROP SCREENSHOT HERE<br>
-            <span style="font-size:8px; color: var(--text-dim);">replace .img-slot div with img tag</span>
-          </div>
+  <!-- Exploration -->
+  <div class="section fade-up">
+    <div class="section-label">Exploration</div>
+    <div class="pef-grid">
+      <div class="pef-cell">
+        <div class="pef-key">Control Surface Mode</div>
+        <div class="pef-text">Scanning, targeting, and trajectory feedback expand across space.
+Complexity is distributed and visible.</div>
+      </div>
+      <div class="pef-cell">
+        <div class="pef-key">Wearable AR Mode</div>
+        <div class="pef-text">The same logic compresses into attention, timing, and reticle stability.
+Complexity is reduced to selective cues.</div>
+      </div>
+      <div class="pef-cell">
+        <div class="pef-key">Coherence Across Scales</div>
+        <div class="pef-text">The system does not change.
+Only its presentation adapts across scale.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Perceptual exchange split -->
+  <div class="section fade-up">
+    <div class="split-media-copy">
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline>
+          <source src="./videos/X_Signal_Lock_2.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="split-copy-card">
+        <div class="split-copy-body">
+          <p>Signal Lock translates a single system across two conditions:</p>
+          <p>Control Surface: complexity expands through spatial distribution
+Wearable AR: complexity compresses into targeting, timing, and attention</p>
+          <p>Rather than redesigning the interface, the system preserves its logic across scale.
+
+On the monitor, trajectories and command states spread outward.
+In wearable view, those same relationships condense into reticle stability and selective cues.</p>
+        </div>
+        <div class="split-tools">
+          <span class="tool-tag">HTML</span>
+
+          <span class="tool-tag">JavaScript</span>
+          <span class="tool-tag">Procedural UI</span>
+          <span class="tool-tag">Motion Design</span>
         </div>
       </div>
     </div>
-
   </div>
 
-  <div class="hero-bar">
-    <div class="hero-bar-item">
-      <div class="hero-bar-label">Type</div>
-      <div class="hero-bar-value">Cinematic UI / HTML Canvas</div>
+  <!-- Feature cards -- full bleed -->
+  <div style="margin-bottom:88px;">
+    <div class="section" style="margin-bottom:28px;">
+      <div class="section-label">Perceptual Systems</div>
     </div>
-    <div class="hero-bar-item">
-      <div class="hero-bar-label">Format</div>
-      <div class="hero-bar-value">Monocular HUD + 16:9 Control Surface</div>
+    <div class="feature-grid fade-up">
+      <div class="feature-card">
+        <div class="feature-img">
+          <img src="./gifs/Signal_Lock_Gaze.gif" alt="Gaze Detection" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Gaze Detection</div>'">
+        </div>
+        <div class="feature-body">
+          <div class="feature-title">Gaze Detection</div>
+          <div class="feature-sub">Perceptual Signal Capture</div>
+          <div class="feature-text">Perceptual signals establish stable attention anchors through continuous gaze sampling. Detection stability replaces explicit selection as the primary interaction mechanism.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-img">
+          <img src="./gifs/Signal_Lock_Situated.gif" alt="Situated Operation" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Situated Operation</div>'">
+        </div>
+        <div class="feature-body">
+          <div class="feature-title">Situated Operation</div>
+          <div class="feature-sub">Context Adaptive Guidance</div>
+          <div class="feature-text">System behavior adapts to environmental variability including lighting, motion, and scene interference. Perceptual guidance remains selective, preserving attention for critical spatial tasks.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-img">
+          <img src="./gifs/Signal_Lock_Field.gif" alt="Field Resolution" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Field Resolution</div>'">
+        </div>
+        <div class="feature-body">
+          <div class="feature-title">Field Resolution</div>
+          <div class="feature-sub">Progressive Spatial Sampling</div>
+          <div class="feature-text">Spatial understanding develops through iterative sampling and signal refinement across the visual field. Detail and confidence increase without requiring expansion of interface structure.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-img">
+          <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"><source src="./videos/Signal_Lock_Org.mp4" type="video/mp4"></video>
+        </div>
+        <div class="feature-body">
+          <div class="feature-title">Field Organization</div>
+          <div class="feature-sub">Attention Hierarchy Formation</div>
+          <div class="feature-text">Visual complexity reorganizes through layered signal priority and temporal structuring. Hierarchy governs perception, allowing clarity to persist under increasing informational load.</div>
+        </div>
+      </div>
     </div>
-    <div class="hero-bar-item">
-      <div class="hero-bar-label">Tech</div>
-      <div class="hero-bar-value">HTML / CSS / JavaScript / Canvas API</div>
+  </div>
+
+  <!-- Perceptual Exchange -->
+  <div class="section fade-up">
+    <div class="section-label">Perceptual Exchange</div>
+    <p class="reticle-intro">The same system logic operates across both surfaces -- a Control Surface for spatial command and a Wearable AR display for situated operation. Signal Lock is the perceptual bridge between them.</p>
+    <div style="width:100%; border:1px solid var(--border); overflow:hidden;">
+      <img src="./gifs/Signal_Lock_Perceptual_Exchange.gif" alt="Control Surface and Wearable AR modes" style="width:100%;display:block;opacity:0.92;" onerror="this.style.display='none'">
     </div>
-    <div class="hero-bar-item">
-      <div class="hero-bar-label">Status</div>
-      <div class="hero-bar-value" style="color: var(--accent);">Interactive Demo Live</div>
+  </div>
+
+  <!-- Interaction diagram -->
+  <div class="section fade-up">
+  <div class="section-label">Interaction Loop</div>
+  <div class="contain-media-grid">
+    <div class="contain-media-frame">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="./videos/X_Signal_Detail.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="contain-media-frame">
+      <img src="./images/Signal_Lock_Interaction_Loop.jpg" alt="Interaction Loop" onerror="this.style.display='none'">
     </div>
   </div>
 </div>
 
-<!-- STATEMENT -->
-<section class="section statement-section fade-in">
-  <div class="statement-inner">
-    <div class="section-tag">Design Intent</div>
-    <p class="statement-text">Signal Lock treats the tactical interface as a spatial and perceptual problem — not a stylistic one.</p>
-    <p class="statement-sub">Built as a self-contained UI artifact, Signal Lock explores how information hierarchy, spatial framing, and motion behavior shape operator perception under high-stakes conditions. The aesthetic vocabulary is drawn from defense and surveillance systems, but the underlying questions are the same ones that drove the AR interface work at Meta: how does an interface direct attention, communicate confidence, and reduce cognitive load at the moment of decision?</p>
-  </div>
-</section>
-
-<!-- DATA STRIP -->
-<div class="data-strip">
-  <div class="data-strip-item fade-in">
-    <div class="data-strip-num">2</div>
-    <div class="data-strip-label">Interface Modes</div>
-  </div>
-  <div class="data-strip-item fade-in">
-    <div class="data-strip-num">60</div>
-    <div class="data-strip-label">FPS Canvas Render</div>
-  </div>
-  <div class="data-strip-item fade-in">
-    <div class="data-strip-num">16:9</div>
-    <div class="data-strip-label">Full Control Surface</div>
-  </div>
-  <div class="data-strip-item fade-in">
-    <div class="data-strip-num">0</div>
-    <div class="data-strip-label">Dependencies</div>
-  </div>
-</div>
-
-<!-- SHOWCASE -->
-<section class="section showcase fade-in" style="padding: 0;">
-  <div class="showcase-inner">
-    <div class="showcase-header">
-      <div class="showcase-title">Interface Modes</div>
-      <div class="showcase-mode">SGL // v1.0</div>
+  <!-- Perceptual design implications -->
+  <div class="section fade-up">
+    <div class="section-label">Perceptual Design Implications</div>
+    <div class="impl-grid">
+      <div>
+        <p class="impl-lead">AR systems resolve targeting and action sequencing through perceptual anchoring and behavioral hierarchy rather than interface expansion.</p>
+        <ul class="impl-list">
+          <li>Gaze anchoring replaces selection with stabilization -- the system meets attention rather than demanding it.</li>
+          <li>Hierarchy governs perception through timing and motion rather than density.</li>
+          <li>Scale reshapes perceptual organization without modifying system behavior.</li>
+        </ul>
+      </div>
+      <div class="impl-quote">
+        Across monitor-scale environments, identical system logic externalizes complexity through spatial distribution.<br><br>
+        At egocentric scale, the same logic resolves complexity through perceptual anchoring -- same model, different perceptual contract.
+      </div>
     </div>
-    <div class="showcase-tabs">
-      <div class="showcase-tab active" onclick="switchTab(this, 'mono')">Monocular HUD</div>
-      <div class="showcase-tab" onclick="switchTab(this, 'surface')">16:9 Control Surface</div>
-    </div>
+  </div>
 
-    <div class="showcase-view" id="view-mono">
-      <!-- Monocular HUD placeholder / will show screenshot -->
-      <div style="position:relative; width:360px; height:240px;">
-        <div class="hud-mono">
-          <div class="hud-mono-inner">
-            <div class="hud-mono-reticle"></div>
-            <div class="hud-readout top-left">AZ 247.4<br>EL 12.8</div>
-            <div class="hud-readout top-right">TGT 004<br>LOCK</div>
-            <div class="hud-readout bot-left">4.2 KM</div>
-            <div class="hud-readout bot-right">94%</div>
-          </div>
+  <!-- Interactive prototypes -->
+  <div style="margin-bottom:88px;">
+    <div class="section" style="margin-bottom:28px;">
+      <div class="section-label">Interactive Prototypes</div>
+    </div>
+    <div class="proto-grid fade-up">
+      <div class="proto-card">
+        <div class="proto-title">Wearable AR Display</div>
+        <a class="proto-link" href="https://whiteylowe.github.io/Signal-Lock/" target="_blank">[ Open Live Demo ] &#8599;</a>
+        <p class="proto-text">Designed for attention precision, where perceptual signals, hierarchy, and feedback must operate within a tightly bounded visual field.</p>
+        <div class="proto-tag">+ Applied Eye Tracking Principles</div>
+        <div class="proto-img">
+          <img src="./gifs/Signal_Lock_Field.gif" alt="Wearable AR field resolution" onerror="this.style.display='none'">
         </div>
-        <div style="position:absolute; bottom:-24px; left:0; right:0; text-align:center; font-size:8px; letter-spacing:0.1em; color: var(--text-dim); text-transform:uppercase;">
-          Monocular HUD — replace with screenshot
+      </div>
+      <div class="proto-card">
+        <div class="proto-title">Spatial Monitor Display</div>
+        <div class="proto-link-locked"><span class="lock-dot" aria-hidden="true"></span><span>[ Locked ]</span></div>
+        <p class="proto-text">Optimized for perceptual distribution, allowing system complexity, signal relationships, and behavioral states to externalize across expanded visual space.</p>
+        <div class="proto-tag">+ Gesture Driven Interaction</div>
+        <div class="proto-img">
+          <img src="./gifs/Signal_Lock_Situated.gif" alt="Spatial Monitor Display situated operation" onerror="this.style.display='none'">
         </div>
       </div>
     </div>
-
-    <div class="showcase-view" id="view-surface" style="display:none;">
-      <div style="text-align:center;">
-        <div style="font-size:9px; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:1rem;">16:9 Control Surface</div>
-        <div style="width:400px; height:225px; border:1px solid var(--rule-accent); background:var(--bg-3); display:flex; align-items:center; justify-content:center;">
-          <div style="font-size:8px; letter-spacing:0.1em; color:var(--text-dim); text-transform:uppercase;">Drop screenshot here</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="showcase-caption">
-      <div class="showcase-caption-text">HTML / Canvas — no external libraries</div>
-      <div class="showcase-caption-tag">Interactive in browser</div>
-    </div>
   </div>
-</section>
 
-<!-- PROCESS -->
-<section class="section fade-in">
-  <div class="section-tag">Design Process</div>
-  <div class="specs-grid">
-    <div class="spec-cell">
-      <div class="spec-num">01 // Constraint</div>
-      <div class="spec-title">Zero Dependencies</div>
-      <div class="spec-body">Built entirely in vanilla HTML, CSS, and Canvas API. No frameworks, no libraries. The constraint was deliberate — understanding the rendering pipeline at a low level informed every visual decision about motion timing and draw order.</div>
-    </div>
-    <div class="spec-cell">
-      <div class="spec-num">02 // Hierarchy</div>
-      <div class="spec-title">Information Architecture</div>
-      <div class="spec-body">Tactical UI design is fundamentally an information hierarchy problem. Signal Lock maps data criticality to spatial position, motion behavior, and visual weight — primary targeting data at center, contextual telemetry at periphery.</div>
-    </div>
-    <div class="spec-cell">
-      <div class="spec-num">03 // Motion</div>
-      <div class="spec-title">Perceptual Feedback</div>
-      <div class="spec-body">Every animated element in Signal Lock encodes state. Scan lines indicate active acquisition, reticle behavior changes on lock confirmation, peripheral data dims during high-attention moments. Motion as communication, not decoration.</div>
-    </div>
-    <div class="spec-cell">
-      <div class="spec-num">04 // Connection</div>
-      <div class="spec-title">From HUD to AR</div>
-      <div class="spec-body">The perceptual questions Signal Lock explores — attention direction, confidence signaling, ambient feedback — are the same ones that drove the AR wearable interface work at Meta Reality Labs. Different medium, same underlying design problem.</div>
-    </div>
+  <!-- Bottom nav -->
+  <div class="case-scroll-top-wrap"><a class="case-scroll-top-btn" href="#top" aria-label="Scroll to top"><span class="case-scroll-top-glyph" aria-hidden="true"></span></a></div>
+
+  <div class="bottom-nav">
+    <a href="index.html#xr-systems" class="nav-btn" id="back-btn-2">&#8592; Back to XR Systems</a>
+    <a href="spatial-companion.html" class="nav-btn" style="flex-direction:column;align-items:flex-end;">
+      <span class="nav-label">Next</span>
+      Spatial Companion &#8594;
+    </a>
   </div>
-</section>
 
-<!-- TECH STACK -->
-<section class="section fade-in" style="padding-top: 0; border-top: none;">
-  <div class="section-tag">Stack</div>
-  <div class="stack-row">
-    <div class="stack-tag">HTML5</div>
-    <div class="stack-tag">Canvas API</div>
-    <div class="stack-tag">CSS3</div>
-    <div class="stack-tag">Vanilla JS</div>
-    <div class="stack-tag">RequestAnimationFrame</div>
-    <div class="stack-tag">No Dependencies</div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <a href="#" class="footer-back">&#8592; All Work</a>
-  <div class="footer-center">NL // 2024</div>
-  <a href="#" class="footer-next">
-    Next Project
-    <span class="footer-next-label">Midnight Miso</span>
-  </a>
-</footer>
+</main>
 
 <script>
-  function switchTab(el, view) {
-    document.querySelectorAll('.showcase-tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('view-mono').style.display = view === 'mono' ? 'flex' : 'none';
-    document.getElementById('view-surface').style.display = view === 'surface' ? 'flex' : 'none';
-  }
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  const t = document.createElement('div');
+  t.className = 'cursor-trail';
+  t.style.left = e.clientX + 'px';
+  t.style.top = e.clientY + 'px';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 560);
+});
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
 
-  document.querySelectorAll('.fade-in').forEach((el, i) => {
-    el.style.transitionDelay = (i % 4) * 0.08 + 's';
-    observer.observe(el);
+
+document.querySelectorAll('.loop-half video').forEach(video => {
+  video.addEventListener('loadeddata', () => {
+    const label = video.parentElement.querySelector('.loop-placeholder');
+    if (label) label.style.display = 'none';
   });
+});
+
+// Grain
+(function() {
+  const c = document.getElementById('grain');
+  const ctx = c.getContext('2d');
+  function draw() {
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    const img = ctx.createImageData(c.width, c.height);
+    for (let i = 0; i < img.data.length; i+=4) {
+      const v = Math.random()*255;
+      img.data[i]=img.data[i+1]=img.data[i+2]=v; img.data[i+3]=255;
+    }
+    ctx.putImageData(img,0,0); setTimeout(draw,80);
+  }
+  draw();
+})();
+
+// Back
+let _going = false;
+function goBack(target = 'index.html#xr-systems') {
+  if (_going) return; _going = true;
+  const f = document.createElement('div');
+  f.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:#050507;z-index:99999;opacity:0;pointer-events:all;transition:opacity 0.32s ease-in;';
+  document.body.appendChild(f);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    f.style.opacity='1';
+    setTimeout(()=>{ window.location.href=target; },340);
+  }));
+}
+const backBtn2 = document.getElementById('back-btn-2');
+if (backBtn2) backBtn2.addEventListener('click', e => { e.preventDefault(); goBack('index.html#xr-systems'); });
+const collapseBtn = document.querySelector('.case-collapse-btn');
+if (collapseBtn) collapseBtn.addEventListener('click', e => { e.preventDefault(); goBack('index.html#xr-systems'); });
+const nameBlock = document.getElementById('name-block');
+if (nameBlock) nameBlock.addEventListener('click', e => { e.preventDefault(); goBack('index.html'); });
+const rightBlock = document.getElementById('right-block');
+if (rightBlock) rightBlock.addEventListener('click', e => { e.preventDefault(); goBack('index.html#contact'); });
+
+// Fade in on arrival
+(function(){
+  const f=document.createElement('div');
+  f.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:#050507;z-index:99999;opacity:1;pointer-events:none;transition:opacity 0.45s ease-out;';
+  document.body.appendChild(f);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    f.style.opacity='0'; setTimeout(()=>f.remove(),500);
+  }));
+})();
+
+// Scroll fade-ups
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.transition='opacity 0.6s ease, transform 0.6s ease';
+      e.target.style.opacity='1'; e.target.style.transform='translateY(0)';
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+(function () {
+  const tiltEl = document.getElementById('signal-lock-hero-video');
+  if (!tiltEl) return;
+
+  const maxRotate = 1.9;
+  const innerShift = 5;
+  const maxDist = 900;
+
+  document.addEventListener('mousemove', (e) => {
+    const rect = tiltEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const dx = e.clientX - centerX;
+    const dy = e.clientY - centerY;
+
+    const px = dx / window.innerWidth;
+    const py = dy / window.innerHeight;
+
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const falloff = Math.max(0, 1 - dist / maxDist);
+
+    const rotateY = px * maxRotate * 26 * falloff;
+    const rotateX = py * -maxRotate * 26 * falloff;
+
+    tiltEl.style.transform = `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    const vid = tiltEl.querySelector('video');
+    if (vid) {
+      const moveX = px * -innerShift * 18 * falloff;
+      const moveY = py * -innerShift * 18 * falloff;
+      vid.style.transform = `scale(1.01) translate(${moveX}px, ${moveY}px)`;
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    tiltEl.style.transform = 'perspective(1400px) rotateX(0deg) rotateY(0deg)';
+    const vid = tiltEl.querySelector('video');
+    if (vid) {
+      vid.style.transform = 'scale(1) translate(0px, 0px)';
+    }
+  });
+})();
+
 </script>
 </body>
 </html>

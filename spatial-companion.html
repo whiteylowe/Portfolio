@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<title>Spatial Companion -- Nicholas Lowe</title>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --cyan: rgba(128,198,160,1);
+    --cyan-dim: rgba(128,198,160,0.68);
+    --cyan-faint: rgba(128,198,160,0.20);
+    --white: rgba(255,255,255,0.92);
+    --white-mid: rgba(255,255,255,0.78);
+    --white-dim: rgba(255,255,255,0.5);
+    --muted: rgba(255,255,255,0.50);
+    --bg: #050507;
+    --border: rgba(255,255,255,0.07);
+    --accent: 240, 220, 180;
+    --header-h: 112px;
+    --content-width: min(1320px, calc(100vw - 64px));
+  }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:#fff; font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; cursor:none; }
+
+  /* ── CUSTOM CURSOR ── */
+  #cursor { position:fixed; width:6px; height:6px; border-radius:50%; background:rgba(128,198,160,0.92); pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width 0.2s,height 0.2s; }
+  #cursor.hover { width:20px; height:20px; background:transparent; border:1px solid rgba(128,198,160,0.66); }
+  .cursor-trail { position:fixed; width:10px; height:10px; border-radius:50%; background:rgba(128,198,160,0.28); pointer-events:none; z-index:9998; transform:translate(-50%,-50%); box-shadow:0 0 12px rgba(128,198,160,0.16); animation:trailFade 0.55s ease-out forwards; }
+  @keyframes trailFade { 0%{opacity:0.9;transform:translate(-50%,-50%) scale(1);} 100%{opacity:0;transform:translate(-50%,-50%) scale(0.18);} }
+
+  /* ── GRAIN ── */
+  #grain { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.032; mix-blend-mode:screen; z-index:500; }
+
+  /* ── TOP NAV BAR ── */
+  .site-header {
+    position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50;
+    background:linear-gradient(180deg, rgba(5,5,7,0.98), rgba(5,5,7,0.84) 72%, rgba(5,5,7,0.14));
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .site-header::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.22), transparent);
+  }
+  .header-inner {
+    width:var(--content-width); height:100%; margin:0 auto;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  }
+  .brand { justify-self:center; text-align:center; }
+  #name {
+    font-size:22px; line-height:1; letter-spacing:0.28em; text-transform:uppercase; font-weight:400;
+    display:inline-block; position:relative;
+  }
+  #name::after {
+    content:""; position:absolute; left:0; right:0; bottom:-8px; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.72), transparent);
+  }
+  #name-sub { margin-top:14px; font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(var(--accent),0.78); font-family:'DM Mono',monospace; }
+  .contact { justify-self:end; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); text-decoration:none; }
+  .contact:hover { color:rgba(var(--accent),0.95); }
+
+  /* ── PAGE SHELL ── */
+  #content { padding:calc(var(--header-h) + 20px) 0 120px; max-width:1320px; margin:0 auto; }
+
+  /* ── HERO ── */
+  .hero { padding:72px 64px 64px; display:grid; grid-template-columns:1fr 400px; gap:80px; align-items:end; border-bottom:1px solid var(--border); }
+  .hero-eyebrow { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.35em; text-transform:uppercase; color:var(--cyan-dim); margin-bottom:22px; }
+  .hero-title { font-size:56px; letter-spacing:0.06em; text-transform:uppercase; font-weight:300; color:var(--white); line-height:1.0; margin-bottom:16px; white-space:nowrap; }
+  .hero-subtitle { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:36px; }
+  .hero-meta-block { margin-bottom:24px; }
+  .hero-meta-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); margin-bottom:7px; }
+  .hero-meta-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.75; }
+  .tools-strip { display:flex; gap:8px; flex-wrap:wrap; }
+  .tool-tag { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.2em; text-transform:uppercase; color:var(--cyan-dim); padding:5px 12px; border:1px solid var(--cyan-faint); }
+
+  /* ── SECTIONS ── */
+  .section { padding:0 64px; margin-bottom:88px; }
+  .section-label { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.35em; text-transform:uppercase; color:var(--cyan-dim); margin-bottom:32px; padding-bottom:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:16px; }
+  .section-label::before { content:''; width:18px; height:1px; background:var(--cyan-dim); }
+
+  /* ── VIDEO / IMAGE WRAPS ── */
+  .video-wrap { width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; border:1px solid var(--border); position:relative; }
+  .video-wrap video,.video-wrap img { width:100%; height:100%; object-fit:contain; display:block; background:#000; }
+
+  /* ── INTRO TEXT ── */
+  .reticle-intro { font-size:14px; color:var(--white-mid); font-weight:300; line-height:1.9; margin-bottom:40px; max-width:820px; }
+
+  /* ── 3-COL PEF GRID ── */
+  .pef-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); }
+  .pef-cell { background:var(--bg); padding:36px 32px; }
+  .pef-key { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; }
+  .pef-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.8; }
+
+  /* ── GLASSES HALF-FRAME SPLIT ── */
+  .glasses-split { display:grid; grid-template-columns:1fr 1fr; gap:0; align-items:stretch; border:1px solid var(--border); }
+  .glasses-media { overflow:hidden; background:#000; }
+  .glasses-media img { width:100%; height:100%; object-fit:cover; display:block; }
+  .glasses-copy { padding:48px 52px; display:flex; flex-direction:column; justify-content:center; border-left:1px solid var(--border); }
+  .glasses-eyebrow { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan-dim); margin-bottom:18px; }
+  .glasses-title { font-size:22px; font-weight:300; color:var(--white); letter-spacing:0.04em; margin-bottom:8px; line-height:1.2; }
+  .glasses-sub { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--cyan); margin-bottom:28px; }
+  .glasses-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.8; margin-bottom:14px; }
+  .glasses-tools { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+
+  /* ── PROCESS IMAGE ── */
+  .process-wrap { width:100%; background:#000; overflow:hidden; border:1px solid var(--border); }
+  .process-wrap img { width:100%; display:block; }
+
+  /* ── PROCESS 4-STEP STRIP ── */
+  .process-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); margin-top:1px; }
+  .process-step { background:var(--bg); padding:28px 26px; }
+  .process-num { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+  .process-step-title { font-size:13px; font-weight:400; color:var(--white); margin-bottom:10px; letter-spacing:0.02em; }
+  .process-step-text { font-size:12px; color:var(--white-mid); font-weight:300; line-height:1.76; }
+
+  /* ── LOOP / AI AGENT IMAGE ── */
+  .loop-wrap { width:100%; background:#0a0a0f; overflow:hidden; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; padding:56px; }
+  .loop-wrap img { max-width:640px; width:100%; display:block; }
+
+  /* ── PERCEPTUAL PRINCIPLES ── */
+  .principles-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
+  .principles-lead { font-size:15px; color:var(--white); font-weight:300; line-height:1.8; margin-bottom:28px; }
+  .principles-list { list-style:none; display:flex; flex-direction:column; gap:18px; }
+  .principles-list li { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.72; padding-left:20px; position:relative; }
+  .principles-list li::before { content:'+'; position:absolute; left:0; color:var(--cyan-dim); }
+  .principles-quote { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.1em; line-height:2.0; color:var(--white-mid); border-left:1px solid var(--cyan-faint); padding-left:28px; }
+
+  /* ── BEHAVIORAL STUDIES 3-COL ── */
+  .behavioral-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+  .behavioral-card { background:var(--bg); }
+  .behavioral-media { width:100%; aspect-ratio:1/1; overflow:hidden; background:#000; position:relative; }
+  .behavioral-media video,.behavioral-media img { width:100%; height:100%; object-fit:cover; display:block; }
+  .behavioral-body { padding:24px 22px 30px; }
+  .behavioral-title { font-size:13px; letter-spacing:0.03em; color:var(--white); font-weight:400; margin-bottom:5px; }
+  .behavioral-sub { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:13px; }
+  .behavioral-text { font-size:12px; color:var(--white-mid); font-weight:300; line-height:1.72; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav { padding:48px 64px 92px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .nav-btn { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.64); background:none; border:none; cursor:none; display:flex; align-items:center; gap:8px; transition:color 0.2s; text-decoration:none; }
+  .nav-btn:hover { color:var(--cyan); }
+  .nav-label { font-size:8px; letter-spacing:0.2em; color:rgba(255,255,255,0.46); display:block; margin-bottom:3px; text-align:right; }
+  .nav-btn-left { flex-direction:column; align-items:flex-start; }
+  .nav-label-left { text-align:left; }
+
+  /* ── SCROLL TOP ── */
+  .case-scroll-top-wrap { display:block; height:0; }
+  .case-scroll-top-btn { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); width:24px; height:24px; border:1px solid rgba(128,198,160,0.54); background:rgba(12,24,19,0.9); color:rgba(154,218,179,0.96); display:inline-flex; align-items:center; justify-content:center; border-radius:5px; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.03); transition:color 0.2s,border-color 0.2s,background 0.2s,transform 0.2s; text-decoration:none; cursor:none; z-index:1095; }
+  .case-scroll-top-btn:hover { color:rgba(198,240,213,1); border-color:rgba(152,222,184,0.86); background:rgba(16,31,24,0.96); transform:translateX(-50%) translateY(-1px); }
+  .case-scroll-top-glyph { position:relative; width:0; height:0; color:inherit; }
+  .case-scroll-top-glyph::before,.case-scroll-top-glyph::after { content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .case-scroll-top-glyph::before { width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-bottom:6px solid currentColor; margin-top:-3px; }
+  .case-scroll-top-glyph::after { width:8px; height:1px; background:currentColor; margin-top:4px; opacity:0.82; }
+
+  /* ── DESIGNED BY ── */
+  .designed-by { text-align:center; font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.36); padding:8px 20px 54px; }
+
+  /* ── FADE UP ── */
+  .fade-up { opacity:0; transform:translateY(18px); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:1100px) {
+    .hero { grid-template-columns:1fr; gap:40px; }
+    .pef-grid,.behavioral-grid,.process-strip { grid-template-columns:1fr; }
+    .glasses-split { grid-template-columns:1fr; }
+    .glasses-media { height:280px; }
+    .principles-grid { grid-template-columns:1fr; }
+  }
+  @media (max-width:720px) {
+    #ui { padding:16px 20px 0; }
+    #content { padding-top:170px; }
+    .hero,.section,.bottom-nav { padding-left:20px; padding-right:20px; }
+    .hero-title { font-size:42px; white-space:normal; }
+    .bottom-nav { gap:16px; align-items:flex-start; flex-direction:column; }
+    .loop-wrap { padding:28px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div></div>
+    <a href="index.html" style="text-decoration:none;color:inherit;justify-self:center;">
+<div class="brand">
+      <div id="name">Nicholas Lowe</div>
+      <div id="name-sub" class="mono">Technical Artist &bull; XR Systems &bull; Environment Design</div>
+    </div>
+    <a class="contact mono" href="mailto:nicklowe3d@gmail.com">Contact</a>
+  </div>
+</header>
+
+<canvas id="grain"></canvas>
+<div id="cursor"></div>
+
+<main id="content">
+<div id="top"></div>
+
+<!-- ══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">XR Systems &nbsp;/&nbsp; Ambient AR Entity</div>
+    <h1 class="hero-title">Spatial Companion</h1>
+    <div class="hero-subtitle">Persistent Presence Interface Study</div>
+    <div class="tools-strip">
+      <span class="tool-tag">Blender</span>
+      <span class="tool-tag">Procedural Animation</span>
+      <span class="tool-tag">Behavior Studies</span>
+      <span class="tool-tag">XR Prototyping</span>
+      <span class="tool-tag">XREAL</span>
+    </div>
+  </div>
+  <div>
+    <div class="hero-meta-block">
+      <div class="hero-meta-label">Problem</div>
+      <div class="hero-meta-text">Most AR interfaces appear on demand. Efficient, but lacking continuity, presence, and readability over time.</div>
+    </div>
+    <div class="hero-meta-block">
+      <div class="hero-meta-label">Focus</div>
+      <div class="hero-meta-text">Presence modeling, attention signaling, and stable interaction in lightweight AR.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CASE STUDY OVERVIEW + 3-COL
+════════════════════════════════════════════ -->
+<div class="section fade-up" style="margin-bottom:0; padding-bottom:0;">
+  <div class="section-label">Case Study Overview</div>
+  <p class="reticle-intro">Spatial Companion explores an alternative to utility-driven AR. Instead of appearing on demand, the system exists as a persistent presence. Interaction is driven through motion, behavior, and attention, not interface density.</p>
+</div>
+<div style="margin-bottom:88px; padding:0 64px;">
+  <div class="pef-grid fade-up">
+    <div class="pef-cell">
+      <div class="pef-key">Problem</div>
+      <div class="pef-text">AR systems are optimized for quick access, not long-term presence. Entities appear and disappear, limiting continuity and emotional readability.</div>
+    </div>
+    <div class="pef-cell">
+      <div class="pef-key">Approach</div>
+      <div class="pef-text">A stylized companion acts as the interface. Motion, state changes, and placement become the communication layer. Behavior replaces UI elements.</div>
+    </div>
+    <div class="pef-cell">
+      <div class="pef-key">Outcome</div>
+      <div class="pef-text">A system where presence carries meaning. Stability, timing, and motion create a readable interaction model without overlays.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HERO VIDEO
+════════════════════════════════════════════ -->
+<div class="section fade-up">
+  <div class="section-label">Hero Video</div>
+  <div class="video-wrap">
+    <video controls autoplay muted loop playsinline preload="metadata">
+      <source src="./videos/X_Spatial_Companion_1.mp4" type="video/mp4">
+      Your browser could not load this video.
+    </video>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GLASSES HALF-FRAME SPLIT
+════════════════════════════════════════════ -->
+<div class="section fade-up">
+  <div class="section-label">Thumbnail Display</div>
+  <div class="glasses-split">
+  <div class="glasses-media" style="height:auto;">
+  <video autoplay muted loop playsinline preload="metadata" style="width:100%;height:auto;display:block;">
+    <source src="./videos/X_Companion_Glasses.mp4" type="video/mp4">
+  </video>
+</div>
+    <div class="glasses-copy">
+      <div class="glasses-eyebrow">Ambient AR Entity</div>
+      <div class="glasses-title">A Spatial Companion</div>
+      <div class="glasses-sub">Persistent Presence Interface</div>
+      <p class="glasses-text">Spatial AI systems must communicate state, intent, and presence while minimizing perceptual and cognitive load.</p>
+      <p class="glasses-text">The companion functions as a continuous perceptual participant, communicating through motion, attention cues, and behavioral continuity.</p>
+      <div class="glasses-tools">
+        <span class="tool-tag">Gesture Detection</span>
+        <span class="tool-tag">Notification</span>
+        <span class="tool-tag">Mode Switch</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PROCESS & SYSTEM DESIGN
+════════════════════════════════════════════ -->
+<div style="margin-bottom:88px;">
+  <div class="section" style="margin-bottom:28px;">
+    <div class="section-label">Process &amp; System Design</div>
+  </div>
+  <div style="padding:0 64px;">
+    <div class="process-wrap fade-up">
+      <img src="./images/X_Companion_Process.jpg" alt="Process and System Design diagram" />
+    </div>
+    <div class="process-strip fade-up">
+      <div class="process-step">
+        <div class="process-num">01 &mdash; Problem Mapping</div>
+        <div class="process-step-title">Identifying the Friction</div>
+        <div class="process-step-text">Identified power drain and visual overload caused by animated AR menus in outdoor use. Defined instant-glance visual cues that stay legible without stealing attention.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02 &mdash; Scenario Designs</div>
+        <div class="process-step-title">Storyboarding Personas</div>
+        <div class="process-step-text">Storyboarded tasks for Jogger, Creator, Investigator, and Streamer personas in Figma. Color-coded stencils reusing elements for nav, status, and media control.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03 &mdash; Interaction Prototyping</div>
+        <div class="process-step-title">Rapid Test Loops</div>
+        <div class="process-step-text">Tested stencil design across roles, reusing dots for nav, status, and media. Refined colors, timing, and position through rapid loops with engineers.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">04 &mdash; System Archetypes</div>
+        <div class="process-step-title">Modular Stencil Specs</div>
+        <div class="process-step-text">Presented modular stencil specs for cross-discipline stakeholder review. Uploaded to interaction library for future low-power AR builds.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     AI AGENT LOOP IMAGE
+════════════════════════════════════════════ -->
+<div class="section fade-up">
+  <div class="section-label">AI Agent Interactions</div>
+  <div class="loop-wrap">
+    <img src="./images/X_Companion_Loop.jpg" alt="AI Agent interaction loop diagram" style="max-width:480px;" />
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PERCEPTUAL INTERFACE PRINCIPLES
+════════════════════════════════════════════ -->
+<div class="section fade-up">
+  <div class="section-label">Perceptual Interface Principles</div>
+  <div class="principles-grid">
+    <div>
+      <p class="principles-lead">Clarity emerges from stability, timing, and behavioral hierarchy rather than visual density.</p>
+      <ul class="principles-list">
+        <li>Motion relationships guide attention more effectively than persistent UI chrome.</li>
+        <li>Presence requires continuity across idle, active, and transitional states.</li>
+        <li>In lightweight AR, the environment is part of the interface grammar.</li>
+      </ul>
+    </div>
+    <div class="principles-quote">
+      The companion is not a mascot layered onto space. It is a probe into how interface behavior can feel embodied, ambient, and emotionally legible within a shared physical environment.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BEHAVIORAL STUDIES
+════════════════════════════════════════════ -->
+<div style="margin-bottom:88px;">
+  <div class="section" style="margin-bottom:28px;">
+    <div class="section-label">Behavioral Studies</div>
+  </div>
+  <div style="padding:0 64px;">
+    <div class="behavioral-grid fade-up">
+
+      <!-- 1: Attention Response -->
+      <div class="behavioral-card">
+        <div class="behavioral-media">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="./videos/X_Companion_Gesture.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="behavioral-body">
+          <div class="behavioral-title">Attention Response</div>
+          <div class="behavioral-sub">Intent Recognition Behavior</div>
+          <div class="behavioral-text">Companion posture and motion reflect perceived user intent, reinforcing gesture recognition through subtle behavioral confirmation.</div>
+        </div>
+      </div>
+
+      <!-- 2: Informational Signaling -->
+      <div class="behavioral-card">
+        <div class="behavioral-media" style="background:#000; display:flex; align-items:center; justify-content:center;">
+          <video autoplay muted loop playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;background:#000;">
+            <source src="./videos/X_Companion_Joe.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="behavioral-body">
+          <div class="behavioral-title">Informational Signaling</div>
+          <div class="behavioral-sub">Contextual Message Display</div>
+          <div class="behavioral-text">Semantic cues appear transiently, communicating system state without disrupting perceptual continuity.</div>
+        </div>
+      </div>
+
+      <!-- 3: Spatial Anchoring -->
+      <div class="behavioral-card">
+        <div class="behavioral-media">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="./videos/X_Companion_Anchor.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="behavioral-body">
+          <div class="behavioral-title">Spatial Anchoring</div>
+          <div class="behavioral-sub">World-Locked Behavior</div>
+          <div class="behavioral-text">Companion motion remains spatially stable, reinforcing continuity between entity behavior and environmental context.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCROLL TOP + FOOTER
+════════════════════════════════════════════ -->
+<div class="case-scroll-top-wrap">
+  <a class="case-scroll-top-btn" href="#top" aria-label="Scroll to top">
+    <span class="case-scroll-top-glyph" aria-hidden="true"></span>
+  </a>
+</div>
+
+<div class="designed-by">Designed by Nicholas Lowe</div>
+
+<div class="bottom-nav">
+  <a href="signal-lock.html" class="nav-btn nav-btn-left">
+    <span class="nav-label nav-label-left">Previous</span>
+    &#8592; Signal Lock
+  </a>
+  <a href="mixed-reality-prototypes.html" class="nav-btn" style="flex-direction:column;align-items:flex-end;">
+    <span class="nav-label">Next</span>
+    Mixed Reality Prototypes &#8594;
+  </a>
+</div>
+
+</main>
+
+<script>
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  const t = document.createElement('div');
+  t.className = 'cursor-trail';
+  t.style.left = e.clientX + 'px';
+  t.style.top = e.clientY + 'px';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 560);
+});
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+/* ── GRAIN ── */
+(function() {
+  const c = document.getElementById('grain');
+  const ctx = c.getContext('2d');
+  function draw() {
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    const img = ctx.createImageData(c.width, c.height);
+    for (let i = 0; i < img.data.length; i+=4) {
+      const v = Math.random()*255;
+      img.data[i]=img.data[i+1]=img.data[i+2]=v; img.data[i+3]=255;
+    }
+    ctx.putImageData(img,0,0); setTimeout(draw,80);
+  }
+  draw();
+})();
+
+/* ── PAGE FADE IN ── */
+(function(){
+  const f = document.createElement('div');
+  f.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#050507;z-index:99999;opacity:1;pointer-events:none;transition:opacity 0.45s ease-out;';
+  document.body.appendChild(f);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    f.style.opacity='0'; setTimeout(()=>f.remove(),500);
+  }));
+})();
+
+/* ── FADE UP ON SCROLL ── */
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.transition='opacity 0.6s ease, transform 0.6s ease';
+      e.target.style.opacity='1'; e.target.style.transform='translateY(0)';
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.06});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
