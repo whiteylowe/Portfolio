@@ -128,6 +128,13 @@
   .proto-img img { width:100%; height:100%; object-fit:cover; opacity:0.85; display:block; }
   .proto-img-placeholder { display:flex; align-items:center; justify-content:center; height:100%; font-family:'DM Mono',monospace; font-size:8px; color:rgba(255,255,255,0.1); letter-spacing:0.15em; text-transform:uppercase; }
 
+  /* Portfolio embed */
+  .proto-embed-intro { margin-bottom:24px; max-width:700px; }
+  .proto-embed-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; }
+  .proto-embed-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.8; }
+  .proto-embed-frame { width:100%; aspect-ratio:16/9; border:1px solid var(--border); overflow:hidden; background:#050507; }
+  .proto-embed-frame iframe { width:100%; height:100%; border:none; display:block; }
+
   /* Tools */
   .tools-strip { display:flex; gap:8px; flex-wrap:wrap; }
   .tool-tag { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.2em; text-transform:uppercase; color:var(--cyan-dim); padding:5px 12px; border:1px solid var(--cyan-faint); }
@@ -901,6 +908,17 @@ In wearable view, those same relationships condense into reticle stability and s
         <div class="proto-img">
           <img src="./gifs/Signal_Lock_Situated.gif" alt="Spatial Monitor Display situated operation" onerror="this.style.display='none'">
         </div>
+      </div>
+    </div>
+
+    <!-- Portfolio hero embed -->
+    <div class="section fade-up" style="margin-top:48px;">
+      <div class="proto-embed-intro">
+        <div class="proto-embed-label">Portfolio Environment</div>
+        <p class="proto-embed-text">The same spatial logic that drives Signal Lock extends into the portfolio itself. The hero environment below is built on Three.js -- project planes drift through dark space, sharpening on proximity. Interaction is ambient. Presence is the interface.</p>
+      </div>
+      <div class="proto-embed-frame">
+        <iframe src="Signal_Glasses.html" title="Portfolio Hero Environment" allowfullscreen></iframe>
       </div>
     </div>
   </div>
