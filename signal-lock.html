@@ -310,12 +310,81 @@ body { cursor: none !important; }
 
 .case-page-shell, #content, main.case-page-shell { max-width: 1320px !important; margin: 0 auto !important; }
 .case-scroll-top-wrap { display:flex; justify-content:center; padding: 0 0 72px; }
-.case-scroll-top-btn { position: relative; width: 24px; height: 24px; border: 1px solid rgba(100,220,255,0.45); background: rgba(7,18,24,0.84); color: rgba(110,220,255,0.95); display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03); transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; text-decoration:none; cursor:none; }
-.case-scroll-top-btn:hover { color: rgba(170,240,255,1); border-color: rgba(100,220,255,0.78); background: rgba(10,28,36,0.96); transform: translateY(-1px); }
-.case-scroll-top-glyph { position:relative; width:0; height:0; color: inherit; }
-.case-scroll-top-glyph::before,.case-scroll-top-glyph::after { content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
-.case-scroll-top-glyph::before { width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-bottom:6px solid currentColor; margin-top:-3px; }
-.case-scroll-top-glyph::after { width:8px; height:1px; background: currentColor; margin-top:4px; opacity:0.82; }
+
+.case-scroll-top-btn {
+  animation: scrollPulse 2.6s ease-in-out infinite;
+position: relative;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(100,220,255,0.45);
+  background: rgba(7,18,24,0.84);
+  color: rgba(110,220,255,0.95);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  text-decoration:none;
+  cursor:none;
+  overflow: visible;
+}
+.case-scroll-top-btn:hover {
+  color: rgba(170,240,255,1);
+  border-color: rgba(100,220,255,0.82);
+  background: rgba(10,28,36,0.96);
+  box-shadow: 0 0 18px rgba(100,220,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.case-scroll-top-btn:hover .case-scroll-top-glyph {
+  animation: scrollTopHop 0.56s cubic-bezier(.22,.7,.2,1) infinite;
+}
+.case-scroll-top-btn.is-jumping .case-scroll-top-glyph {
+  animation: scrollTopLaunch 0.34s cubic-bezier(.22,.8,.22,1) forwards;
+}
+.case-scroll-top-glyph {
+  position:relative;
+  width:10px;
+  height:10px;
+  color: inherit;
+  transform: translateY(0);
+  will-change: transform, opacity;
+}
+.case-scroll-top-glyph::before,
+.case-scroll-top-glyph::after {
+  content:'';
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+.case-scroll-top-glyph::before {
+  width:0;
+  height:0;
+  border-left:4px solid transparent;
+  border-right:4px solid transparent;
+  border-bottom:6px solid currentColor;
+  margin-top:-3px;
+}
+.case-scroll-top-glyph::after {
+  width:8px;
+  height:1px;
+  background: currentColor;
+  margin-top:4px;
+  opacity:0.82;
+}
+@keyframes scrollTopHop {
+  0%   { transform: translateY(0); opacity: 1; }
+  20%  { transform: translateY(-1px); opacity: 1; }
+  45%  { transform: translateY(-15px); opacity: 1; }
+  55%  { transform: translateY(-5px); opacity: 0.98; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes scrollTopLaunch {
+  0%   { transform: translateY(0); opacity: 1; }
+  35%  { transform: translateY(-6px); opacity: 1; }
+  100% { transform: translateY(-38px); opacity: 0; }
+}
+
 
 
   /* Added signal lock split section */
@@ -488,6 +557,117 @@ body { cursor: none !important; }
   .contact{justify-self:end;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.50);}
   .contact:hover{color:rgba(100,200,255,0.95);}
   .mono{font-family:'DM Mono',monospace;}
+
+
+
+.hero {
+  position: relative;
+  padding: 72px 64px 64px;
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 80px;
+  align-items: end;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 420px;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-bg-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-bg-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;              /* most important for border-trimmed fill */
+  opacity: 0.98;                  /* most important overall visibility control */
+  filter: grayscale(0.10) brightness(0.60) contrast(1.15); /* main image feel */
+  transform: scale(1.03);         /* prevents edge reveal while moving */
+}
+
+.hero-bg-video::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.12;                  /* grain strength */
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.22) 0.7px, transparent 1.4px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.18) 0.6px, transparent 1.3px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.15) 0.8px, transparent 1.6px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.16) 0.7px, transparent 1.5px);
+  background-size: 130px 130px, 170px 170px, 110px 110px, 190px 190px;
+  mix-blend-mode: screen;
+  animation: heroGrainShift 0.9s steps(2) infinite;
+}
+
+.hero-bg-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(5,5,7,0.62) 0%, rgba(5,5,7,0.34) 38%, rgba(5,5,7,0.78) 100%),
+    linear-gradient(90deg, rgba(5,5,7,0.20) 0%, rgba(5,5,7,0.03) 35%, rgba(5,5,7,0.30) 100%),
+    radial-gradient(circle at 30% 42%, rgba(100,200,255,0.06), transparent 58%);
+  z-index: 1;
+}
+
+@keyframes heroGrainShift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-1.5%, 1%); }
+  50%  { transform: translate(1%, -1.2%); }
+  75%  { transform: translate(-0.8%, 1.4%); }
+  100% { transform: translate(0, 0); }
+}
+
+
+.header-back{
+  justify-self:start;
+  align-self:center;
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.44);
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  transition:color 0.22s ease, opacity 0.22s ease, transform 0.22s ease;
+  cursor:none;
+}
+.header-back:hover{
+  color:rgba(100,200,255,0.95);
+  transform:translateX(-1px);
+}
+.header-next{
+  justify-self:end;
+  align-self:center;
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.40);
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  transition:color 0.22s ease, opacity 0.22s ease, transform 0.22s ease;
+  cursor:none;
+}
+.header-next:hover{
+  color:rgba(100,200,255,0.95);
+  transform:translateX(1px);
+}
 </style>
 </head>
 <body>
@@ -495,11 +675,12 @@ body { cursor: none !important; }
 
 <header class="site-header">
   <div class="header-inner">
-    <div></div>
-   <a class="brand" href="index.html" style="text-decoration:none;color:inherit;cursor:pointer;">
-  <div id="name">Nicholas Lowe</div>
-  <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
-</a>
+    <a class="header-back" href="index.html#xr-systems" id="header-back-link">← XR Systems</a>
+    <a class="brand" href="index.html" style="text-decoration:none;color:inherit;cursor:pointer;">
+      <div id="name">Nicholas Lowe</div>
+      <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
+    </a>
+    <a class="header-next" href="spatial-companion.html" id="header-next-link">Spatial Companion →</a>
   </div>
 </header>
 
@@ -516,6 +697,12 @@ body { cursor: none !important; }
 
   <!-- Hero -->
   <div class="hero">
+  <div class="hero-bg-video">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="./videos/Signal_Drone.mp4" type="video/mp4">
+    </video>
+  </div>
+
     <div>
       <div class="hero-eyebrow">XR Systems &nbsp;/&nbsp; Perceptual Interface</div>
       <h1 class="hero-title">Signal<br>Lock</h1>
@@ -719,7 +906,7 @@ In wearable view, those same relationships condense into reticle stability and s
   </div>
 
   <!-- Bottom nav -->
-  <div class="case-scroll-top-wrap"><a class="case-scroll-top-btn" href="#top" aria-label="Scroll to top"><span class="case-scroll-top-glyph" aria-hidden="true"></span></a></div>
+  <div class="case-scroll-top-wrap"><a class="case-scroll-top-btn" href="#top" id="scroll-top-btn" aria-label="Scroll to top"><span class="case-scroll-top-glyph" aria-hidden="true"></span></a></div>
 
   <div class="bottom-nav">
     <a href="index.html#xr-systems" class="nav-btn" id="back-btn-2">&#8592; Back to XR Systems</a>
@@ -785,6 +972,26 @@ function goBack(target = 'index.html#xr-systems') {
     setTimeout(()=>{ window.location.href=target; },340);
   }));
 }
+const headerBackLink = document.getElementById('header-back-link');
+if (headerBackLink) headerBackLink.addEventListener('click', e => { e.preventDefault(); goBack('index.html#xr-systems'); });
+
+const headerNextLink = document.getElementById('header-next-link');
+if (headerNextLink) headerNextLink.addEventListener('click', e => { e.preventDefault(); goBack('spatial-companion.html'); });
+
+
+const scrollTopBtn = document.getElementById('scroll-top-btn');
+if (scrollTopBtn) {
+  scrollTopBtn.addEventListener('click', e => {
+    e.preventDefault();
+    if (scrollTopBtn.classList.contains('is-jumping')) return;
+    scrollTopBtn.classList.add('is-jumping');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => scrollTopBtn.classList.remove('is-jumping'), 260);
+    }, 170);
+  });
+}
+
 const backBtn2 = document.getElementById('back-btn-2');
 if (backBtn2) backBtn2.addEventListener('click', e => { e.preventDefault(); goBack('index.html#xr-systems'); });
 const collapseBtn = document.querySelector('.case-collapse-btn');

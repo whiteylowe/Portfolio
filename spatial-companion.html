@@ -176,6 +176,44 @@
     .bottom-nav { gap:16px; align-items:flex-start; flex-direction:column; }
     .loop-wrap { padding:28px; }
   }
+
+  :root {
+    --accent: 240, 220, 180;
+    --content-width: min(1320px, calc(100vw - 64px));
+    --header-h: 110px;
+  }
+  .site-header{
+    position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50;
+    background:linear-gradient(180deg, rgba(2,2,4,0.99) 70%, rgba(2,2,4,0.93));
+    backdrop-filter:blur(2px); border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .site-header::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.22), transparent);
+  }
+  .header-inner{
+    width:var(--content-width); height:calc(100% - 40px); margin:0 auto;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:start; padding-top:20px;
+  }
+  .brand-sl{ justify-self:center; text-align:center; display:block; text-decoration:none; color:inherit; }
+  #name{ font-size:22px; line-height:1; letter-spacing:0.28em; text-transform:uppercase; font-weight:400; display:inline-block; position:relative; }
+  #name::after{ content:""; position:absolute; left:0; right:0; bottom:-8px; height:1px; background:linear-gradient(90deg, transparent, rgba(var(--accent),0.72), transparent); }
+  #name-sub{ margin-top:14px; font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(var(--accent),0.78); }
+  .site-nav{ position:absolute; bottom:0; left:0; right:0; height:40px; display:flex; align-items:center; justify-content:center; border-top:1px solid rgba(255,255,255,0.06); }
+  .site-nav-item{ position:relative; display:flex; align-items:center; }
+  .site-nav-sep{ width:1px; height:14px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+  .site-nav-btn{ border:none; background:none; color:rgba(255,255,255,0.38); font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.24em; text-transform:uppercase; padding:0 48px; height:40px; white-space:nowrap; display:flex; align-items:center; gap:7px; transition:color .18s ease; text-decoration:none; }
+  .site-nav-btn:hover{ color:rgba(255,255,255,0.82); }
+  .site-nav-btn.active{ color:rgba(var(--accent),0.90); }
+  .site-nav-btn.has-drop::after{ content:""; width:0; height:0; border-left:3px solid transparent; border-right:3px solid transparent; border-top:4px solid currentColor; opacity:0.5; transition:transform .18s ease; }
+  .site-nav-item.drop-open .site-nav-btn.has-drop::after{ transform:rotate(180deg); }
+  .site-nav-drop{ position:absolute; top:calc(100% + 2px); left:50%; transform:translateX(-50%) translateY(-6px); min-width:190px; background:rgba(4,4,6,0.98); border:1px solid rgba(255,255,255,0.09); backdrop-filter:blur(20px); padding:6px 0; opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:80; }
+  .site-nav-item.drop-open .site-nav-drop{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+  .site-nav-drop-item{ display:block; width:100%; padding:9px 18px; border:none; background:none; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.46); text-align:left; white-space:nowrap; text-decoration:none; transition:color .14s ease, background .14s ease; }
+  .site-nav-drop-item:hover{ color:rgba(var(--accent),0.90); background:rgba(255,255,255,0.03); }
+  #content{ padding-top:var(--header-h); }
+  .sl-logo-footer{ width:var(--content-width); margin:0 auto; padding:48px 0; text-align:center; }
+  .sl-logo-footer-label{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(255,255,255,0.20); margin-bottom:20px; }
 </style>
 </head>
 <body>
@@ -183,13 +221,36 @@
 <header class="site-header">
   <div class="header-inner">
     <div></div>
-    <a href="index.html" style="text-decoration:none;color:inherit;justify-self:center;">
-<div class="brand">
+    <a href="index.html" class="brand-sl">
       <div id="name">Nicholas Lowe</div>
-      <div id="name-sub" class="mono">Technical Artist &bull; XR Systems &bull; Environment Design</div>
-    </div>
-    <a class="contact mono" href="mailto:nicklowe3d@gmail.com">Contact</a>
+      <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
+    </a>
+    <div></div>
   </div>
+  <nav class="site-nav">
+    <div class="site-nav-item">
+      <a class="site-nav-btn mono has-drop" href="index.html">XR Systems</a>
+      <div class="site-nav-drop">
+        <a class="site-nav-drop-item mono" href="signal-lock.html">Signal Lock</a>
+        <a class="site-nav-drop-item mono" href="spatial-companion.html">Spatial Companion</a>
+        <a class="site-nav-drop-item mono" href="index.html?open=xr&card=Mixed+Reality">Mixed Reality</a>
+      </div>
+    </div>
+    <div class="site-nav-sep"></div>
+    <div class="site-nav-item">
+      <a class="site-nav-btn mono has-drop" href="index.html?open=spatial">Spatial Designs</a>
+      <div class="site-nav-drop">
+        <a class="site-nav-drop-item mono" href="index.html?open=spatial&card=Midnight+Miso">Midnight Miso</a>
+        <a class="site-nav-drop-item mono" href="index.html?open=spatial&card=Naoko+Shrine">Naoko Shrine</a>
+        <a class="site-nav-drop-item mono" href="index.html?open=spatial&card=To+Hell+With+It">To Hell With It</a>
+        <a class="site-nav-drop-item mono" href="index.html?open=spatial&card=Architecture">Architecture</a>
+      </div>
+    </div>
+    <div class="site-nav-sep"></div>
+    <a class="site-nav-btn mono" href="index.html?open=thesis">Research</a>
+    <div class="site-nav-sep"></div>
+    <a class="site-nav-btn mono" href="index.html?open=about">About</a>
+  </nav>
 </header>
 
 <canvas id="grain"></canvas>
@@ -433,6 +494,11 @@
   </a>
 </div>
 
+
+  <div class="sl-logo-footer">
+    <div class="sl-logo-footer-label mono">Collaborators</div>
+    <img src="./images/Logo_Long_2.jpg" alt="Collaborators" style="width:50%;display:block;margin:0 auto;opacity:0.55;">
+  </div>
 </main>
 
 <script>
@@ -490,6 +556,22 @@ const obs = new IntersectionObserver(entries=>{
   });
 },{threshold:0.06});
 document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+</script>
+
+<script>
+document.querySelectorAll('.site-nav-btn.has-drop').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    const item = btn.closest('.site-nav-item');
+    const wasOpen = item.classList.contains('drop-open');
+    document.querySelectorAll('.site-nav-item.drop-open').forEach(el => el.classList.remove('drop-open'));
+    if(!wasOpen) item.classList.add('drop-open');
+    else window.location.href = btn.getAttribute('href');
+  });
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.site-nav-item.drop-open').forEach(el => el.classList.remove('drop-open'));
+});
 </script>
 </body>
 </html>

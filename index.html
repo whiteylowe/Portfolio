@@ -17,7 +17,7 @@
     --accent: 240, 220, 180;
     --content-width:min(1320px, calc(100vw - 64px));
     --hero-width:min(1400px, calc(100vw - 40px));
-    --header-h:112px;
+    --header-h:110px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:auto}
@@ -28,8 +28,8 @@
 
   .site-header{
     position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50;
-    background:linear-gradient(180deg, rgba(5,5,7,0.98), rgba(5,5,7,0.84) 72%, rgba(5,5,7,0.14));
-    backdrop-filter:blur(12px);
+    background:linear-gradient(180deg, rgba(2,2,4,0.99) 70%, rgba(2,2,4,0.93));
+    backdrop-filter:blur(2px);
     border-bottom:1px solid rgba(255,255,255,0.05);
   }
   .site-header::after{
@@ -38,10 +38,10 @@
   }
   .header-inner{
     width:var(--content-width); height:100%; margin:0 auto;
-    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:start; padding-top:20px;
   }
   .brand{justify-self:center; text-align:center; display:block}
-  .header-left-controls{justify-self:start; display:flex; align-items:center; margin-top:10px}
+  .header-left-controls{justify-self:start; display:flex; align-items:center; margin-top:20px}
   #name{
     font-size:22px; line-height:1; letter-spacing:0.28em; text-transform:uppercase; font-weight:400;
     display:inline-block; position:relative;
@@ -57,7 +57,7 @@
     flex-direction:column;
     align-items:flex-end;
     gap:6px;
-    margin-top:10px;
+    margin-top:20px;
     position:relative;
   }
   .audio-toggle,
@@ -189,8 +189,8 @@
   }
   .shake{animation:shake .35s ease}
 
-  main{padding-top:calc(var(--header-h) + 20px)}
-  .hero-wrap{width:var(--content-width); margin:0 auto; padding-bottom:32px}
+  main{padding-top:var(--header-h)}
+  .hero-wrap{width:var(--content-width); margin:-90px auto 0; padding-bottom:32px}
   .hero-stage{
     position:relative; width:var(--hero-width); aspect-ratio:16/9; margin:0 auto;
     background:#09090c; overflow:hidden; border:1px solid rgba(255,255,255,0.06);
@@ -280,15 +280,13 @@
     position:absolute; left:28px; right:28px; bottom:-22px; z-index:6; pointer-events:none;
     display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
   }
-  .hero-copy{max-width:720px; transform:translateY(0)}
+  .hero-copy{max-width:1000px; transform:translateY(0)}
   .eyebrow{font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:rgba(var(--accent),.82); margin-bottom:10px}
   .headline{font-size:clamp(24px, 4.4vw, 40px); line-height:.96; font-weight:400; letter-spacing:.04em; text-transform:uppercase}
   .summary{margin-top:12px; max-width:760px; font-size:13px; line-height:1.65; color:rgba(255,255,255,.60)}
   .meta{display:flex; flex-wrap:wrap; gap:10px 18px; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.40); margin-top:14px}
 
-  .nav-row{
-    width:var(--hero-width); margin:18px auto 0; display:flex; flex-wrap:wrap; gap:10px;
-  }
+  .nav-row{ display:none; }
   .nav-btn{
     border:1px solid rgba(255,255,255,0.10); background:rgba(9,12,16,0.38); color:rgba(255,255,255,0.52);
     padding:12px 16px; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; cursor:none;
@@ -357,6 +355,7 @@
   }
   /* Hero top grid becomes stacked for first image full-width */
   .detail-top{display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px}
+  .detail-hero.no-span{ grid-column:auto !important; width:auto !important; }
   .detail-hero{aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:rgba(0,0,0,0.32)}
   .detail-hero img,.detail-hero video{width:100%; height:100%; object-fit:contain; display:block}
   .detail-meta{display:grid; gap:10px; align-content:start}
@@ -559,7 +558,7 @@
     .detail-top,.detail-grid{grid-template-columns:1fr}
     #name{font-size:18px}
     #name-sub{font-size:9px}
-    :root{--header-h:122px}
+    :root{--header-h:110px}
   }
 
   /* Spatial case study layout (ported from 299) */
@@ -648,6 +647,118 @@
   }
 
 
+
+  /* ── SITE NAV BAR ─────────────────────────────────────── */
+  .site-nav{
+    position:absolute; bottom:0; left:0; right:0; height:40px;
+    display:flex; align-items:center; justify-content:center;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .site-nav-item{ position:relative; display:flex; align-items:center; }
+  .site-nav-sep{ width:1px; height:14px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+  .site-nav-btn{
+    border:none; background:none; color:rgba(255,255,255,0.38);
+    font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.24em; text-transform:uppercase;
+    padding:0 48px; height:40px; white-space:nowrap;
+    display:flex; align-items:center; gap:7px; transition:color .18s ease;
+  }
+  .site-nav-btn:hover{ color:rgba(255,255,255,0.82); }
+  .site-nav-btn.active{ color:rgba(var(--accent),0.90); }
+  .site-nav-btn.has-drop::after{
+    content:""; width:0; height:0;
+    border-left:3px solid transparent; border-right:3px solid transparent;
+    border-top:4px solid currentColor; opacity:0.5; transition:transform .18s ease;
+  }
+  .site-nav-item.drop-open .site-nav-btn.has-drop::after{ transform:rotate(180deg); }
+  .site-nav-drop{
+    position:absolute; top:calc(100% + 2px); left:50%;
+    transform:translateX(-50%) translateY(-6px);
+    min-width:190px; background:rgba(4,4,6,0.98);
+    border:1px solid rgba(255,255,255,0.09);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    padding:6px 0; opacity:0; pointer-events:none;
+    transition:opacity .16s ease, transform .16s ease; z-index:80;
+  }
+  .site-nav-item.drop-open .site-nav-drop{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+  .site-nav-drop-item{
+    display:block; width:100%; padding:9px 18px; border:none; background:none;
+    font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+    color:rgba(255,255,255,0.46); text-align:left; white-space:nowrap;
+    transition:color .14s ease, background .14s ease;
+  }
+  .site-nav-drop-item:hover{ color:rgba(var(--accent),0.90); background:rgba(255,255,255,0.03); }
+
+  /* ── HOME CONTENT ─────────────────────────────────────── */
+  .home-content{ width:var(--content-width); margin:0 auto; padding:56px 0 64px; }
+  .home-intro{ max-width:660px; margin:0 auto 48px; text-align:center; }
+  .home-intro-eyebrow{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(var(--accent),0.55); margin-bottom:16px; }
+  .home-intro-text{ font-size:14px; line-height:1.78; color:rgba(255,255,255,0.82); font-weight:300; }
+  .featured-label{ text-align:center; margin-bottom:24px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(255,255,255,0.28); }
+  .featured-row{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:52px; transition:opacity .3s ease; }
+  .featured-row.hidden{ display:none; }
+  .featured-card{ border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.016); transition:border-color .22s ease, transform .22s ease; position:relative; overflow:hidden; }
+  .featured-card:hover{ transform:translateY(-3px); border-color:rgba(var(--accent),0.30); }
+  .featured-card::before,.featured-card::after{ content:""; position:absolute; width:11px; height:11px; border-color:rgba(var(--accent),0.32); }
+  .featured-card::before{ top:-1px; left:-1px; border-top:1px solid; border-left:1px solid; }
+  .featured-card::after{ right:-1px; bottom:-1px; border-right:1px solid; border-bottom:1px solid; }
+  .featured-card-media{ aspect-ratio:16/9; overflow:hidden; border-bottom:1px solid rgba(255,255,255,0.06); background:#000; }
+  .featured-card-media img,.featured-card-media video{ width:100%; height:100%; object-fit:cover; display:block; }
+  .featured-card-body{ padding:14px 16px 16px; display:grid; gap:7px; }
+  .featured-card-cat{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(var(--accent),0.52); }
+  .featured-card-title{ font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.86); }
+  .featured-card-desc{ font-size:11px; line-height:1.65; color:rgba(255,255,255,0.40); }
+  .featured-card-cta{ margin-top:3px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(var(--accent),0.65); border:none; background:none; padding:0; text-align:left; transition:color .16s ease; }
+  .featured-card-cta:hover{ color:rgba(var(--accent),0.95); }
+  .home-featured-section{ transition:none; }
+  .home-featured-section.hidden{ display:none; }
+  .home-logos{ border-top:1px solid rgba(255,255,255,0.05); padding-top:34px; }
+  .home-logos-label{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(255,255,255,0.20); text-align:center; margin-bottom:20px; }
+  .home-logos-strip{ display:flex; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .home-logo-chip{ width:160px; height:54px; display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01); }
+  .home-logo-chip img{ max-width:100%; max-height:26px; object-fit:contain; filter:grayscale(1); opacity:0.55; transition:opacity .2s ease; }
+  .home-logo-chip:hover img{ opacity:0.82; }
+  @media(max-width:900px){ .featured-row{ grid-template-columns:1fr; } .home-logo-chip{ width:120px; } }
+
+
+  /* ── HERO HINT ───────────────────────────────────────── */
+  .hero-hint{
+    position:absolute; top:108px; left:0; right:0; z-index:7;
+    display:flex; justify-content:center; align-items:center; gap:16px;
+    pointer-events:none;
+  }
+  .hero-hint-word{
+    font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.26em;
+    text-transform:uppercase; color:rgba(0,0,0,0.55);
+  }
+  .hero-hint-dot{
+    width:3px; height:3px; border-radius:50%;
+    background:rgba(0,0,0,0.30); flex-shrink:0;
+  }
+
+  /* ── CINEMATIC TAGLINE ───────────────────────────────── */
+  .hero-tagline{
+    position:absolute; top:200px; left:0; right:0; z-index:7;
+    text-align:center; pointer-events:none; padding:0 60px;
+  }
+  .hero-tagline-line{
+    display:block;
+    font-size:clamp(9px, 0.9vw, 12px);
+    font-weight:400; letter-spacing:0.10em;
+    color:rgba(0,0,0,0.75); line-height:1.55;
+    opacity:0;
+    animation:taglineCycle 10s ease-in-out infinite;
+    animation-play-state:paused;
+  }
+  .hero-tagline-line:nth-child(2){ animation-delay:0.15s; }
+  .hero-tagline.playing .hero-tagline-line{ animation-play-state:running; }
+  @keyframes taglineCycle{
+    0%  { opacity:0; filter:blur(10px); }
+    10% { opacity:0.82; filter:blur(0px); }
+    55% { opacity:0.82; filter:blur(0px); }
+    72% { opacity:0; filter:blur(6px); }
+    100%{ opacity:0; filter:blur(10px); }
+  }
+
 </style>
 </head>
 <body>
@@ -681,11 +792,23 @@
       </div>
     </div>
   </div>
+  <nav class="site-nav" id="site-nav" aria-label="Site navigation"></nav>
 </header>
 
 <main>
   <section class="hero-wrap">
     <div class="hero-stage" id="hero-stage">
+      <div class="hero-hint">
+        <span class="hero-hint-word">Move</span>
+        <span class="hero-hint-dot"></span>
+        <span class="hero-hint-word">Click</span>
+        <span class="hero-hint-dot"></span>
+        <span class="hero-hint-word">Explore</span>
+      </div>
+      <div class="hero-tagline">
+        <span class="hero-tagline-line">Designing systems of light, motion, and interaction</span>
+        <span class="hero-tagline-line">interaction that shape how space is perceived.</span>
+      </div>
       <div class="hero-videos" id="hero-videos"></div>
       <img id="hero-glasses" src="./images/Hero_Back_Glasses.png" alt="Glasses overlay">
       <img id="hero-frame" src="./images/Hero_Back_Frame.png" alt="Hero frame overlay">
@@ -726,6 +849,23 @@
   </section>
 </main>
 
+<section class="home-content" id="home-content">
+  <div class="home-featured-section" id="home-featured-section">
+    <div class="home-intro">
+      <div class="home-intro-eyebrow mono">Technical Artist &nbsp;·&nbsp; XR Systems &nbsp;·&nbsp; Environment Design</div>
+      <p class="home-intro-text">I build real-time systems where interaction, perception, and space converge — moving between XR prototyping, environment art, and architectural research to translate complex technical ideas into legible, emotionally readable experiences.</p>
+    </div>
+    <div class="featured-label mono">Featured Projects</div>
+    <div class="featured-row" id="featured-row"></div>
+  </div>
+  <div class="home-logos">
+    <div class="home-logos-label mono">Software &amp; Hardware</div>
+    <img src="./images/Logo_Long_1.jpg" alt="Software and Hardware" style="width:50%;display:block;margin:0 auto 32px;opacity:0.6;">
+    <div class="home-logos-label mono">Collaborators</div>
+    <img src="./images/Logo_Long_2.jpg" alt="Collaborators" style="width:50%;display:block;margin:0 auto;opacity:0.6;">
+  </div>
+</section>
+
 <footer class="site-footer mono">Site constructed by Nicholas Lowe © 2026</footer>
 
 <script>
@@ -749,7 +889,7 @@ const PROJECTS = [
     name: 'Spatial Designs',
     slug: 'spatial',
     eyebrow: 'Spatial Designs',
-    title: 'WORLD BUILDING AND SPATIAL DESIGN.',
+    title: 'WORLD BUILDING & SPATIAL DESIGN.',
     summary: 'Real time environments built for clarity, composition, and spatial readability.',
     meta: 'M.Arch UF • M.EAE Utah • Shipped Steam Game',
     heroVideo: './videos/Hero_Back_Architecture.mp4',
@@ -762,9 +902,9 @@ const PROJECTS = [
     ]
   },
   {
-    name: 'Thesis',
+    name: 'Research',
     slug: 'thesis',
-    eyebrow: 'Thesis',
+    eyebrow: 'Research',
     title: 'ARCHITECTURE AS CINEMATIC PERCEPTION.',
     summary: 'Campus Obscura explores framing, optics, virtual reconstruction, and phenomenological space.',
     meta: 'Perceptual Systems • Computational Design • Phenomenology & Space',
@@ -790,6 +930,20 @@ const PROJECTS = [
 ];
 
 const SPATIAL_DETAIL = {
+  'Campus Obscura': `
+    <div class="detail-frame">
+      <div class="detail-top">
+        <div class="detail-hero no-span"><a href="campus-obscura.html"><video src="./videos/Thesis_Hero.mp4" autoplay muted loop playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block;"></video></a></div>
+        <div class="detail-meta">
+          <div class="detail-kicker">Research / M.Arch Thesis · AIA Bronze Medal</div>
+          <div class="detail-title">Campus Obscura</div>
+          <div class="detail-copy">Pinhole optics, particle systems, and cinematic montage deployed as architectural research. The project reconstructs the perceptual experience of the UF campus through virtual optics, motion, and phenomenological framing.</div>
+          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Cinematic montage · Pinhole optics · Phenomenology · Particle systems</div>
+          <a href="campus-obscura.html" style="display:inline-block;margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,220,180,0.80);">Full Case Study →</a>
+        </div>
+      </div>
+      <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
+    </div>`,
   'Midnight Miso': `
     <div class="detail-frame">
       <div class="detail-top">
@@ -1329,9 +1483,19 @@ function returnToIdle(){
     idleVideo.play().catch(()=>{});
   }
   restoreGlassesOnIdle();
+  const tagline = document.querySelector('.hero-tagline');
+  if(tagline){
+    tagline.classList.remove('playing');
+    tagline.querySelectorAll('.hero-tagline-line').forEach(el => {
+      el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+    });
+    requestAnimationFrame(() => tagline.classList.add('playing'));
+  }
 }
 
 function playHeroSequence(index){
+  const tagline = document.querySelector('.hero-tagline');
+  if(tagline) tagline.classList.remove('playing');
   const next = document.getElementById(`hero-video-${index}`);
   if(!next) return;
   if(idleVideo){ idleVideo.pause(); idleVideo.classList.remove('active'); }
@@ -1344,17 +1508,21 @@ function playHeroSequence(index){
 }
 
 function renderCards(target, cards, clickableDetail = false){
+  const p = PROJECTS[current];
   target.innerHTML = cards.map(card => {
+    const isThesis = p.slug === 'thesis';
+    const cta = isThesis ? 'Learn More' : (card.link ? 'Open project' : (clickableDetail ? 'View Project' : 'Curated preview'));
     const inner = `
       <article class="card ${clickableDetail ? 'clickable' : ''}" data-card-title="${card.title}">
         <div class="media">${makeMedia(card)}</div>
         <div class="card-copy">
           <div class="card-title mono">${card.title}</div>
           <div class="card-desc">${card.desc}</div>
-          <div class="card-link mono">${card.link ? 'Open project' : clickableDetail ? 'VIEW PROJECT' : 'Curated preview'}</div>
+          <div class="card-link mono">${cta}</div>
         </div>
       </article>`;
-    return card.link ? `<a href="${card.link}">${inner}</a>` : inner;
+    if(card.link && !isThesis) return `<a href="${card.link}">${inner}</a>`;
+    return inner;
   }).join('');
 }
 
@@ -1362,25 +1530,24 @@ function easeInOutCubic(t){
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
+let _scrollRafId = null;
 function smoothScrollToY(targetY, duration = 1280){
+  if(_scrollRafId){ cancelAnimationFrame(_scrollRafId); _scrollRafId = null; }
   const startY = window.scrollY || window.pageYOffset;
   const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   const endY = Math.max(0, Math.min(targetY, maxY));
   const delta = endY - startY;
-  if(Math.abs(delta) < 2){
-    window.scrollTo(0, endY);
-    return Promise.resolve();
-  }
+  if(Math.abs(delta) < 2){ window.scrollTo(0, endY); return Promise.resolve(); }
   return new Promise(resolve => {
     const start = performance.now();
     const step = (now) => {
       const t = Math.min(1, (now - start) / duration);
       const eased = easeInOutCubic(t);
       window.scrollTo(0, startY + delta * eased);
-      if(t < 1) requestAnimationFrame(step);
-      else resolve();
+      if(t < 1){ _scrollRafId = requestAnimationFrame(step); }
+      else { _scrollRafId = null; resolve(); }
     };
-    requestAnimationFrame(step);
+    _scrollRafId = requestAnimationFrame(step);
   });
 }
 
@@ -1392,9 +1559,17 @@ function scrollCategoryIntoPlace(){
 }
 
 function scrollDetailIntoPlace(){
-  const headerOffset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 112;
-  const targetTop = window.scrollY + expandShell.getBoundingClientRect().top - headerOffset - 12;
-  return smoothScrollToY(targetTop, 1360);
+  // About / Research: gentle nudge
+  const headerOffset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 110;
+  const targetTop = window.scrollY + expandShell.getBoundingClientRect().top - headerOffset - 600;
+  return smoothScrollToY(targetTop, 900);
+}
+
+function scrollProjectIntoPlace(){
+  // Specific project card click: panel top flush under header
+  const headerOffset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 110;
+  const targetTop = window.scrollY + expandShell.getBoundingClientRect().top - headerOffset - 8;
+  return smoothScrollToY(targetTop, 900);
 }
 
 function openDetail(card){
@@ -1418,12 +1593,31 @@ function openDetail(card){
     range.addEventListener('input', update); update();
   });
   initRevealBlocks(detailShell);
+  // Append logos strip only to XR panels (not about, thesis, spatial)
+  const _skipLogos = ['About','Campus Obscura','Midnight Miso','Naoko Shrine','To Hell With It','Architecture'];
+  const detailFrame = detailShell.querySelector('.detail-frame');
+  const closeRow = detailShell.querySelector('.detail-close-row');
+  if(detailFrame && closeRow && !_skipLogos.includes(card.title)){
+    const logos = document.createElement('div');
+    logos.innerHTML = `
+      <div style="border-top:1px solid rgba(255,255,255,0.05);margin-top:20px;padding-top:24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(255,255,255,0.20);text-align:center;margin-bottom:16px;">Experience &amp; Contributions</div>
+        <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;">
+          <div style="width:140px;height:48px;display:flex;align-items:center;justify-content:center;padding:8px 14px;border:1px solid rgba(255,255,255,0.04);"><img src="./images/Logo_Meta.png" alt="Meta" style="max-width:100%;max-height:24px;object-fit:contain;filter:grayscale(1);opacity:0.55;"></div>
+          <div style="width:140px;height:48px;display:flex;align-items:center;justify-content:center;padding:8px 14px;border:1px solid rgba(255,255,255,0.04);"><img src="./images/Logo_UF.png" alt="UF" style="max-width:100%;max-height:24px;object-fit:contain;filter:grayscale(1);opacity:0.55;"></div>
+          <div style="width:140px;height:48px;display:flex;align-items:center;justify-content:center;padding:8px 14px;border:1px solid rgba(255,255,255,0.04);"><img src="./images/Logo_Utah.png" alt="Utah" style="max-width:100%;max-height:24px;object-fit:contain;filter:grayscale(1);opacity:0.55;"></div>
+          <div style="width:140px;height:48px;display:flex;align-items:center;justify-content:center;padding:8px 14px;border:1px solid rgba(255,255,255,0.04);"><img src="./images/Logo_IBI.png" alt="IBI" style="max-width:100%;max-height:24px;object-fit:contain;filter:grayscale(1);opacity:0.55;"></div>
+          <div style="width:140px;height:48px;display:flex;align-items:center;justify-content:center;padding:8px 14px;border:1px solid rgba(255,255,255,0.04);"><img src="./images/Logo_Steam.png" alt="Steam" style="max-width:100%;max-height:24px;object-fit:contain;filter:grayscale(1);opacity:0.55;"></div>
+        </div>
+      </div>`;
+    detailFrame.insertBefore(logos.firstElementChild, closeRow);
+  }
   detailShell.querySelector('.detail-close')?.addEventListener('click', () => {
     detailShell.classList.remove('open');
     detailShell.innerHTML = '';
   });
   requestAnimationFrame(() => {
-    scrollDetailIntoPlace();
+    scrollProjectIntoPlace();
   });
 }
 
@@ -1471,7 +1665,7 @@ function renderProject(index, {openPanel = false, source = 'nav'} = {}){
   expandTitle.textContent = p.name;
   expandMeta.textContent = p.sectionMeta;
 
-  renderCards(expandCards, p.cards, p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about');
+  renderCards(expandCards, p.cards, p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about' || p.slug === 'thesis');
 
   expandCards.classList.remove('single-card', 'single-large');
 
@@ -1492,17 +1686,23 @@ function renderProject(index, {openPanel = false, source = 'nav'} = {}){
     zone.classList.toggle('active', i === index && source === 'mask')
   );
 
-  if(openPanel){
-    expandShell.classList.add('open');
-    requestAnimationFrame(() => {
-      scrollCategoryIntoPlace();
-    });
-  } else {
-    expandShell.classList.remove('open');
+  if(p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about' || p.slug === 'thesis'){
+    bindSpatialDetails();
   }
 
-  if(p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about'){
-    bindSpatialDetails();
+  if(openPanel){
+    expandShell.classList.add('open');
+    if(p.slug === 'about' || p.slug === 'thesis'){
+      expandCards.style.display = 'none';
+      openDetail(p.cards[0]);
+      requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => scrollDetailIntoPlace())));
+    } else {
+      expandCards.style.display = '';
+      requestAnimationFrame(() => scrollCategoryIntoPlace());
+    }
+  } else {
+    expandShell.classList.remove('open');
+    expandCards.style.display = '';
   }
 }
 
@@ -1796,7 +1996,7 @@ function spawnClickBracket(cx, cy){
 
 document.addEventListener('click', (e)=>{
   const inMask = e.target.closest && e.target.closest('.mask-zone');
-  const inNav = e.target.closest && e.target.closest('.nav-row');
+  const inNav = e.target.closest && (e.target.closest('.nav-row') || e.target.closest('.site-nav'));
   const inPanel = e.target.closest && e.target.closest('.expand-frame');
   // Spawn click bracket and boost particles on hero stage clicks
   const inStage = e.target.closest && e.target.closest('#hero-stage');
@@ -1821,6 +2021,138 @@ window.addEventListener('mousemove', (e)=>{
 }, {passive:true});
 window.addEventListener('resize', resizeCanvas);
 
+
+// ── SITE NAV ───────────────────────────────────────────────────
+(function buildSiteNav(){
+  const nav = document.getElementById('site-nav');
+  if(!nav) return;
+  PROJECTS.forEach((project, index) => {
+    if(index > 0){ const sep = document.createElement('div'); sep.className = 'site-nav-sep'; nav.appendChild(sep); }
+    const item = document.createElement('div');
+    item.className = 'site-nav-item';
+    const hasMulti = project.cards.length > 1;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'site-nav-btn mono' + (hasMulti ? ' has-drop' : '');
+    btn.textContent = project.name;
+    btn.dataset.index = index;
+    item.appendChild(btn);
+    const fireOpen = () => {
+      activeZone = index;
+      renderProject(index, {openPanel:true, source:'nav'});
+      playHeroSequence(index);
+      hideGlassesForAbout(index);
+      flashHeroFrame();
+      playClick(2);
+    };
+    if(hasMulti){
+      const drop = document.createElement('div');
+      drop.className = 'site-nav-drop';
+      project.cards.forEach(card => {
+        const di = document.createElement('button');
+        di.type = 'button';
+        di.className = 'site-nav-drop-item mono';
+        di.textContent = card.title;
+        di.addEventListener('click', e => {
+          e.stopPropagation();
+          item.classList.remove('drop-open');
+          fireOpen();
+          setTimeout(() => {
+            if(SPATIAL_DETAIL[card.title]) openDetail(card);
+            else if(card.link) window.location.href = card.link;
+          }, 80);
+        });
+        drop.appendChild(di);
+      });
+      item.appendChild(drop);
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const wasOpen = item.classList.contains('drop-open');
+        document.querySelectorAll('.site-nav-item.drop-open').forEach(el => el.classList.remove('drop-open'));
+        if(!wasOpen) item.classList.add('drop-open');
+        else fireOpen();
+      });
+    } else {
+      btn.addEventListener('click', e => { e.stopPropagation(); fireOpen(); });
+    }
+    nav.appendChild(item);
+  });
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.site-nav-item.drop-open').forEach(el => el.classList.remove('drop-open'));
+  });
+  const syncActive = () => nav.querySelectorAll('.site-nav-btn').forEach(b => b.classList.toggle('active', Number(b.dataset.index) === current));
+  new MutationObserver(syncActive).observe(document.getElementById('nav-row'), {subtree:true, attributes:true, attributeFilter:['class']});
+  syncActive();
+})();
+
+// ── FEATURED ROW ───────────────────────────────────────────────
+(function buildFeaturedRow(){
+  const row = document.getElementById('featured-row');
+  const shell = document.getElementById('expand-shell');
+  if(!row || !shell) return;
+  new MutationObserver(() => {
+    const isOpen = shell.classList.contains('open');
+    const section = document.getElementById('home-featured-section');
+    if(section) section.classList.toggle('hidden', isOpen);
+  }).observe(shell, {attributes:true, attributeFilter:['class']});
+  const picks = [
+    {project: PROJECTS[0], card: PROJECTS[0].cards[0]},
+    {project: PROJECTS[1], card: PROJECTS[1].cards[1]},
+    {project: PROJECTS[2], card: PROJECTS[2].cards[0]},
+  ];
+  picks.forEach(({project, card}) => {
+    const media = card.mediaType === 'video'
+      ? `<video autoplay muted loop playsinline preload="metadata"><source src="${card.media}" type="video/mp4"></video>`
+      : `<img src="${card.media}" alt="${card.title}">`;
+    const el = document.createElement('div');
+    el.className = 'featured-card';
+    el.innerHTML = `
+      <div class="featured-card-media">${media}</div>
+      <div class="featured-card-body">
+        <div class="featured-card-cat mono">${project.name}</div>
+        <div class="featured-card-title mono">${card.title}</div>
+        <div class="featured-card-desc">${card.desc}</div>
+        <button class="featured-card-cta mono" type="button">Explore project</button>
+      </div>`;
+    const triggerCard = e => {
+      e.stopPropagation();
+      const idx = PROJECTS.indexOf(project);
+      activeZone = idx;
+      playClick(2);
+      renderProject(idx, {openPanel:true, source:'nav'});
+      playHeroSequence(idx);
+      hideGlassesForAbout(idx);
+      flashHeroFrame();
+      if(project.slug !== 'thesis' && project.slug !== 'about'){
+        setTimeout(() => {
+          if(SPATIAL_DETAIL[card.title]) openDetail(card);
+          else if(card.link) window.location.href = card.link;
+        }, 200);
+      }
+    };
+    el.querySelector('.featured-card-cta').addEventListener('click', triggerCard);
+    el.addEventListener('click', triggerCard);
+    row.appendChild(el);
+  });
+})();
+
+
+// ── OPEN PANEL FROM CASE STUDY BACK NAVIGATION ────────────────
+(function checkOpenIntent(){
+  const panel = sessionStorage.getItem('openPanel');
+  if(!panel) return;
+  sessionStorage.removeItem('openPanel');
+  const idx = PROJECTS.findIndex(p => p.slug === panel);
+  if(idx < 0) return;
+  // slight delay so page renders first
+  setTimeout(() => {
+    activeZone = idx;
+    renderProject(idx, {openPanel:true, source:'nav'});
+    playHeroSequence(idx);
+    hideGlassesForAbout(idx);
+    flashHeroFrame();
+  }, 120);
+})();
 ensureHeroVideos();
 ensureReticle();
 renderProject(0);
