@@ -466,7 +466,44 @@
     gap:12px;
   }
   .about-contact-card{padding:14px}
+  .about-contact-value{position:relative}
   .about-contact-value a:hover{color:rgba(var(--accent),0.92)}
+  .copy-email-btn{
+    appearance:none;
+    background:none;
+    border:0;
+    padding:0;
+    margin:0;
+    color:inherit;
+    font:inherit;
+    cursor:pointer;
+    text-align:left;
+    letter-spacing:0.02em;
+  }
+  .copy-email-btn:hover{color:rgba(var(--accent),0.92)}
+  .copy-email-toast{
+    position:absolute;
+    left:0;
+    top:calc(100% + 8px);
+    padding:6px 10px;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.92);
+    background:rgba(10,12,18,0.96);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:4px;
+    opacity:0;
+    transform:translateY(4px);
+    pointer-events:none;
+    transition:opacity 160ms ease, transform 160ms ease;
+    white-space:nowrap;
+    z-index:3;
+  }
+  .copy-email-toast.show{
+    opacity:1;
+    transform:translateY(0);
+  }
   .about-logo-group{display:grid; gap:14px}
   .about-logo-strip{
     display:grid;
@@ -806,8 +843,8 @@
         <span class="hero-hint-word">Explore</span>
       </div>
       <div class="hero-tagline">
-        <span class="hero-tagline-line">Designing systems of light, motion, and interaction</span>
-        <span class="hero-tagline-line">interaction that shape how space is perceived.</span>
+        <span class="hero-tagline-line">Designing systems of light, motion, & interaction</span>
+        <span class="hero-tagline-line">that shape how space is perceived.</span>
       </div>
       <div class="hero-videos" id="hero-videos"></div>
       <img id="hero-glasses" src="./images/Hero_Back_Glasses.png" alt="Glasses overlay">
@@ -853,7 +890,7 @@
   <div class="home-featured-section" id="home-featured-section">
     <div class="home-intro">
       <div class="home-intro-eyebrow mono">Technical Artist &nbsp;·&nbsp; XR Systems &nbsp;·&nbsp; Environment Design</div>
-      <p class="home-intro-text">I build real-time systems where interaction, perception, and space converge — moving between XR prototyping, environment art, and architectural research to translate complex technical ideas into legible, emotionally readable experiences.</p>
+      <p class="home-intro-text">I build real-time systems where perception and space converge, moving between XR prototyping, environment art, and architectural research to translate complex technical ideas into legible, emotionally readable experiences.</p>
     </div>
     <div class="featured-label mono">Featured Projects</div>
     <div class="featured-row" id="featured-row"></div>
@@ -882,7 +919,7 @@ const PROJECTS = [
     cards: [
       { title: 'Signal Lock', desc: 'Targeting, scanning, and readable control logic for a defense-adjacent interface study.', link: 'signal-lock.html', mediaType: 'video', media: './videos/X_Signal_Lock_2.mp4' },
       { title: 'Spatial Companion', desc: 'Persistent presence, state expression, and lightweight augmented behavior.', link: 'spatial-companion.html', mediaType: 'video', media: './videos/X_Spatial_Dance.mp4' },
-      { title: 'Mixed Reality', desc: 'Dimming studies, object placement, and interface behavior tests.', link: null, mediaType: 'image', media: './images/About_Hands.jpg' }
+      { title: 'Mixed Reality Prototypes', desc: 'AR & VR studies, object placement, and interface behavior tests.', link: null, mediaType: 'video', media: './videos/Mixed_Reality.mp4' }
     ]
   },
   {
@@ -939,7 +976,7 @@ const SPATIAL_DETAIL = {
           <div class="detail-title">Campus Obscura</div>
           <div class="detail-copy">Pinhole optics, particle systems, and cinematic montage deployed as architectural research. The project reconstructs the perceptual experience of the UF campus through virtual optics, motion, and phenomenological framing.</div>
           <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Cinematic montage · Pinhole optics · Phenomenology · Particle systems</div>
-          <a href="campus-obscura.html" style="display:inline-block;margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,220,180,0.80);">Full Case Study →</a>
+          <a href="campus-obscura.html" style="display:inline-block;margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,220,180,0.80);">Full Thesis Research →</a>
         </div>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
@@ -1114,15 +1151,15 @@ const SPATIAL_DETAIL = {
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
     </div>`,
 
-  'Mixed Reality': `
-    <div class="detail-frame">
-      <div class="detail-top">
-        <div class="detail-hero"><img src="./images/X_Dim_Demo.jpg" alt="Mixed Reality hero"></div>
+  'Mixed Reality Prototypes': `
+    <div class="detail-hero">
+     <img src="./images/X_Dim_Demo.jpg" alt="Mixed Reality hero">
+        </div>
         <div class="detail-meta">
           <div class="detail-kicker">XR Systems / Mixed Reality Prototypes</div>
-          <div class="detail-title">Mixed Reality</div>
-          <div class="detail-copy">Dimming studies, object placement, and interface behavior tests for lightweight AR environments.</div>
-          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Passthrough MR · Dimming · Object Placement · Interaction Behavior</div>
+          <div class="detail-title">Mixed Reality Prototypes</div>
+          <div class="detail-copy">AR & VR studies, object placement, and interface behavior tests for lightweight AR environments.</div>
+          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Passthrough MR · AR & VR Studies · Object Placement · Interaction Behavior</div>
         </div>
       </div>
       <div style="margin-top:18px; width:100%; aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#000;">
@@ -1168,7 +1205,7 @@ const SPATIAL_DETAIL = {
         <div class="about-two reveal-block">
           <div class="about-card">
             <div class="about-card-title">Tools</div>
-            <div class="about-card-copy">Unreal Engine, Unity, Blender, Substance Painter, Adobe Creative Suite, Figma, real time rendering workflows, procedural systems, and rapid prototyping pipelines.</div>
+            <div class="about-card-copy">Unreal Engine, Unity, Blender, Maya, Cinema 4D, V-Ray, Substance Painter, Adobe Creative Suite, Figma, real time rendering workflows, procedural systems, and rapid prototyping pipelines.</div>
           </div>
           <div class="about-card">
             <div class="about-card-title">Approach</div>
@@ -1178,8 +1215,11 @@ const SPATIAL_DETAIL = {
 
         <div class="about-contact reveal-block">
           <div class="about-contact-card">
-            <div class="about-contact-label">Website</div>
-            <div class="about-contact-value"><a href="https://www.nicklowe3d.com" target="_blank" rel="noopener noreferrer">nicklowe3d.com</a></div>
+            <div class="about-contact-label">Email</div>
+            <div class="about-contact-value">
+              <button class="copy-email-btn" type="button" data-email="nicklowe3d@gmail.com">nicklowe3d@gmail.com</button>
+              <span class="copy-email-toast" aria-hidden="true">Email copied</span>
+            </div>
           </div>
           <div class="about-contact-card">
             <div class="about-contact-label">LinkedIn</div>
@@ -1511,7 +1551,7 @@ function renderCards(target, cards, clickableDetail = false){
   const p = PROJECTS[current];
   target.innerHTML = cards.map(card => {
     const isThesis = p.slug === 'thesis';
-    const cta = isThesis ? 'Learn More' : (card.link ? 'Open project' : (clickableDetail ? 'View Project' : 'Curated preview'));
+    const cta = isThesis ? 'Learn More' : (card.link ? 'Open project' : (clickableDetail ? (card.title === 'Mixed Reality Prototypes' ? 'View Projects' : 'View Project') : 'Curated preview'));
     const inner = `
       <article class="card ${clickableDetail ? 'clickable' : ''}" data-card-title="${card.title}">
         <div class="media">${makeMedia(card)}</div>
@@ -2085,6 +2125,24 @@ window.addEventListener('resize', resizeCanvas);
   syncActive();
 })();
 
+
+document.querySelectorAll('.copy-email-btn').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const email = button.dataset.email;
+    const toast = button.parentElement.querySelector('.copy-email-toast');
+    try{
+      await navigator.clipboard.writeText(email);
+      if(toast){
+        toast.classList.add('show');
+        clearTimeout(toast._hideTimer);
+        toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+      }
+    }catch(err){
+      window.location.href = `mailto:${email}`;
+    }
+  });
+});
+
 // ── FEATURED ROW ───────────────────────────────────────────────
 (function buildFeaturedRow(){
   const row = document.getElementById('featured-row');
@@ -2098,7 +2156,7 @@ window.addEventListener('resize', resizeCanvas);
   const picks = [
     {project: PROJECTS[0], card: PROJECTS[0].cards[0]},
     {project: PROJECTS[1], card: PROJECTS[1].cards[1]},
-    {project: PROJECTS[2], card: PROJECTS[2].cards[0]},
+    {project: PROJECTS[0], card: PROJECTS[0].cards[2]},
   ];
   picks.forEach(({project, card}) => {
     const media = card.mediaType === 'video'
@@ -2112,7 +2170,7 @@ window.addEventListener('resize', resizeCanvas);
         <div class="featured-card-cat mono">${project.name}</div>
         <div class="featured-card-title mono">${card.title}</div>
         <div class="featured-card-desc">${card.desc}</div>
-        <button class="featured-card-cta mono" type="button">Explore project</button>
+        <button class="featured-card-cta mono" type="button">${card.title === 'Mixed Reality Prototypes' ? 'Explore Prototypes' : 'Explore Project'}</button>
       </div>`;
     const triggerCard = e => {
       e.stopPropagation();
