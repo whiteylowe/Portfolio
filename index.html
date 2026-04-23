@@ -679,6 +679,116 @@
     gap:12px;
     margin-top:8px;
   }
+  .arch-craft-split{
+    grid-template-columns:minmax(0,1.05fr) minmax(320px,0.8fr) !important;
+    align-items:start;
+  }
+  .arch-craft-tall{
+    min-height:0;
+    aspect-ratio:auto;
+    justify-content:center;
+    align-items:flex-start;
+    padding:10px 0;
+  }
+  .arch-craft-tall img{
+    width:60%;
+    height:auto;
+    object-fit:contain;
+    margin:0 auto;
+  }
+  .arch-craft-full{
+    aspect-ratio:auto;
+    padding:0;
+  }
+  .arch-craft-full img{
+    width:100%;
+    height:auto;
+    object-fit:contain;
+  }
+  .arch-craft-lighting{
+    grid-template-columns:minmax(0,1.2fr) minmax(220px,0.6fr) !important;
+    align-items:center;
+  }
+  .arch-craft-diagram{
+    aspect-ratio:auto;
+    justify-content:center;
+    padding:8px 0;
+  }
+  .arch-craft-diagram img{
+    width:83%;
+    height:auto;
+    object-fit:contain;
+    margin:0 auto;
+  }
+  .arch-craft-row{
+    aspect-ratio:16/4.2;
+    align-items:center;
+  }
+  .arch-craft-row img{
+    width:100%;
+    height:auto;
+    object-fit:contain;
+  }
+
+  .arch-break-wrap{
+    display:grid;
+    gap:10px;
+    justify-items:center;
+    padding:10px 0 14px;
+    margin:10px 0 14px;
+  }
+  .arch-break-line{
+    width:100%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    opacity:0.65;
+    transform:scaleX(0.55);
+    transform-origin:center;
+  }
+  .arch-break-title{
+    font-size:10px;
+    letter-spacing:0.26em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.54);
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .55s ease, transform .55s ease;
+    text-align:center;
+  }
+  .reveal-block.is-visible .arch-break-title{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .reveal-block.is-visible .arch-break-line{
+    animation:archBreakPulse 1.0s cubic-bezier(.2,.7,.2,1) 1 both;
+  }
+  @keyframes archBreakPulse{
+    0%{transform:scaleX(0.35); opacity:0.24;}
+    55%{transform:scaleX(1.03); opacity:0.9;}
+    100%{transform:scaleX(1); opacity:0.65;}
+  }
+  .arch-caption-card{
+    display:grid;
+    gap:8px;
+    align-content:start;
+  }
+  .arch-caption-title{
+    font-size:12px;
+    letter-spacing:0.04em;
+    text-transform:none;
+    color:rgba(255,255,255,0.84);
+    font-weight:400;
+  }
+  .arch-caption-copy{
+    font-size:11px;
+    line-height:1.65;
+    color:rgba(255,255,255,0.44);
+    text-transform:none;
+  }
+  .arch-pool-compare{
+    width:85%;
+    margin:14px auto 0;
+  }
   @media(max-width:960px){
     .spatial-section.split,.spatial-grid-2,.spatial-grid-3,.arch-hero,.arch-row-2,.arch-row-2.tight{grid-template-columns:1fr}
   }
@@ -1089,7 +1199,7 @@ const SPATIAL_DETAIL = {
               <img src="./images/SD_Cave_1.jpg" alt="Black Wing Cave final lighting" class="compare-after">
               <div class="compare-divider"></div>
               <div class="compare-handle"></div>
-              <input type="range" min="0" max="100" value="50" class="compare-range" aria-label="Compare grayscale and final lighting">
+              <input type="range" min="0" max="100" step="1" value="50" class="compare-range" aria-label="Compare grayscale and final lighting">
             </div>
             <div class="spatial-copy">Composition locked early in grayscale to establish pathing and value hierarchy. Lighting and fog take over the final pass.</div>
           </div>
@@ -1238,7 +1348,7 @@ const SPATIAL_DETAIL = {
     <div class="detail-frame">
       <div class="spatial-case" style="margin-top:4px">
         <section class="spatial-section reveal-block tone-panel tone-deep">
-          <div class="spatial-media-lg"><img src="./images/SD_A_Craft.jpg" alt="American Craft Museum visualization"></div>
+          <div class="spatial-media-lg"><img src="./images/SD_A_Craft.jpg" alt="American Craft Museum primary visualization"></div>
           <div class="arch-text-card">
             <div class="detail-kicker">Spatial Designs / Architecture</div>
             <div class="detail-title">Architecture</div>
@@ -1246,68 +1356,145 @@ const SPATIAL_DETAIL = {
             <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Visualization · Daylight · Material hierarchy · Built form</div>
           </div>
         </section>
-        <section class="spatial-section split reveal-block tone-panel tone-soft">
-          <div class="spatial-media-md"><img src="./images/SD_A_Adidas.jpg" alt="Adidas Concept Tower visualization"></div>
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">Urban scale</div>
-            <div class="spatial-headline">Adidas Concept Tower</div>
-            <div class="spatial-copy">Skyline-driven concept study focused on vertical identity, massing clarity, and a strong read at distance.</div>
-            <div class="spatial-toolline">Commercial identity · Skyline presence · Massing hierarchy</div>
+
+        <section class="spatial-section reveal-block">
+          <div class="arch-break-wrap">
+            <div class="arch-break-line"></div>
+            <div class="arch-break-title mono">Craft Museum</div>
           </div>
         </section>
-        <section class="spatial-section split reveal-block tone-panel tone-blue">
+
+        <section class="spatial-section split reveal-block tone-panel tone-soft arch-craft-split">
           <div class="spatial-stack">
-            <div class="spatial-eyebrow">Interior atmosphere</div>
-            <div class="spatial-headline">Takanada Sushi</div>
-            <div class="spatial-copy">Warm material contrast, controlled highlights, and focused composition build a quieter and more intimate interior read.</div>
-            <div class="spatial-toolline">Interior mood · Material contrast · Focal control</div>
+            <div class="spatial-eyebrow">Cultural institution</div>
+            <div class="spatial-headline">American Craft Museum</div>
+            <div class="spatial-copy">St. Petersburg, Florida</div>
+            <div class="spatial-copy">Designed in conjunction with Alfonso Architects, this proposal treats daylight as a shaping force, using apertures, orientation, and controlled solar exposure to frame artwork with clarity, rhythm, and presence.</div>
+            <div class="spatial-copy">The building is conceived as a luminous vessel for craft, where filtered light and carefully tuned openings turn the movement of the sun into part of the museum experience.</div>
+            <div class="spatial-toolline">Museum design · Apertures · Solar orientation · Daylight for art</div>
           </div>
-          <div class="spatial-media-md"><img src="./images/SD_A_Takanada.jpg" alt="Takanada Sushi interior visualization"></div>
+          <div class="spatial-media-lg arch-craft-tall"><img src="./images/SD_A_Craft_3.jpg" alt="American Craft Museum secondary visualization"></div>
         </section>
-        <section class="spatial-section split reveal-block tone-panel tone-soft">
-          <div class="spatial-media-md"><img src="./images/SD_A_Lincoln.jpg" alt="27 Lincoln exterior visualization"></div>
+
+        <section class="spatial-section reveal-block tone-panel tone-soft">
+          <div class="spatial-media-lg arch-craft-full"><img src="./images/SD_A_Craft_4.jpg" alt="American Craft Museum full scale exterior visualization"></div>
+        </section>
+
+        <section class="spatial-section split reveal-block tone-panel tone-soft arch-craft-lighting">
           <div class="spatial-stack">
+            <div class="spatial-eyebrow">Apertures, lighting, and sun orientation</div>
+            <div class="spatial-copy">The placement and proportion of apertures are driven by the sun’s path, balancing northern light for steady illumination and controlled southern exposure for warmth and depth.</div>
+            <div class="spatial-copy">Deep reveals, light shelves, and oriented openings reduce glare, protect the collection, and create a quieter dialogue between time, light, and material.</div>
+          </div>
+          <div class="spatial-media-md arch-craft-diagram"><img src="./images/SD_A_Craft_5.jpg" alt="American Craft Museum daylight and sun orientation diagram"></div>
+        </section>
+
+        <section class="spatial-section reveal-block tone-panel tone-soft">
+          <div class="spatial-media-lg arch-craft-row"><img src="./images/SD_A_Craft_2.jpg" alt="American Craft Museum horizontal render sequence"></div>
+        </section>
+
+        <section class="spatial-section reveal-block">
+          <div class="arch-break-wrap">
+            <div class="arch-break-line"></div>
+            <div class="arch-break-title mono">27 Lincoln</div>
+          </div>
+        </section>
+
+        <section class="spatial-section reveal-block tone-panel tone-soft">
+          <div class="spatial-media-lg"><img src="./images/SD_A_Lincoln.jpg" alt="27 Lincoln exterior visualization"></div>
+          <div class="spatial-stack" style="margin-top:14px">
             <div class="spatial-eyebrow">Mixed use frontage</div>
             <div class="spatial-headline">27 Lincoln</div>
             <div class="spatial-copy">Layered frontage, planted edges, and repeated structural rhythm support a clear urban elevation and a believable residential-commercial mix.</div>
-            <div class="spatial-toolline">Mixed use · Layering · Rhythm · Streetscape</div>
+            <div class="spatial-copy">Miami Modern Architecture shaped this study through horizontal rhythm, shaded thresholds, and an attention to how Florida light moves across façade depth. The design stays sensitive to landscape, frames outward views, and uses sunlight as an active part of the composition.</div>
+            <div class="spatial-toolline">Mixed use · Layering · Rhythm · Streetscape · Florida light</div>
+          </div>
+          <div class="spatial-section split tone-panel tone-blue" style="margin-top:14px; padding:16px; border:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg, rgba(7,17,26,.96), rgba(5,9,14,.98));">
+            <div class="spatial-stack">
+              <div class="spatial-eyebrow">Construction documentation</div>
+              <div class="spatial-headline">Drawing sets + detailing</div>
+              <div class="spatial-copy">Technical documentation connecting design intent to build conditions through details, conventions, and production-ready communication.</div>
+              <div class="spatial-toolline">Documentation · Detailing · Technical communication</div>
+            </div>
+            <div class="spatial-media-lg"><img src="./images/A_Drawing.jpg" alt="Construction documentation drawing"></div>
+          </div>
+          <div class="spatial-grid-3" style="margin-top:14px">
+            <div class="spatial-media-sm"><img src="./images/SD_A_Avocado_1.jpg" alt="Avocado house study 1"></div>
+            <div class="spatial-media-sm"><img src="./images/SD_A_Avocado_2.jpg" alt="Avocado house study 2"></div>
+            <div class="spatial-media-sm"><img src="./images/SD_A_Avocado_3.jpg" alt="Avocado house study 3"></div>
           </div>
         </section>
+
+        <section class="spatial-section reveal-block">
+          <div class="arch-break-wrap">
+            <div class="arch-break-line"></div>
+            <div class="arch-break-title mono">Adidas Tower</div>
+          </div>
+        </section>
+
+        <section class="spatial-section reveal-block tone-panel tone-soft">
+          <div class="spatial-media-lg"><img src="./images/SD_A_Adidas.jpg" alt="Adidas Concept Tower visualization"></div>
+        </section>
+
+        <section class="spatial-section split reveal-block tone-panel tone-soft">
+          <div class="spatial-stack">
+            <div class="spatial-eyebrow">Architectural branding</div>
+            <div class="spatial-headline">Adidas Tower</div>
+            <div class="spatial-copy">This concept frames branding as an architectural system rather than a graphic overlay. Vertical identity, material contrast, and illuminated structure work together to establish a strong skyline presence while keeping the tower legible at urban scale.</div>
+            <div class="spatial-copy">At the base, the proposal preserves the historic restaurant scene and active street life, allowing retail identity and public-facing function to coexist without erasing the character already embedded in the block.</div>
+            <div class="spatial-toolline">Architectural branding · Historic base condition · Vertical identity · Urban integration</div>
+          </div>
+          <div class="spatial-media-md"><img src="./images/SD_A_Adidas_2.jpg" alt="Adidas Tower ground floor program"></div>
+        </section>
+
+        <section class="spatial-section reveal-block tone-panel tone-blue">
+          <div class="spatial-grid-2">
+            <div class="arch-caption-card">
+              <div class="spatial-media-sm"><img src="./images/SD_A_Takanada.jpg" alt="Takanada related visualization"></div>
+              <div class="arch-caption-title">Restaurant base and street condition</div>
+              <div class="arch-caption-copy">This view highlights the lower levels where the project meets the city, preserving a more intimate urban edge while layering branded architectural identity above.</div>
+            </div>
+            <div class="arch-caption-card">
+              <div class="spatial-media-sm"><img src="./images/SD_A_Interior.jpg" alt="Adidas related interior visualization"></div>
+              <div class="arch-caption-title">Interior continuity</div>
+              <div class="arch-caption-copy">The interior carries the same visual language through light, material contrast, and spatial sequencing so the tower reads as a unified environment rather than a separate shell and fit-out.</div>
+            </div>
+          </div>
+        </section>
+
         <section class="spatial-section reveal-block tone-panel tone-deep">
-          <div class="spatial-media-lg"><img src="./images/SD_A_Pool.jpg" alt="Nexus Aquatics interior visualization"></div>
-          <div class="arch-text-card">
+          <div class="spatial-stack">
             <div class="spatial-eyebrow">Program + atmosphere</div>
-            <div class="spatial-headline">Pool Hall</div>
+            <div class="spatial-headline">Nexus Aquatics</div>
             <div class="spatial-copy">A full-width interior moment where material reflectance, daylight behavior, and long-span geometry hold the entire composition together.</div>
             <div class="spatial-toolline">Atmosphere · Daylight · Reflection · Structural clarity</div>
           </div>
-        </section>
-        <section class="spatial-section split reveal-block tone-panel tone-blue">
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">Technical environment</div>
-            <div class="spatial-headline">Lumen Labs</div>
-            <div class="spatial-copy">Daylight, structural rhythm, and controlled depth organize a more technical program without losing visual atmosphere.</div>
-            <div class="spatial-toolline">Daylight structure · Interior hierarchy · Technical environment</div>
-          </div>
-          <div class="spatial-media-md"><img src="./images/SD_A_Labs.jpg" alt="Lumen Labs atrium visualization"></div>
-        </section>
-        <section class="spatial-section split reveal-block tone-panel tone-soft">
-          <div class="spatial-media-md"><img src="./images/SD_A_Interior.jpg" alt="Interior visualization"></div>
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">Interior systems</div>
-            <div class="spatial-headline">Interior Study</div>
-            <div class="spatial-copy">Precision environments are still framed through experience. Material hierarchy, human scale, and believable light keep the work from reading as sterile documentation.</div>
-            <div class="spatial-toolline">Human scale · Material hierarchy · Spatial clarity</div>
+          <div class="compare-slider arch-pool-compare" data-compare style="margin-top:14px">
+            <img src="./images/SD_A_Pool_Wireframe.jpg" alt="Nexus Aquatics wireframe visualization">
+            <img src="./images/SD_A_Pool.jpg" alt="Nexus Aquatics final visualization" class="compare-after">
+            <div class="compare-divider"></div>
+            <div class="compare-handle"></div>
+            <input type="range" min="0" max="100" step="1" value="50" class="compare-range" aria-label="Compare Nexus Aquatics wireframe and final rendering">
           </div>
         </section>
-        <section class="spatial-section split reveal-block tone-panel tone-blue">
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">Construction documentation</div>
-            <div class="spatial-headline">Drawing sets + detailing</div>
-            <div class="spatial-copy">Technical documentation connecting design intent to build conditions through details, conventions, and production-ready communication.</div>
-            <div class="spatial-toolline">Documentation · Detailing · Technical communication</div>
+
+        <section class="spatial-section reveal-block">
+          <div class="arch-break-wrap">
+            <div class="arch-break-line"></div>
+            <div class="arch-break-title mono">Computational Architecture</div>
           </div>
-          <div class="spatial-media-md"><img src="./images/A_Drawing.jpg" alt="Construction documentation drawing"></div>
+        </section>
+
+        <section class="spatial-section reveal-block tone-panel tone-soft">
+          <div class="spatial-eyebrow">Computational Architecture</div>
+          <div class="spatial-headline">Computational form finding</div>
+          <div class="spatial-grid-2" style="margin-top:14px">
+            <div class="spatial-media-lg"><img src="./images/SD_A_Computation.jpg" alt="Computational architecture study 1"></div>
+            <div class="spatial-media-lg"><img src="./images/SD_A_Computation_2.jpg" alt="Computational architecture study 2"></div>
+          </div>
+          <div class="spatial-copy" style="margin-top:14px">Computational design opened a different register of architectural thinking, where systems, repetition, and parametric control could generate form without losing atmosphere. These studies balance scripted logic with spatial judgment so the resulting geometry still reads as inhabited, legible, and visually intentional.</div>
+          <div class="spatial-copy">The Flux Hotel, Orlando, FL became a useful frame for this way of working, linking fluid formal variation to hospitality, circulation, and a stronger relationship between diagram, envelope, and experience.</div>
+          <div class="spatial-toolline">Parametric design · Form finding · Flux Hotel, Orlando FL</div>
         </section>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
@@ -1625,11 +1812,26 @@ function openDetail(card){
     const handle = slider.querySelector('.compare-handle');
     if(!range||!after||!divider||!handle) return;
     const update = () => {
-      const v = Number(range.value)||50;
+      const v = Math.max(0, Math.min(100, Number(range.value)||50));
       after.style.clipPath = `inset(0 0 0 ${v}%)`;
       divider.style.left = `${v}%`;
-      handle.style.left = `${v}%`;
+      if(v <= 0){
+        handle.style.left = '0%';
+        handle.style.transform = 'translate(0,-50%)';
+      } else if(v >= 100){
+        handle.style.left = '100%';
+        handle.style.transform = 'translate(-100%,-50%)';
+      } else {
+        handle.style.left = `${v}%`;
+        handle.style.transform = 'translate(-50%,-50%)';
+      }
     };
+    slider.addEventListener('pointerdown', (e) => {
+      const rect = slider.getBoundingClientRect();
+      const pct = ((e.clientX - rect.left) / rect.width) * 100;
+      if(pct <= 4){ range.value = 0; update(); }
+      else if(pct >= 96){ range.value = 100; update(); }
+    });
     range.addEventListener('input', update); update();
   });
   initRevealBlocks(detailShell);
