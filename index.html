@@ -840,7 +840,15 @@
   .home-intro{ max-width:660px; margin:0 auto 48px; text-align:center; }
   .home-intro-eyebrow{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(var(--accent),0.55); margin-bottom:16px; }
   .home-intro-text{ font-size:14px; line-height:1.78; color:rgba(255,255,255,0.82); font-weight:300; }
-  .featured-label{ text-align:center; margin-bottom:24px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(255,255,255,0.28); }
+  .featured-label{
+  text-align:center;
+  margin-bottom:30px;
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.34em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.42);
+}
   .featured-row{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:52px; transition:opacity .3s ease; }
   .featured-row.hidden{ display:none; }
   .featured-card{ border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.016); transition:border-color .22s ease, transform .22s ease; position:relative; overflow:hidden; }
@@ -864,6 +872,123 @@
   .home-logo-chip{ width:160px; height:54px; display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01); }
   .home-logo-chip img{ max-width:100%; max-height:26px; object-fit:contain; filter:grayscale(1); opacity:0.55; transition:opacity .2s ease; }
   .home-logo-chip:hover img{ opacity:0.82; }
+
+.perceptual-feature{
+  width:100%;
+  margin:0 auto 108px;
+  display:grid;
+  gap:14px;
+  justify-items:center;
+}
+.perceptual-label{
+  font-size:11px;
+  letter-spacing:0.32em;
+  text-transform:uppercase;
+  color:rgba(var(--accent),0.82);
+  text-align:left;
+}
+.perceptual-tagline{
+  max-width:820px;
+  text-align:left;
+  font-size:12px;
+  line-height:1.8;
+  color:rgba(255,255,255,0.72);
+  font-weight:300;
+}
+.perceptual-overlay{
+  position:absolute;
+  left:32px;
+  bottom:28px;
+  max-width:900px;
+  z-index:3;
+  display:grid;
+  gap:8px;
+  pointer-events:none;
+  text-align:left;
+}
+.perceptual-video-frame{
+  width:100%;
+  max-width:1180px;
+  aspect-ratio:16/9;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(0,0,0,0.38);
+  overflow:hidden;
+  position:relative;
+}
+.perceptual-video-frame::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.78) 0%,
+    rgba(0,0,0,0.42) 26%,
+    rgba(0,0,0,0.10) 58%,
+    rgba(0,0,0,0.02) 100%
+  );
+  z-index:1;
+  pointer-events:none;
+}
+.perceptual-video-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:1px solid rgba(var(--accent),0.18);
+  pointer-events:none;
+  z-index:2;
+}
+.perceptual-video-frame video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+  
+.perceptual-timed{
+  position:absolute;
+  right:34px;
+  top:34px;
+  z-index:4;
+  max-width:380px;
+  text-align:right;
+  pointer-events:none;
+  opacity:0;
+  animation:timedWords 15s infinite, timedFloat 5.8s ease-in-out infinite;
+  text-shadow:0 0 14px rgba(90,220,255,0.22);
+}
+.perceptual-timed .timed-title{
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  color:rgba(105,225,255,0.92);
+}
+.perceptual-timed .timed-copy{
+  margin-top:8px;
+  font-size:11px;
+  line-height:1.6;
+  color:rgba(185,245,255,0.68);
+}
+.timed-1{ animation-delay:0s, 0s; }
+.timed-2{ animation-delay:5s, .7s; }
+.timed-3{ animation-delay:10s, 1.4s; }
+
+@keyframes timedWords{
+  0%{opacity:0; filter:blur(4px);}
+  8%{opacity:1; filter:blur(0);}
+  28%{opacity:1; filter:blur(0);}
+  36%{opacity:0; filter:blur(4px);}
+  100%{opacity:0; filter:blur(4px);}
+}
+
+@keyframes timedFloat{
+  0%{transform:translate3d(0, 6px, 0);}
+  50%{transform:translate3d(-4px, -3px, 0);}
+  100%{transform:translate3d(0, 6px, 0);}
+}
+
+
   @media(max-width:900px){ .featured-row{ grid-template-columns:1fr; } .home-logo-chip{ width:120px; } }
 
 
@@ -1002,6 +1127,34 @@
       <div class="home-intro-eyebrow mono">Technical Artist &nbsp;·&nbsp; XR Systems &nbsp;·&nbsp; Environment Design</div>
       <p class="home-intro-text">I build real-time systems where perception and space converge, moving between XR prototyping, environment art, and architectural research to translate complex technical ideas into legible, emotionally readable experiences.</p>
     </div>
+
+    <div class="perceptual-feature">
+      <div class="perceptual-video-frame">
+        <video autoplay muted loop playsinline preload="auto">
+          <source src="./videos/Ar_Wearables_2.mp4" type="video/mp4">
+        </video>
+        <div class="perceptual-overlay">
+          <div class="perceptual-label mono">Perceptual Interface Visualization</div>
+          <div class="perceptual-tagline">Exploring how motion, framing, and visual behavior shape perceptual legibility in wearable systems.</div>
+        </div>
+
+        <div class="perceptual-timed timed-1">
+          <div class="timed-title">Mode / Smart Camera</div>
+          <div class="timed-copy">Contextual framing enabled</div>
+        </div>
+
+        <div class="perceptual-timed timed-2">
+          <div class="timed-title">Input / Gaze + Motion</div>
+          <div class="timed-copy">Motion tuned for legibility</div>
+        </div>
+
+        <div class="perceptual-timed timed-3">
+          <div class="timed-title">Output / Ambient Feedback</div>
+          <div class="timed-copy">Glanceable signals active</div>
+        </div>
+      </div>
+    </div>
+
     <div class="featured-label mono">Featured Projects</div>
     <div class="featured-row" id="featured-row"></div>
   </div>
