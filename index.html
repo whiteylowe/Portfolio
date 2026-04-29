@@ -2527,9 +2527,9 @@ document.querySelectorAll('.copy-email-btn').forEach((button) => {
     if(section) section.classList.toggle('hidden', isOpen);
   }).observe(shell, {attributes:true, attributeFilter:['class']});
   const picks = [
-    {project: PROJECTS[0], card: PROJECTS[0].cards[0]},
-    {project: PROJECTS[1], card: PROJECTS[1].cards[1]},
-    {project: PROJECTS[0], card: PROJECTS[0].cards[2]},
+    {project: PROJECTS[0], card: PROJECTS[0].cards[0]}, // Signal Lock
+    {project: PROJECTS[0], card: PROJECTS[0].cards[1]}, // Spatial Companion
+    {project: PROJECTS[1], card: PROJECTS[1].cards[0]}, // Midnight Miso
   ];
   picks.forEach(({project, card}) => {
     const media = card.mediaType === 'video'
