@@ -137,6 +137,69 @@
   .behavioral-sub { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:13px; }
   .behavioral-text { font-size:12px; color:var(--white-mid); font-weight:300; line-height:1.72; }
 
+
+
+  /* ── CINEMATIC COMPANION CLOSEUP ── */
+  .cinematic-closeout { padding:0 64px; margin:112px 0 104px; }
+  .cinematic-kicker { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.34em; text-transform:uppercase; color:var(--cyan-dim); margin-bottom:18px; }
+  .cinematic-title { font-size:34px; font-weight:300; letter-spacing:0.08em; text-transform:uppercase; color:var(--white); line-height:1.1; margin-bottom:14px; max-width:860px; }
+  .cinematic-deck { font-size:14px; font-weight:300; line-height:1.78; color:var(--white-mid); max-width:760px; margin-bottom:32px; }
+  .cinematic-frame { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:#000; border:1px solid rgba(255,255,255,0.08); box-shadow:0 34px 100px rgba(0,0,0,0.48); }
+  .cinematic-frame video { width:100%; height:100%; object-fit:cover; display:block; background:#000; }
+  .cinematic-frame::before { content:""; position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(90deg, rgba(0,0,0,0.14), transparent 38%, rgba(0,0,0,0.28)), radial-gradient(circle at 80% 20%, rgba(128,198,160,0.10), transparent 34%); }
+  .cinematic-frame::after { content:""; position:absolute; left:0; right:0; bottom:0; height:40%; z-index:3; pointer-events:none; background:linear-gradient(180deg, transparent, rgba(0,0,0,0.46)); }
+ .principle-overlay {
+  position:absolute;
+  top:12%;
+  left:50%;
+  right:auto;
+  width:min(760px, calc(100% - 88px));
+  min-height:92px;
+  z-index:4;
+  pointer-events:none;
+  transform:translateX(-50%);
+}
+
+.principle-card {
+  position:absolute;
+  inset:0;
+  width:100%;
+  opacity:0;
+  transform:translateY(10px) scale(0.985);
+  animation:principleFade 16s ease-in-out infinite;
+  text-align:center;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+  .principle-card:nth-child(1) { animation-delay:0s; }
+  .principle-card:nth-child(2) { animation-delay:4s; }
+  .principle-card:nth-child(3) { animation-delay:8s; }
+  .principle-card:nth-child(4) { animation-delay:12s; }
+  .principle-line { font-size:30px; font-weight:300; line-height:1.08; letter-spacing:0.09em; text-transform:uppercase; color:rgba(255,255,255,0.95); text-shadow:0 0 32px rgba(0,0,0,0.92), 0 0 18px rgba(128,198,160,0.10); max-width:760px; }
+  .cinematic-caption { display:grid; grid-template-columns:1fr auto; gap:28px; align-items:start; border:1px solid var(--border); border-top:0; padding:24px 28px; background:rgba(255,255,255,0.018); }
+  .cinematic-caption-main { font-size:13px; line-height:1.75; font-weight:300; color:var(--white-mid); max-width:760px; }
+  .cinematic-caption-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan-dim); white-space:nowrap; padding-top:3px; }
+  @keyframes principleFade {
+    0%, 3% {
+      opacity:0;
+      transform:translateY(12px) scale(0.985);
+      filter:blur(8px);
+    }
+
+    7%, 20% {
+      opacity:1;
+      transform:translateY(0) scale(1);
+      filter:blur(0);
+    }
+
+    28%, 100% {
+      opacity:0;
+      transform:translateY(-10px) scale(1.01);
+      filter:blur(8px);
+    }
+  }
+
   /* ── BOTTOM NAV ── */
   .bottom-nav { padding:48px 64px 92px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
   .nav-btn { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.64); background:none; border:none; cursor:none; display:flex; align-items:center; gap:8px; transition:color 0.2s; text-decoration:none; }
@@ -175,6 +238,12 @@
     .hero-title { font-size:42px; white-space:normal; }
     .bottom-nav { gap:16px; align-items:flex-start; flex-direction:column; }
     .loop-wrap { padding:28px; }
+    .cinematic-closeout { padding-left:20px; padding-right:20px; margin-top:72px; }
+    .cinematic-title { font-size:28px; }
+    .cinematic-frame { aspect-ratio:4/5; }
+    .principle-overlay { top:28px; left:50%; right:auto; width:calc(100% - 48px); transform:translateX(-50%); }
+    .principle-line { font-size:21px; letter-spacing:0.07em; }
+    .cinematic-caption { grid-template-columns:1fr; }
   }
 
   :root {
@@ -405,7 +474,7 @@
     <div>
       <p class="principles-lead">Clarity emerges from stability, timing, and behavioral hierarchy rather than visual density.</p>
       <ul class="principles-list">
-        <li>Motion relationships guide attention more effectively than persistent UI chrome.</li>
+        <li>Motion relationships guide attention without relying on persistent interface graphics.</li>
         <li>Presence requires continuity across idle, active, and transitional states.</li>
         <li>In lightweight AR, the environment is part of the interface grammar.</li>
       </ul>
@@ -469,6 +538,40 @@
       </div>
 
     </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     CINEMATIC COMPANION CLOSEUP
+════════════════════════════════════════════ -->
+<div class="cinematic-closeout fade-up">
+  <div class="cinematic-kicker">Closeup Study / Dynamic AR Behavior</div>
+  <h2 class="cinematic-title">Presence With a Pulse</h2>
+  <p class="cinematic-deck">A close study of presence, motion, and transient AR behavior.</p>
+  <div class="cinematic-frame">
+    <video autoplay muted loop playsinline preload="metadata">
+      <source src="./videos/Ar_Companion_Closeup.mp4" type="video/mp4">
+      Your browser could not load this video.
+    </video>
+    <div class="principle-overlay" aria-hidden="true">
+      <div class="principle-card">
+        <div class="principle-line">Persistent Companion</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-line">Motion Becomes Signal</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-line">Emotion Becomes Feedback</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-line">Signal Without Clutter</div>
+      </div>
+    </div>
+  </div>
+  <div class="cinematic-caption">
+    <div class="cinematic-caption-main">Persistent presence creates continuity. Transient effects carry status, confirmation, and emotional tone.</div>
+    <div class="cinematic-caption-tag">10 second loop</div>
   </div>
 </div>
 
