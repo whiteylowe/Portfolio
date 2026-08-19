@@ -128,13 +128,6 @@
   .proto-img img { width:100%; height:100%; object-fit:cover; opacity:0.85; display:block; }
   .proto-img-placeholder { display:flex; align-items:center; justify-content:center; height:100%; font-family:'DM Mono',monospace; font-size:8px; color:rgba(255,255,255,0.1); letter-spacing:0.15em; text-transform:uppercase; }
 
-  /* Portfolio embed */
-  .proto-embed-intro { margin-bottom:24px; max-width:700px; }
-  .proto-embed-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; }
-  .proto-embed-text { font-size:13px; color:var(--white-mid); font-weight:300; line-height:1.8; }
-  .proto-embed-frame { width:100%; aspect-ratio:16/9; border:1px solid var(--border); overflow:hidden; background:#050507; }
-  .proto-embed-frame iframe { width:100%; height:100%; border:none; display:block; }
-
   /* Tools */
   .tools-strip { display:flex; gap:8px; flex-wrap:wrap; }
   .tool-tag { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:0.2em; text-transform:uppercase; color:var(--cyan-dim); padding:5px 12px; border:1px solid var(--cyan-faint); }
@@ -477,82 +470,6 @@ position: relative;
       grid-template-columns:1fr;
     }
     .feature-img { aspect-ratio: 16 / 10; }
-  }
-
-
-
-  /* Cursor trail */
-  .cursor-trail {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(100,200,255,0.32);
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 12px rgba(100,200,255,0.18);
-    animation: trailFade 0.55s ease-out forwards;
-  }
-  @keyframes trailFade {
-    0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.18); }
-  }
-
-  /* Locked prototype state */
-  .proto-link-locked {
-    font-family:'DM Mono',monospace;
-    font-size:9px;
-    letter-spacing:0.22em;
-    text-transform:uppercase;
-    color:#ff5454;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:22px;
-    font-weight:400;
-  }
-  .lock-dot {
-    display:inline-block;
-    width:8px;
-    height:9px;
-    border:1.5px solid #ff5454;
-    border-radius:1px;
-    position:relative;
-    top:-1px;
-  }
-  .lock-dot::before {
-    content:'';
-    position:absolute;
-    top:-6px;
-    left:-1px;
-    width:8px;
-    height:6px;
-    border:1.5px solid #ff5454;
-    border-bottom:none;
-    border-radius:4px 4px 0 0;
-  }
-
-  .loop-half {
-    position: relative;
-  }
-  .loop-half video {
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-    opacity:0.94;
-  }
-  .loop-placeholder {
-    position:absolute;
-    inset:auto 16px 14px 16px;
-    font-family:'DM Mono',monospace;
-    font-size:8px;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.26);
-    text-align:center;
-    pointer-events:none;
   }
   .site-header{position:fixed;inset:0 0 auto 0;height:112px;z-index:50;background:linear-gradient(180deg,rgba(5,5,7,0.98),rgba(5,5,7,0.84) 72%,rgba(5,5,7,0.14));backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05);}
   .site-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(100,200,255,0.22),transparent);}
@@ -1184,20 +1101,13 @@ In wearable view, those same relationships condense into reticle stability and s
       </div>
     </div>
 
-    <!-- Wearable Signal Lock interactive drone demo, original model asset preserved -->
+    <!-- Wearable AR video -->
     <div class="section fade-up" style="margin-top:48px;">
-      <div class="proto-embed-intro">
-        <div class="proto-embed-label">Wearable Signal Lock</div>
-        <p class="proto-embed-text">A glasses-scale targeting study layered over the original Signal Glasses model asset. Small drones hover in the lens field. A few special targets carry electric signal links. Click a drone to capture the signal, increment the lens counter, destroy the target, and respawn a new one.</p>
-      </div>
-      <div class="wearable-signal-lock" id="wearable-signal-lock">
-        <div class="wsl-model-base" id="wsl-model-base">
-          <iframe src="Signal_Glasses.html" title="Signal Glasses model asset" id="wsl-model-frame" allowfullscreen></iframe>
-        </div>
-        <div class="wsl-ui">Lens active<br>Reticle tracking<br>Special signals linked</div>
-        <div class="wsl-counter">Locks <strong id="wsl-count">00</strong></div>
-        <div class="wsl-reticle" id="wsl-reticle"></div>
-        <div class="wsl-caption">Click the hovering drones inside the glasses field. Blue linked drones behave like captured signal particles and trigger electric line feedback.</div>
+      <div class="section-label">Wearable AR</div>
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="./videos/Ar_Wearables_2.mp4" type="video/mp4">
+        </video>
       </div>
     </div>
 
@@ -1232,14 +1142,6 @@ document.addEventListener('mousemove', e => {
 document.querySelectorAll('a,button').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
   el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-});
-
-
-document.querySelectorAll('.loop-half video').forEach(video => {
-  video.addEventListener('loadeddata', () => {
-    const label = video.parentElement.querySelector('.loop-placeholder');
-    if (label) label.style.display = 'none';
-  });
 });
 
 // Grain
@@ -1366,246 +1268,7 @@ document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 })();
 
 
-(function(){
-  const stage = document.getElementById('wearable-signal-lock');
-  const reticle = document.getElementById('wsl-reticle');
-  const countEl = document.getElementById('wsl-count');
-  const modelBase = document.getElementById('wsl-model-base');
-  const modelFrame = document.getElementById('wsl-model-frame');
-  if (!stage || !reticle || !countEl || !modelBase) return;
 
-  let pointer = { x: 0, y: 0, inside: false };
-  let locks = 0;
-  const drones = [];
-  const lines = [];
-  const droneCount = 13;
-
-  function stageRect() { return stage.getBoundingClientRect(); }
-  function rand(min, max) { return min + Math.random() * (max - min); }
-  function pad(n) { return String(n).padStart(2, '0'); }
-
-  function setModelParallax(x, y) {
-    const rect = stageRect();
-    const nx = (x / rect.width - 0.5);
-    const ny = (y / rect.height - 0.5);
-    const tx = nx * 18;
-    const ty = ny * 10;
-    const scale = 1.012;
-    modelBase.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
-  }
-
-  // Best effort: keep the model asset, remove old Bloch/sphere/qubit UI if it exists inside Signal_Glasses.html.
-  function removeOldSphereFromFrame() {
-    if (!modelFrame || !modelFrame.contentDocument) return;
-    try {
-      const doc = modelFrame.contentDocument;
-      const selectors = [
-        '[id*="bloch" i]', '[class*="bloch" i]',
-        '[id*="sphere" i]', '[class*="sphere" i]',
-        '[id*="qubit" i]', '[class*="qubit" i]',
-        '[id*="quantum" i]', '[class*="quantum" i]',
-        '[id*="particle" i]', '[class*="particle" i]'
-      ];
-      selectors.forEach(sel => {
-        doc.querySelectorAll(sel).forEach(el => {
-          const tag = el.tagName ? el.tagName.toLowerCase() : "";
-          if (tag !== "body" && tag !== "html") el.style.display = "none";
-        });
-      });
-    } catch (err) {}
-  }
-
-  if (modelFrame) {
-    modelFrame.addEventListener('load', () => {
-      removeOldSphereFromFrame();
-      setTimeout(removeOldSphereFromFrame, 300);
-      setTimeout(removeOldSphereFromFrame, 1000);
-    });
-  }
-
-  function makeDrone(i, specialOverride) {
-    const rect = stageRect();
-    const d = document.createElement('div');
-    const special = specialOverride ?? (i % 5 === 0 || i === 2);
-    d.className = 'wsl-drone' + (special ? ' special' : '');
-    stage.appendChild(d);
-
-    const drone = {
-      el: d,
-      special,
-      x: rand(rect.width * 0.34, rect.width * 0.66),
-      y: rand(rect.height * 0.30, rect.height * 0.62),
-      vx: rand(-0.34, 0.34),
-      vy: rand(-0.22, 0.22),
-      phase: rand(0, Math.PI * 2)
-    };
-
-    drones.push(drone);
-    return drone;
-  }
-
-  function rebuildLines() {
-    lines.forEach(line => line.remove());
-    lines.length = 0;
-    const specials = drones.filter(d => d.special).slice(0, 4);
-    for (let i = 0; i < specials.length - 1; i++) {
-      const line = document.createElement('div');
-      line.className = 'wsl-electric-line';
-      stage.appendChild(line);
-      lines.push(line);
-    }
-  }
-
-  function updateLines() {
-    const specials = drones.filter(d => d.special).slice(0, lines.length + 1);
-    lines.forEach((line, i) => {
-      const a = specials[i];
-      const b = specials[i + 1];
-      if (!a || !b) return;
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const len = Math.sqrt(dx * dx + dy * dy);
-      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-      line.style.left = a.x + 'px';
-      line.style.top = a.y + 'px';
-      line.style.width = len + 'px';
-      line.style.transform = `rotate(${angle}deg)`;
-    });
-  }
-
-  function respawnDrone(drone) {
-    const rect = stageRect();
-    drone.x = rand(rect.width * 0.34, rect.width * 0.66);
-    drone.y = rand(rect.height * 0.30, rect.height * 0.62);
-    drone.vx = rand(-0.34, 0.34);
-    drone.vy = rand(-0.22, 0.22);
-    drone.special = Math.random() < 0.33;
-    drone.el.className = 'wsl-drone' + (drone.special ? ' special' : '');
-    drone.el.style.opacity = '1';
-    drone.el.style.transform = 'translate(-50%, -50%) scale(1)';
-    rebuildLines();
-  }
-
-  for (let i = 0; i < droneCount; i++) makeDrone(i);
-  rebuildLines();
-
-  stage.addEventListener('mousemove', e => {
-    const rect = stageRect();
-    pointer.x = e.clientX - rect.left;
-    pointer.y = e.clientY - rect.top;
-    pointer.inside = true;
-    reticle.style.left = pointer.x + 'px';
-    reticle.style.top = pointer.y + 'px';
-    setModelParallax(pointer.x, pointer.y);
-  });
-
-  stage.addEventListener('mouseenter', () => { pointer.inside = true; });
-  stage.addEventListener('mouseleave', () => {
-    pointer.inside = false;
-    reticle.classList.remove('is-hot');
-    modelBase.style.transform = 'translate(0px, 0px) scale(1)';
-  });
-
-  function makeImpact(x, y, special) {
-    const impact = document.createElement('div');
-    impact.className = 'wsl-impact';
-    impact.style.left = x + 'px';
-    impact.style.top = y + 'px';
-    if (special) {
-      impact.style.borderColor = 'rgba(100,230,255,0.98)';
-      impact.style.boxShadow = '0 0 28px rgba(100,220,255,0.38)';
-    }
-    stage.appendChild(impact);
-    setTimeout(() => impact.remove(), 520);
-  }
-
-  function makeShot(x1, y1, x2, y2) {
-    const shot = document.createElement('div');
-    shot.className = 'wsl-shot-line';
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const len = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-    shot.style.left = x1 + 'px';
-    shot.style.top = y1 + 'px';
-    shot.style.width = len + 'px';
-    shot.style.transform = `rotate(${angle}deg)`;
-    stage.appendChild(shot);
-    setTimeout(() => shot.remove(), 320);
-  }
-
-  stage.addEventListener('click', e => {
-    const rect = stageRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    let hit = null;
-    let hitDist = Infinity;
-    drones.forEach(drone => {
-      const dx = drone.x - x;
-      const dy = drone.y - y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const radius = drone.special ? 34 : 25;
-      if (dist < radius && dist < hitDist) {
-        hit = drone;
-        hitDist = dist;
-      }
-    });
-
-    if (!hit) {
-      makeImpact(x, y, false);
-      return;
-    }
-
-    locks += hit.special ? 2 : 1;
-    countEl.textContent = pad(locks);
-    makeShot(x, y, hit.x, hit.y);
-    makeImpact(hit.x, hit.y, hit.special);
-
-    hit.el.style.opacity = '0';
-    hit.el.style.transform = 'translate(-50%, -50%) scale(2.6)';
-    setTimeout(() => respawnDrone(hit), 420);
-  });
-
-  function animate() {
-    const rect = stageRect();
-    const t = performance.now() * 0.001;
-    let near = false;
-
-    drones.forEach(drone => {
-      drone.phase += 0.008;
-      drone.x += drone.vx + Math.sin(t + drone.phase) * 0.08;
-      drone.y += drone.vy + Math.cos(t * 0.85 + drone.phase) * 0.06;
-
-      const minX = rect.width * 0.30;
-      const maxX = rect.width * 0.70;
-      const minY = rect.height * 0.25;
-      const maxY = rect.height * 0.68;
-
-      if (drone.x < minX || drone.x > maxX) drone.vx *= -1;
-      if (drone.y < minY || drone.y > maxY) drone.vy *= -1;
-
-      drone.x = Math.max(minX, Math.min(maxX, drone.x));
-      drone.y = Math.max(minY, Math.min(maxY, drone.y));
-
-      drone.el.style.left = drone.x + 'px';
-      drone.el.style.top = drone.y + 'px';
-
-      if (pointer.inside) {
-        const dx = drone.x - pointer.x;
-        const dy = drone.y - pointer.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < (drone.special ? 38 : 28)) near = true;
-      }
-    });
-
-    reticle.classList.toggle('is-hot', near);
-    updateLines();
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-})();
 
 </script>
 </body>

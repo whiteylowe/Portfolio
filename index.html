@@ -276,6 +276,41 @@
     100%{opacity:0; transform:translate(-50%,-50%) scale(1);}
   }
 
+  .zone-label{
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%) translateY(45px) scale(.96);
+    padding:8px 13px;
+    border:1px solid rgba(var(--accent),0);
+    background:rgba(5,5,7,0.12);
+    backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+    border-radius:8px;
+    clip-path:none;
+    font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.24em;
+    text-transform:uppercase; white-space:nowrap; color:rgba(255,255,255,0);
+    opacity:0; filter:blur(5px); pointer-events:none;
+    transition:opacity .52s ease, filter .58s ease, transform .58s cubic-bezier(.2,.7,.2,1), color .42s ease, border-color .42s ease, background .42s ease, letter-spacing .42s ease;
+  }
+  .mask-zone:hover .zone-label,
+  .mask-zone.active .zone-label,
+  .mask-zone.selected .zone-label{
+    opacity:1; filter:blur(0);
+    transform:translate(-50%,-50%) translateY(75px) scale(1);
+    color:rgba(255,255,255,.92);
+    border-color:rgba(var(--accent),.28);
+    background:rgba(5,5,7,.58);
+  }
+  .mask-zone.selected .zone-label{
+    color:rgba(var(--accent),.96);
+    border-color:rgba(var(--accent),.44);
+    background:rgba(26,22,14,.72);
+  }
+  .mask-zone.zone-clicked .zone-label{animation:zoneLabelConfirm .9s cubic-bezier(.2,.75,.2,1) both;}
+  @keyframes zoneLabelConfirm{
+    0%{opacity:1; transform:translate(-50%,-50%) translateY(75px) scale(1); letter-spacing:.24em; color:rgba(255,255,255,.92);}
+    38%{opacity:1; transform:translate(-50%,-50%) translateY(75px) scale(1.09); letter-spacing:.31em; color:rgba(var(--accent),1); border-color:rgba(var(--accent),.72); background:rgba(30,25,15,.82);}
+    100%{opacity:1; transform:translate(-50%,-50%) translateY(75px) scale(1); letter-spacing:.24em; color:rgba(var(--accent),.96);}
+  }
+
   .hero-overlay-copy{
     position:absolute; left:28px; right:28px; bottom:-22px; z-index:6; pointer-events:none;
     display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
@@ -452,6 +487,14 @@
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:12px;
   }
+  .about-three{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+  }
+  .about-capabilities{gap:6px}
+  .about-capabilities .about-highlight{grid-template-columns:10px minmax(0,1fr);gap:8px}
+  .about-capabilities .about-highlight-dot{margin-top:7px}
   .about-card{padding:14px}
   .about-card-title{
     font-size:14px;
@@ -527,7 +570,7 @@
     opacity:.88;
   }
   @media(max-width:960px){
-    .about-grid,.about-two,.about-contact,.about-logo-strip{grid-template-columns:1fr}
+    .about-grid,.about-two,.about-three,.about-contact,.about-logo-strip{grid-template-columns:1fr}
   }
 
 
@@ -804,13 +847,18 @@
   .site-nav-item{ position:relative; display:flex; align-items:center; }
   .site-nav-sep{ width:1px; height:14px; background:rgba(255,255,255,0.08); flex-shrink:0; }
   .site-nav-btn{
-    border:none; background:none; color:rgba(255,255,255,0.38);
+    border:none; background:transparent; color:rgba(255,255,255,0.38);
     font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.24em; text-transform:uppercase;
     padding:0 48px; height:40px; white-space:nowrap;
-    display:flex; align-items:center; gap:7px; transition:color .18s ease;
+    display:flex; align-items:center; gap:7px;
+    transition:color .22s ease, background .28s ease, box-shadow .28s ease;
   }
-  .site-nav-btn:hover{ color:rgba(255,255,255,0.82); }
-  .site-nav-btn.active{ color:rgba(var(--accent),0.90); }
+  .site-nav-btn:hover{ color:rgba(255,255,255,0.82); background:rgba(var(--accent),0.035); }
+  .site-nav-btn.active{
+    color:rgba(var(--accent),0.96);
+    background:linear-gradient(180deg, rgba(var(--accent),0.115), rgba(var(--accent),0.045));
+    box-shadow:inset 0 1px rgba(var(--accent),0.20), inset 0 -1px rgba(var(--accent),0.10);
+  }
   .site-nav-btn.has-drop::after{
     content:""; width:0; height:0;
     border-left:3px solid transparent; border-right:3px solid transparent;
@@ -828,12 +876,23 @@
   }
   .site-nav-item.drop-open .site-nav-drop{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
   .site-nav-drop-item{
-    display:block; width:100%; padding:9px 18px; border:none; background:none;
+    display:flex; align-items:center; gap:10px; width:100%; padding:9px 18px; border:none; background:none;
     font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
     color:rgba(255,255,255,0.46); text-align:left; white-space:nowrap;
-    transition:color .14s ease, background .14s ease;
+    transition:color .18s ease, background .18s ease, padding-left .18s ease;
   }
-  .site-nav-drop-item:hover{ color:rgba(var(--accent),0.90); background:rgba(255,255,255,0.03); }
+  .site-nav-drop-item::before{
+    content:""; width:5px; height:5px; border-radius:50%; flex:0 0 5px;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.92) 0 12%, rgba(var(--accent),.88) 28%, rgba(var(--accent),.34) 62%, rgba(var(--accent),.08) 100%);
+    box-shadow:0 0 0 1px rgba(var(--accent),.18), 0 0 8px rgba(var(--accent),.10);
+    opacity:.58; transform:scale(.9);
+    transition:opacity .18s ease, transform .18s ease, box-shadow .18s ease;
+  }
+  .site-nav-drop-item:hover{ color:rgba(var(--accent),0.94); background:rgba(var(--accent),0.035); padding-left:20px; }
+  .site-nav-drop-item:hover::before{
+    opacity:1; transform:scale(1.18);
+    box-shadow:0 0 0 1px rgba(var(--accent),.30), 0 0 10px rgba(var(--accent),.22);
+  }
 
   /* ── HOME CONTENT ─────────────────────────────────────── */
   .home-content{ width:var(--content-width); margin:0 auto; padding:56px 0 64px; }
@@ -1086,10 +1145,10 @@
       <img id="hero-frame" src="./images/Hero_Back_Frame.png" alt="Hero frame overlay">
       <canvas id="swarm-canvas"></canvas>
       <div class="hero-mask" id="hero-mask-overlay">
-        <button class="mask-zone" id="mz-spatial" data-zone="1" aria-label="Spatial Designs" style="left:5%;bottom:18%;width:26%;height:14%;"><span class="zone-glint"></span></button>
-        <button class="mask-zone" id="mz-about" data-zone="3" aria-label="About" style="left:42%;bottom:20%;width:18%;height:28%;"><span class="zone-glint"></span></button>
-        <button class="mask-zone" id="mz-xr" data-zone="0" aria-label="XR Systems" style="right:14%;bottom:22%;width:18%;height:12%;"><span class="zone-glint"></span></button>
-        <button class="mask-zone" id="mz-thesis" data-zone="2" aria-label="Thesis" style="right:3%;top:31%;width:13%;height:22%;"><span class="zone-glint"></span></button>
+        <button class="mask-zone" id="mz-spatial" data-zone="1" aria-label="Spatial Designs" style="left:5%;bottom:18%;width:26%;height:14%;"><span class="zone-glint"></span><span class="zone-label">Spatial Designs</span></button>
+        <button class="mask-zone" id="mz-about" data-zone="3" aria-label="About" style="left:42%;bottom:20%;width:18%;height:28%;"><span class="zone-glint"></span><span class="zone-label">About</span></button>
+        <button class="mask-zone" id="mz-xr" data-zone="0" aria-label="XR Systems" style="right:14%;bottom:22%;width:18%;height:12%;"><span class="zone-glint"></span><span class="zone-label">XR Systems</span></button>
+        <button class="mask-zone" id="mz-thesis" data-zone="2" aria-label="Research" style="right:3%;top:31%;width:13%;height:22%;"><span class="zone-glint"></span><span class="zone-label">Research</span></button>
       </div>
       <div class="hero-overlay-copy">
         <div class="hero-copy">
@@ -1218,11 +1277,11 @@ const PROJECTS = [
     name: 'About',
     slug: 'about',
     eyebrow: 'About',
-    title: 'TECHNICAL ART FOR PERCEPTUAL SYSTEMS.',
-    summary: 'Making complex systems visible across XR, technical visualization, and spatial design.',
-    meta: 'Technical Artist • XR Systems • Architecture to Real-time',
+    title: '3D ART + TECHNICAL VISUALIZATION.',
+    summary: 'High-end 3D visuals, real-time environments, and interactive systems for products, architecture, XR, and technical concepts.',
+    meta: 'Senior 3D Artist • Technical Artist • Spatial Design',
     heroVideo: './videos/Hero_Back_About.mp4',
-    sectionMeta: 'Technical Artist\nXR Systems\nArchitecture to Real-time',
+    sectionMeta: 'Senior 3D Artist\nTechnical Artist\nSpatial Design',
     cards: [
       { title: 'About', desc: 'Former Meta Reality Labs technical artist with shipped game, architectural, and teaching experience.', link: null, mediaType: 'image', media: './images/About_Hands.jpg' }
     ]
@@ -1433,17 +1492,9 @@ const SPATIAL_DETAIL = {
     </div>`,
 
   'Mixed Reality Prototypes': `
-    <div class="detail-hero">
-     <img src="./images/X_Dim_Demo.jpg" alt="Mixed Reality hero">
-        </div>
-        <div class="detail-meta">
-          <div class="detail-kicker">XR Systems / Mixed Reality Prototypes</div>
-          <div class="detail-title">Mixed Reality Prototypes</div>
-          <div class="detail-copy">AR & VR studies, object placement, and interface behavior tests for lightweight AR environments.</div>
-          <div class="detail-copy" style="color:rgba(100,200,255,.42);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'DM Mono',monospace">Passthrough MR · AR & VR Studies · Object Placement · Interaction Behavior</div>
-        </div>
-      </div>
-      <div style="margin-top:18px; width:100%; aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#000;">
+    <div class="detail-frame mixed-reality-detail">
+      <div class="detail-title" style="text-align:center; margin:2px 0 18px;">Mixed Reality Prototypes</div>
+      <div style="width:100%; aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#000;">
         <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQFyMGypw-De7zlWaWidYRtkHpePq41Ui5wZQJidwK0tOWun0NLTfi-99N8vmfDd4KC6DfxJz3brkAC/pubembed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="display:block;width:100%;height:100%;"></iframe>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
@@ -1454,43 +1505,49 @@ const SPATIAL_DETAIL = {
       <div class="about-panel">
         <div class="about-grid reveal-block">
           <div>
-            <div class="about-title">Making complex systems visible</div>
-            <div class="about-kicker">Technical artist trained in architecture, with research experience at Meta Reality Labs across perceptual interfaces, display systems, and spatial feedback for wearable AR.</div>
-            <div class="about-copy">My work makes invisible systems legible. I build real-time experiences and precision visualizations that translate abstract technical concepts into emotionally readable form, whether that system operates at the scale of a city block, a wearable interface, or a quantum chip.</div>
-            <div class="about-copy">That foundation spans perceptual interface research, environment art, cinematic visualization, and architectural practice, each grounded in the same core question: how do you make something complex immediately readable? An M.Arch background in spatial thinking, combined with production pipelines in Maya, Cinema 4D, and V-Ray, means I move between research-adjacent work and shipped deliverables without losing rigor or craft.</div>
+            <div class="about-title">3D Art + Technical Visualization</div>
+            <div class="about-kicker">Senior 3D / Technical Artist creating polished visuals, real-time environments, and interactive systems for products, architecture, XR, and complex technical concepts.</div>
+            <div class="about-copy">I combine high-end 3D craft with spatial and technical problem solving—moving between hard-surface assets, environments, real-time workflows, and research-driven prototypes.</div>
           </div>
           <div class="about-side">
-            <div class="about-side-label">Focus</div>
-            <div class="about-side-copy">Scientific and technical visualization, XR interaction systems, perceptual feedback, real-time world building, cinematic rendering, and procedural design systems.</div>
+            <div class="about-side-label">Best Fit</div>
+            <div class="about-side-copy">Senior 3D Artist · Technical Artist · Product Visualization · Environment Art · Design Technology</div>
           </div>
         </div>
 
         <div class="about-section reveal-block">
-          <div class="about-section-title">Highlights</div>
-          <div class="about-highlights">
-            <div class="about-highlight">
-              <div class="about-highlight-dot"></div>
-              <div class="about-highlight-copy">Technical Artist at Meta Reality Labs on perceptual systems for AR glasses, including display dimming workflows, gaze-driven feedback, and hand tracking interface studies.</div>
+          <div class="about-section-title">Experience</div>
+          <div class="about-three">
+            <div class="about-card">
+              <div class="about-card-title">Meta Reality Labs</div>
+              <div class="about-card-copy">Technical Artist working on AR perceptual systems, spatial interfaces, display concepts, and real-time prototypes.</div>
             </div>
-            <div class="about-highlight">
-              <div class="about-highlight-dot"></div>
-              <div class="about-highlight-copy">Precision 3D pipeline across Maya, Cinema 4D, and V-Ray (since 2008), with hard surface modeling and cinematic rendering for architectural and technical visualization.</div>
+            <div class="about-card">
+              <div class="about-card-title">15+ Years in 3D</div>
+              <div class="about-card-copy">Hard-surface modeling, environment art, architectural visualization, cinematic rendering, and real-time production.</div>
             </div>
-            <div class="about-highlight">
-              <div class="about-highlight-dot"></div>
-              <div class="about-highlight-copy">M.Arch (University of Florida) and M.EAE (University of Utah), with a published research paper connecting phenomenological perception, cinematic montage, and computational design.</div>
+            <div class="about-card">
+              <div class="about-card-title">Architecture + Real-Time</div>
+              <div class="about-card-copy">M.Arch + M.EAE background combining spatial design, visual communication, technical problem solving, and shipped interactive work.</div>
             </div>
           </div>
         </div>
 
         <div class="about-two reveal-block">
           <div class="about-card">
-            <div class="about-card-title">Tools</div>
-            <div class="about-card-copy">Maya, Cinema 4D, V-Ray (since 2008), Unreal Engine, Blender, Houdini, Unity, Substance Painter, Octane, Figma, and rapid prototyping pipelines across real-time and offline rendering workflows.</div>
+            <div class="about-card-title">Core Capabilities</div>
+            <div class="about-highlights about-capabilities">
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Hard-surface + product visualization</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Environment + architectural visualization</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Real-time art in Unreal + Unity</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">XR interaction + technical prototyping</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">PBR materials, lighting + rendering</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Motion + cinematic presentation</div></div>
+            </div>
           </div>
           <div class="about-card">
-            <div class="about-card-title">Approach</div>
-            <div class="about-card-copy">I work at the intersection of precision craft and perceptual legibility. Whether building a wearable AR feedback system, a cinematic environment, or a visualization of quantum hardware, the question is always the same: what does this need to communicate, and what is the clearest form that communication can take.</div>
+            <div class="about-card-title">Tools</div>
+            <div class="about-card-copy">Maya · Cinema 4D · Unreal Engine · Blender · Substance 3D · V-Ray · Photoshop · Unity</div>
           </div>
         </div>
 
@@ -1913,7 +1970,7 @@ function renderCards(target, cards, clickableDetail = false){
   const p = PROJECTS[current];
   target.innerHTML = cards.map(card => {
     const isThesis = p.slug === 'thesis';
-    const cta = isThesis ? 'Learn More' : (card.link ? 'Open project' : (clickableDetail ? (card.title === 'Mixed Reality Prototypes' ? 'View Projects' : 'View Project') : 'Curated preview'));
+    const cta = isThesis ? 'Learn More' : (card.title === 'About' ? 'Expand' : (card.link ? 'Open project' : (clickableDetail ? (card.title === 'Mixed Reality Prototypes' ? 'View Projects' : 'View Project') : 'Curated preview')));
     const inner = `
       <article class="card ${clickableDetail ? 'clickable' : ''}" data-card-title="${card.title}">
         <div class="media">${makeMedia(card)}</div>
@@ -1977,6 +2034,8 @@ function scrollProjectIntoPlace(){
 function openDetail(card){
   const html = SPATIAL_DETAIL[card.title];
   if(!html) return;
+  const isMixedReality = card.title === 'Mixed Reality Prototypes';
+  expandCards.style.display = isMixedReality ? 'none' : '';
   detailShell.innerHTML = html;
   detailShell.classList.add('open');
   // init compare sliders
@@ -2011,7 +2070,7 @@ function openDetail(card){
   });
   initRevealBlocks(detailShell);
   // Append logos strip only to XR panels (not about, thesis, spatial)
-  const _skipLogos = ['About','Campus Obscura','Midnight Miso','Naoko Shrine','To Hell With It','Architecture'];
+  const _skipLogos = ['About','Campus Obscura','Midnight Miso','Naoko Shrine','To Hell With It','Architecture','Mixed Reality Prototypes'];
   const detailFrame = detailShell.querySelector('.detail-frame');
   const closeRow = detailShell.querySelector('.detail-close-row');
   if(detailFrame && closeRow && !_skipLogos.includes(card.title)){
@@ -2032,6 +2091,7 @@ function openDetail(card){
   detailShell.querySelector('.detail-close')?.addEventListener('click', () => {
     detailShell.classList.remove('open');
     detailShell.innerHTML = '';
+    expandCards.style.display = '';
   });
   requestAnimationFrame(() => {
     scrollProjectIntoPlace();
@@ -2082,7 +2142,14 @@ function renderProject(index, {openPanel = false, source = 'nav'} = {}){
   expandTitle.textContent = p.name;
   expandMeta.textContent = p.sectionMeta;
 
-  renderCards(expandCards, p.cards, p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about' || p.slug === 'thesis');
+  const directDetail = p.slug === 'about' || p.slug === 'thesis';
+  if(directDetail){
+    expandCards.innerHTML = '';
+    expandCards.style.display = 'none';
+  } else {
+    expandCards.style.display = '';
+    renderCards(expandCards, p.cards, p.slug === 'spatial' || p.slug === 'xr');
+  }
 
   expandCards.classList.remove('single-card', 'single-large');
 
@@ -2099,9 +2166,11 @@ function renderProject(index, {openPanel = false, source = 'nav'} = {}){
     btn.classList.toggle('active', i === index)
   );
 
-  document.querySelectorAll('.mask-zone').forEach((zone, i) =>
-    zone.classList.toggle('active', i === index && source === 'mask')
-  );
+  document.querySelectorAll('.mask-zone').forEach((zone) => {
+    const zoneIndex = Number(zone.dataset.zone);
+    zone.classList.toggle('selected', zoneIndex === index);
+    zone.classList.toggle('active', zoneIndex === index && source === 'mask');
+  });
 
   if(p.slug === 'spatial' || p.slug === 'xr' || p.slug === 'about' || p.slug === 'thesis'){
     bindSpatialDetails();
@@ -2132,6 +2201,10 @@ PROJECTS.forEach((project, index) => {
 
 document.querySelectorAll('.mask-zone').forEach(zone => {
   zone.addEventListener('click', () => {
+    zone.classList.remove('zone-clicked');
+    void zone.offsetWidth;
+    zone.classList.add('zone-clicked');
+    setTimeout(() => zone.classList.remove('zone-clicked'), 720);
     playClick(2);
     const index = Number(zone.dataset.zone);
     activeZone = index;
@@ -2366,8 +2439,8 @@ function spawnTrail(x,y){
 function bindMaskZones(){
   document.querySelectorAll('.mask-zone').forEach(el => {
     const zone = Number(el.dataset.zone);
-    el.addEventListener('mouseenter', ()=>{ hoverZone = zone; document.querySelectorAll('.mask-zone').forEach(z=>z.classList.remove('active')); el.classList.add('active'); });
-    el.addEventListener('mouseleave', ()=>{ hoverZone = -1; if(activeZone !== zone) el.classList.remove('active'); });
+    el.addEventListener('mouseenter', ()=>{ hoverZone = zone; el.classList.add('active'); });
+    el.addEventListener('mouseleave', ()=>{ hoverZone = -1; el.classList.remove('active'); });
     el.addEventListener('click', (e)=>{
       e.preventDefault(); e.stopPropagation();
       activeZone = zone;
@@ -2455,6 +2528,8 @@ window.addEventListener('resize', resizeCanvas);
     btn.dataset.index = index;
     item.appendChild(btn);
     const fireOpen = () => {
+      // Close any expanded project dropdown before switching sections.
+      document.querySelectorAll('.site-nav-item.drop-open').forEach(el => el.classList.remove('drop-open'));
       activeZone = index;
       renderProject(index, {openPanel:true, source:'nav'});
       playHeroSequence(index);
