@@ -569,6 +569,60 @@
     filter:grayscale(1);
     opacity:.88;
   }
+
+  /* About: brighter reading contrast + subtle interactive emphasis */
+  .about-copy,
+  .about-side-copy,
+  .about-highlight-copy,
+  .about-card-copy,
+  .about-contact-value{color:rgba(255,255,255,0.62)}
+  .about-card-copy strong{color:rgba(255,255,255,0.82);font-weight:400}
+  .about-hover-zone{
+    transition:background .38s ease,border-color .38s ease,box-shadow .38s ease,transform .38s ease;
+  }
+  .about-card.about-hover-zone:hover,
+  .about-side.about-hover-zone:hover,
+  .about-contact-card.about-hover-zone:hover{
+    background:rgba(255,255,255,0.028);
+    border-color:rgba(var(--accent),0.20);
+    box-shadow:0 10px 28px rgba(0,0,0,0.10);
+  }
+  .about-hover-zone .about-copy,
+  .about-hover-zone .about-side-copy,
+  .about-hover-zone .about-card-copy,
+  .about-hover-zone .about-highlight-copy,
+  .about-hover-zone .about-contact-value{
+    transition:color .38s ease;
+  }
+  .about-hover-zone:hover .about-copy,
+  .about-hover-zone:hover .about-side-copy,
+  .about-hover-zone:hover .about-card-copy,
+  .about-hover-zone:hover .about-highlight-copy,
+  .about-hover-zone:hover .about-contact-value{color:rgba(255,255,255,0.82)}
+  .about-inline-link,.about-title-link{
+    position:relative;
+    color:rgba(255,255,255,0.86);
+    transition:color .24s ease,text-shadow .24s ease;
+  }
+  .about-inline-link::after,.about-title-link::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:-2px;height:1px;
+    background:linear-gradient(90deg,rgba(var(--accent),.62),rgba(var(--accent),.16));
+    transform:scaleX(.22);
+    transform-origin:left;
+    opacity:.45;
+    transition:transform .28s ease,opacity .28s ease;
+  }
+  .about-inline-link:hover,.about-title-link:hover{
+    color:rgba(var(--accent),.98);
+    text-shadow:0 0 12px rgba(var(--accent),.10);
+  }
+  .about-inline-link:hover::after,.about-title-link:hover::after{transform:scaleX(1);opacity:.9}
+  .about-contact-label{display:flex;align-items:center;gap:7px}
+  .about-contact-icon{width:11px;height:11px;display:inline-flex;align-items:center;justify-content:center;color:rgba(var(--accent),.66);flex:0 0 11px}
+  .about-contact-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+
   @media(max-width:960px){
     .about-grid,.about-two,.about-three,.about-contact,.about-logo-strip{grid-template-columns:1fr}
   }
@@ -1277,11 +1331,11 @@ const PROJECTS = [
     name: 'About',
     slug: 'about',
     eyebrow: 'About',
-    title: '3D ART + TECHNICAL VISUALIZATION.',
-    summary: 'High-end 3D visuals, real-time environments, and interactive systems for products, architecture, XR, and technical concepts.',
-    meta: 'Senior 3D Artist • Technical Artist • Spatial Design',
+    title: '3D ART + REAL-TIME WORLDS.',
+    summary: 'Senior 3D and Technical Artist working across game environments, product visualization, XR, architecture, and interactive systems.',
+    meta: 'Senior 3D Artist • Technical Artist • Environment Art • Game Art',
     heroVideo: './videos/Hero_Back_About.mp4',
-    sectionMeta: 'Senior 3D Artist\nTechnical Artist\nSpatial Design',
+    sectionMeta: 'Senior 3D Artist\nTechnical Artist\nEnvironment Art • Game Art',
     cards: [
       { title: 'About', desc: 'Former Meta Reality Labs technical artist with shipped game, architectural, and teaching experience.', link: null, mediaType: 'image', media: './images/About_Hands.jpg' }
     ]
@@ -1503,68 +1557,70 @@ const SPATIAL_DETAIL = {
   'About': `
     <div class="detail-frame">
       <div class="about-panel">
-        <div class="about-grid reveal-block">
+        <div class="about-grid reveal-block about-hover-zone">
           <div>
-            <div class="about-title">3D Art + Technical Visualization</div>
-            <div class="about-kicker">Senior 3D / Technical Artist creating polished visuals, real-time environments, and interactive systems for products, architecture, XR, and complex technical concepts.</div>
-            <div class="about-copy">I combine high-end 3D craft with spatial and technical problem solving—moving between hard-surface assets, environments, real-time workflows, and research-driven prototypes.</div>
+            <div class="about-title">3D Art + Real-Time Worlds</div>
+            <div class="about-kicker">Senior 3D Artist / Technical Artist working across game art, real-time environments, product visualization, XR, and interactive systems.</div>
+            <div class="about-copy">My work combines environment art, hard-surface modeling, lighting, materials, real-time workflows, and technical prototyping. I’ve developed spatial and visual systems at <a class="about-inline-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs</a>, led environment art for the commercially released Steam game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>, and worked across architecture, visualization, interactive media, and XR.</div>
+            <div class="about-copy">The common thread is building visually strong systems and environments that also have to function: readable game spaces, modular asset systems, interactive prototypes, product concepts, architectural environments, and emerging-interface research.</div>
           </div>
-          <div class="about-side">
+          <div class="about-side about-hover-zone">
             <div class="about-side-label">Best Fit</div>
-            <div class="about-side-copy">Senior 3D Artist · Technical Artist · Product Visualization · Environment Art · Design Technology</div>
+            <div class="about-side-copy">Senior 3D Artist · Technical Artist · Environment Artist · Game Art · Product Visualization · Design Technologist</div>
           </div>
         </div>
 
         <div class="about-section reveal-block">
-          <div class="about-section-title">Experience</div>
+          <div class="about-section-title">Selected Experience</div>
           <div class="about-three">
-            <div class="about-card">
-              <div class="about-card-title">Meta Reality Labs</div>
-              <div class="about-card-copy">Technical Artist working on AR perceptual systems, spatial interfaces, display concepts, and real-time prototypes.</div>
+            <div class="about-card about-hover-zone">
+              <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs · Technical Artist</a></div>
+              <div class="about-card-copy">Developed real-time environments, high-fidelity visualizations, materials, spatial interfaces, and interactive prototypes for AR wearables and mixed-reality research.</div>
             </div>
-            <div class="about-card">
-              <div class="about-card-title">15+ Years in 3D</div>
-              <div class="about-card-copy">Hard-surface modeling, environment art, architectural visualization, cinematic rendering, and real-time production.</div>
+            <div class="about-card about-hover-zone">
+              <div class="about-card-title"><a class="about-title-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It · Lead Environment Artist · Shipped Steam Title</a></div>
+              <div class="about-card-copy">Led environment art direction for a commercially released indie game, including worldbuilding, lighting, composition, environmental storytelling, gameplay readability, modular asset kits, props, materials, optimization, and production workflows.</div>
             </div>
-            <div class="about-card">
-              <div class="about-card-title">Architecture + Real-Time</div>
-              <div class="about-card-copy">M.Arch + M.EAE background combining spatial design, visual communication, technical problem solving, and shipped interactive work.</div>
+            <div class="about-card about-hover-zone">
+              <div class="about-card-title">Master of Architecture + Game Arts</div>
+              <div class="about-card-copy"><strong>Master of Architecture (UF) + M.EAE / Game Arts (UofU)</strong> spanning architectural design, game development, visualization, and interactive media. Recipient of an <strong>AIA Bronze Medal for architectural design</strong> for <a class="about-inline-link" href="campus-obscura.html">Campus Obscura</a>, with experience teaching architecture, digital visualization, and game-related design.</div>
             </div>
           </div>
         </div>
 
         <div class="about-two reveal-block">
-          <div class="about-card">
+          <div class="about-card about-hover-zone">
             <div class="about-card-title">Core Capabilities</div>
             <div class="about-highlights about-capabilities">
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Hard-surface + product visualization</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Environment + architectural visualization</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Real-time art in Unreal + Unity</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">XR interaction + technical prototyping</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">PBR materials, lighting + rendering</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Motion + cinematic presentation</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Environment Art + Worldbuilding</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Hard-Surface Modeling + Product Visualization</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Modular Assets + Real-Time Production</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Lighting + Look Development</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">PBR Materials + Shader Workflows</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">XR + Interactive Prototyping</div></div>
+              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Architectural + Spatial Visualization</div></div>
             </div>
           </div>
-          <div class="about-card">
+          <div class="about-card about-hover-zone">
             <div class="about-card-title">Tools</div>
-            <div class="about-card-copy">Maya · Cinema 4D · Unreal Engine · Blender · Substance 3D · V-Ray · Photoshop · Unity</div>
+            <div class="about-card-copy">Unreal Engine · Unity · Maya · Blender · 3ds Max · Rhino · Revit · AutoCAD · Cinema 4D · Substance 3D · V-Ray · Photoshop</div>
           </div>
         </div>
 
         <div class="about-contact reveal-block">
-          <div class="about-contact-card">
-            <div class="about-contact-label">Email</div>
+          <div class="about-contact-card about-hover-zone">
+            <div class="about-contact-label"><span class="about-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 6.5h17v11h-17z"/><path d="m4.5 7.5 7.5 6 7.5-6"/></svg></span>Email</div>
             <div class="about-contact-value">
               <button class="copy-email-btn" type="button" data-email="nicklowe3d@gmail.com">nicklowe3d@gmail.com</button>
               <span class="copy-email-toast" aria-hidden="true">Email copied</span>
             </div>
           </div>
-          <div class="about-contact-card">
-            <div class="about-contact-label">LinkedIn</div>
+          <div class="about-contact-card about-hover-zone">
+            <div class="about-contact-label"><span class="about-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M6.5 18c.9-3 2.8-4.5 5.5-4.5s4.6 1.5 5.5 4.5"/><circle cx="12" cy="12" r="9"/></svg></span>LinkedIn</div>
             <div class="about-contact-value"><a href="https://www.linkedin.com/in/nicholas-lowe-2a400135/" target="_blank" rel="noopener noreferrer">Nicholas Lowe</a></div>
           </div>
-          <div class="about-contact-card">
-            <div class="about-contact-label">GitHub</div>
+          <div class="about-contact-card about-hover-zone">
+            <div class="about-contact-label"><span class="about-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 18c-4 .9-4-2-5-2.5M14.5 20v-3.4c0-1 .35-1.8.95-2.3-3.15-.35-6.45-1.55-6.45-7A5.45 5.45 0 0 1 10.45 3.5 5.05 5.05 0 0 1 10.6 0S11.75-.35 14.5 1.4A12.2 12.2 0 0 1 18.4 1.4C21.15-.35 22.3 0 22.3 0a5.05 5.05 0 0 1 .15 3.5 5.45 5.45 0 0 1 1.45 3.8c0 5.45-3.3 6.65-6.45 7 .6.5 1 1.5 1 3V20" transform="translate(-4 2) scale(.9)"/></svg></span>GitHub</div>
             <div class="about-contact-value"><a href="https://github.com/whiteylowe" target="_blank" rel="noopener noreferrer">whiteylowe</a></div>
           </div>
         </div>
