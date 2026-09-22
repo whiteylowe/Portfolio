@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -950,12 +950,13 @@
 
   /* ── HOME CONTENT ─────────────────────────────────────── */
   .home-content{ width:var(--content-width); margin:0 auto; padding:56px 0 64px; }
-  .home-intro{ max-width:660px; margin:0 auto 48px; text-align:center; }
-  .home-intro-eyebrow{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(var(--accent),0.55); margin-bottom:16px; }
-  .home-intro-text{ font-size:14px; line-height:1.78; color:rgba(255,255,255,0.82); font-weight:300; }
+  .home-intro{ max-width:880px; margin:0 auto 40px; text-align:left; }
+  .home-intro-eyebrow{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(var(--accent),0.85); margin-bottom:16px; }
+  .home-intro-text{ font-size:14px; line-height:1.78; color:rgba(255,255,255,0.88); font-weight:300; max-width:810px; }
+  .home-intro-title{font-size:clamp(19px,2.5vw,29px);font-weight:300;line-height:1.35;letter-spacing:.015em;color:rgba(255,255,255,.96);margin-bottom:12px;}
   .featured-label{
   text-align:center;
-  margin-bottom:30px;
+  margin-bottom:20px;
   font-family:'DM Mono',monospace;
   font-size:12px;
   letter-spacing:0.34em;
@@ -988,7 +989,7 @@
 
 .perceptual-feature{
   width:100%;
-  margin:0 auto 108px;
+  margin:0 auto 38px;
   display:grid;
   gap:14px;
   justify-items:center;
@@ -997,7 +998,7 @@
   font-size:11px;
   letter-spacing:0.32em;
   text-transform:uppercase;
-  color:rgba(var(--accent),0.82);
+  color:rgba(var(--accent),0.98);
   text-align:left;
 }
 .perceptual-tagline{
@@ -1005,7 +1006,7 @@
   text-align:left;
   font-size:12px;
   line-height:1.8;
-  color:rgba(255,255,255,0.72);
+  color:rgba(255,255,255,0.85);
   font-weight:300;
 }
 .perceptual-overlay{
@@ -1102,6 +1103,23 @@
 }
 
 
+  /* Compact independently centered modes, with a cyan-white border flash. */
+  .perceptual-video-frame .mode-video{position:absolute;inset:0;opacity:0;transition:opacity .46s ease;pointer-events:none;}
+  .perceptual-video-frame .mode-video.is-active{opacity:1;}
+  .perceptual-video-frame.is-navigate .perceptual-timed{visibility:hidden;}
+  .mode-selector{display:grid;justify-items:center;gap:10px;padding-top:4px;}
+  .mode-selector-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:rgba(var(--accent),.9);}
+  .mode-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:min(390px,100%);}
+  .mode-button{appearance:none;position:relative;min-width:0;min-height:40px;width:100%;padding:0 14px;border:1px solid rgba(var(--accent),.26);border-radius:14px;background:rgba(13,15,20,.84);color:rgba(255,255,255,.76);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:12px;white-space:nowrap;transition:color .35s ease,text-shadow .35s ease,background .35s ease,border-color .35s ease,box-shadow .35s ease;}
+  .mode-button .mode-number{font-size:10px;letter-spacing:.1em;opacity:.86;flex-shrink:0;}
+  .mode-button[aria-pressed="true"]{color:rgba(var(--accent),1);text-shadow:0 0 10px rgba(207,243,255,.18);border-color:rgba(var(--accent),.52);background:linear-gradient(180deg,rgba(var(--accent),.09),rgba(27,36,42,.18));box-shadow:inset 0 0 10px rgba(218,246,255,.035),0 0 12px rgba(185,235,250,.05);}
+  .mode-button:focus-visible{outline:1px solid rgba(215,247,255,.95);outline-offset:3px;}
+  .mode-button:hover{color:rgba(var(--accent),.96);border-color:rgba(198,241,251,.56);}
+  .mode-button::after{content:"";position:absolute;inset:-2px;border:1px solid rgba(220,250,255,0);border-radius:inherit;pointer-events:none;opacity:0;}
+  .mode-button.mode-pulse::after{animation:modeBorderRipple .82s cubic-bezier(.18,.65,.28,1) both;}
+  @keyframes modeBorderRipple{0%{inset:-1px;opacity:0;border-color:rgba(235,253,255,.15);box-shadow:0 0 0 0 rgba(205,246,255,0)}22%{opacity:1;border-color:rgba(233,253,255,.95);box-shadow:0 0 8px 2px rgba(187,239,251,.64),0 0 24px 5px rgba(183,235,247,.30)}100%{inset:-12px;opacity:0;border-color:rgba(192,243,252,0);box-shadow:0 0 26px 5px rgba(185,239,250,0)}}
+  @media(max-width:600px){.home-intro{margin-bottom:32px}.home-intro-title{font-size:20px}.perceptual-overlay{left:15px;bottom:15px;right:15px}.perceptual-tagline{font-size:10px;line-height:1.45}.perceptual-label{font-size:9px;letter-spacing:.15em}.perceptual-timed{right:15px;top:15px}.perceptual-timed .timed-copy{display:none}.perceptual-timed .timed-title{font-size:9px;letter-spacing:.12em}.mode-switch{gap:10px}.mode-button{min-height:38px;padding:0 8px;font-size:10px;gap:8px;letter-spacing:.09em}}
+  @media(prefers-reduced-motion:reduce){.mode-button,.perceptual-video-frame .mode-video{transition:none!important}.mode-button.mode-pulse::after{animation:none!important}}
   @media(max-width:900px){ .featured-row{ grid-template-columns:1fr; } .home-logo-chip{ width:120px; } }
 
 
@@ -1238,16 +1256,20 @@
   <div class="home-featured-section" id="home-featured-section">
     <div class="home-intro">
       <div class="home-intro-eyebrow mono">Technical Artist &nbsp;·&nbsp; XR Systems &nbsp;·&nbsp; Environment Design</div>
-      <p class="home-intro-text">I build real-time systems where perception and space converge, moving between XR prototyping, environment art, and architectural research to translate complex technical ideas into legible, emotionally readable experiences.</p>
+      <h1 class="home-intro-title">Designing how people interact with emerging technologies and spatial worlds.</h1>
+      <p class="home-intro-text">I build real-time prototypes, perceptual interfaces, and interactive environments, bringing together technical systems, visual design, and architectural thinking.</p>
     </div>
 
     <div class="perceptual-feature">
       <div class="perceptual-video-frame">
-        <video autoplay muted loop playsinline preload="auto">
+        <video class="mode-video is-active" id="mode-video-target" autoplay muted playsinline preload="auto" aria-label="Target mode visualization">
           <source src="./videos/Ar_Wearables_2.mp4" type="video/mp4">
         </video>
+        <video class="mode-video" id="mode-video-navigate" autoplay muted playsinline preload="auto" aria-label="Navigate mode visualization">
+          <source src="./videos/Ar_Companion_closeup.mp4" type="video/mp4">
+        </video>
         <div class="perceptual-overlay">
-          <div class="perceptual-label mono">Perceptual Interface Visualization</div>
+          <div class="perceptual-label mono">Smart Glasses / Perceptual Interface Visualization</div>
           <div class="perceptual-tagline">Exploring how motion, framing, and visual behavior shape perceptual legibility in wearable systems.</div>
         </div>
 
@@ -1264,6 +1286,13 @@
         <div class="perceptual-timed timed-3">
           <div class="timed-title">Output / Ambient Feedback</div>
           <div class="timed-copy">Glanceable signals active</div>
+        </div>
+      </div>
+      <div class="mode-selector" aria-label="Explore smart glasses modes">
+        <div class="mode-selector-label">Explore Modes</div>
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Smart glasses video modes">
+          <button class="mode-button" type="button" data-mode="0" aria-pressed="true"><span class="mode-number">01</span><span>Target</span></button>
+          <button class="mode-button" type="button" data-mode="1" aria-pressed="false"><span class="mode-number">02</span><span>Navigate</span></button>
         </div>
       </div>
     </div>
@@ -2726,6 +2755,44 @@ bindMaskZones();
 initBoids();
 resizeCanvas();
 animateBoids();
+
+// Both clips play continuously, including while hidden. A completed visible clip
+// selects the other mode; manual selection never seeks or restarts either clip.
+(function initPerceptualModes(){
+  const selector=document.getElementById('mode-switch');
+  const frame=document.querySelector('.perceptual-video-frame');
+  if(!selector || !frame) return;
+  const videos=[document.getElementById('mode-video-target'),document.getElementById('mode-video-navigate')];
+  const buttons=[...selector.querySelectorAll('.mode-button')];
+  let current=0;
+  const pulseTimers=new WeakMap();
+  function selectMode(next){
+    if(next===current) return;
+    current=next;
+    const activeButton=buttons[next];
+    activeButton.classList.remove('mode-pulse');
+    void activeButton.offsetWidth;
+    activeButton.classList.add('mode-pulse');
+    clearTimeout(pulseTimers.get(activeButton));
+    pulseTimers.set(activeButton,setTimeout(()=>activeButton.classList.remove('mode-pulse'),850));
+    buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===next)));
+    frame.classList.toggle('is-navigate',next===1);
+    videos.forEach((video,i)=>video.classList.toggle('is-active',i===next));
+    videos.forEach(video=>{if(video.paused && !video.ended) video.play().catch(()=>{});});
+  }
+  videos.forEach((video,i)=>{
+    video.muted=true;
+    video.addEventListener('ended',()=>{
+      const wasActive=current===i;
+      // Restart only at the natural end: never in response to a mode click.
+      video.currentTime=0;
+      video.play().catch(()=>{});
+      if(wasActive) selectMode(1-i);
+    });
+    video.play().catch(()=>{});
+  });
+  buttons.forEach((button,i)=>button.addEventListener('click',()=>selectMode(i)));
+})();
 </script>
 
 
