@@ -1123,6 +1123,19 @@
   @media(max-width:900px){ .featured-row{ grid-template-columns:1fr; } .home-logo-chip{ width:120px; } }
 
 
+
+  /* Two independent illuminated mode controls; no connector between them. */
+  .mode-switch{position:relative;isolation:isolate;}
+  .mode-button{z-index:1;background:rgba(13,15,20,.96);}
+  .mode-button[aria-pressed="true"]{color:rgba(255,239,200,1);border-color:rgba(var(--accent),.9);background:linear-gradient(180deg,rgba(var(--accent),.18),rgba(var(--accent),.045));text-shadow:0 0 11px rgba(var(--accent),.5);box-shadow:inset 0 0 12px rgba(var(--accent),.10),0 0 0 1px rgba(var(--accent),.10),0 0 19px rgba(var(--accent),.22);}
+  .mode-button.mode-pulse::after{animation:modeGoldRipple .82s cubic-bezier(.18,.65,.28,1) both;}
+  @keyframes modeGoldRipple{0%{inset:-1px;opacity:0;border-color:rgba(var(--accent),.2)}25%{opacity:1;border-color:rgba(255,241,209,.94);box-shadow:0 0 10px rgba(var(--accent),.45)}100%{inset:-10px;opacity:0;border-color:rgba(var(--accent),0);box-shadow:0 0 22px rgba(var(--accent),0)}}
+  .perceptual-label{min-height:1.25em;transition:opacity .48s ease;}
+  .perceptual-tagline{min-height:3.6em;transition:opacity .48s ease;}
+  .perceptual-overlay.caption-blank .perceptual-label,
+  .perceptual-overlay.caption-blank .perceptual-tagline{opacity:0;}
+  @media(prefers-reduced-motion:reduce){.perceptual-label,.perceptual-tagline{transition:none}}
+
   /* ── HERO HINT ───────────────────────────────────────── */
   .hero-hint{
     position:absolute; top:108px; left:0; right:0; z-index:7;
@@ -1290,7 +1303,7 @@
       </div>
       <div class="mode-selector" aria-label="Explore smart glasses modes">
         <div class="mode-selector-label">Explore Modes</div>
-        <div class="mode-switch" id="mode-switch" role="group" aria-label="Smart glasses video modes">
+        <div class="mode-switch" id="mode-switch" data-active="0" role="group" aria-label="Smart glasses video modes">
           <button class="mode-button" type="button" data-mode="0" aria-pressed="true"><span class="mode-number">01</span><span>Target</span></button>
           <button class="mode-button" type="button" data-mode="1" aria-pressed="false"><span class="mode-number">02</span><span>Navigate</span></button>
         </div>
@@ -2756,8 +2769,8 @@ initBoids();
 resizeCanvas();
 animateBoids();
 
-// Both clips play continuously, including while hidden. A completed visible clip
-// selects the other mode; manual selection never seeks or restarts either clip.
+// Each manual selection starts its selected clip from frame zero. The inactive
+// clip pauses; the next clip begins from zero when the visible clip finishes.
 (function initPerceptualModes(){
   const selector=document.getElementById('mode-switch');
   const frame=document.querySelector('.perceptual-video-frame');
@@ -2766,9 +2779,11 @@ animateBoids();
   const buttons=[...selector.querySelectorAll('.mode-button')];
   let current=0;
   const pulseTimers=new WeakMap();
-  function selectMode(next){
-    if(next===current) return;
+  function selectMode(next,{restart=true}={}){
+    if(!videos[next]) return;
+    const previous=current;
     current=next;
+    selector.dataset.active=String(next);
     const activeButton=buttons[next];
     activeButton.classList.remove('mode-pulse');
     void activeButton.offsetWidth;
@@ -2777,21 +2792,54 @@ animateBoids();
     pulseTimers.set(activeButton,setTimeout(()=>activeButton.classList.remove('mode-pulse'),850));
     buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===next)));
     frame.classList.toggle('is-navigate',next===1);
+    // Prepare the incoming clip before fading it in. Don't show a late frame.
+    const incoming=videos[next];
+    if(restart){incoming.pause();try{incoming.currentTime=0;}catch(e){}}
+    incoming.muted=true;
+    incoming.play().catch(()=>{});
     videos.forEach((video,i)=>video.classList.toggle('is-active',i===next));
-    videos.forEach(video=>{if(video.paused && !video.ended) video.play().catch(()=>{});});
+    if(previous!==next) setTimeout(()=>{if(current===next)videos[previous].pause();},470);
   }
   videos.forEach((video,i)=>{
     video.muted=true;
     video.addEventListener('ended',()=>{
-      const wasActive=current===i;
-      // Restart only at the natural end: never in response to a mode click.
-      video.currentTime=0;
-      video.play().catch(()=>{});
-      if(wasActive) selectMode(1-i);
+      if(current===i) selectMode(1-i);
     });
-    video.play().catch(()=>{});
   });
+  videos[1].pause();
+  videos[0].play().catch(()=>{});
   buttons.forEach((button,i)=>button.addEventListener('click',()=>selectMode(i)));
+})();
+
+// HUD-like caption: type title and description in sequence; fade together,
+// stay completely blank for 2.5 seconds, then type both again.
+(function initPerceptualCaption(){
+  const overlay=document.querySelector('.perceptual-overlay');
+  const label=overlay?.querySelector('.perceptual-label');
+  const description=overlay?.querySelector('.perceptual-tagline');
+  if(!label || !description || window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const titleLetters=Array.from(label.textContent.trim());
+  const descriptionLetters=Array.from(description.textContent.trim());
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  async function typeInto(element,letters,delay){
+    for(const char of letters){element.textContent+=char;await wait(delay);}
+  }
+  async function cycle(){
+    while(overlay.isConnected){
+      overlay.classList.remove('caption-blank');
+      label.textContent='';
+      description.textContent='';
+      await typeInto(label,titleLetters,14);
+      await typeInto(description,descriptionLetters,9);
+      await wait(5000);
+      overlay.classList.add('caption-blank');
+      await wait(500); // allow both lines to fade out together
+      label.textContent='';
+      description.textContent='';
+      await wait(2500); // full blank interval, after the fade
+    }
+  }
+  cycle();
 })();
 </script>
 
