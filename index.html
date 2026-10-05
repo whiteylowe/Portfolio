@@ -776,6 +776,26 @@
     gap:12px;
     margin-top:8px;
   }
+  .arch-doc-split{
+    grid-template-columns:minmax(0,0.92fr) minmax(360px,1.08fr) !important;
+    align-items:center;
+  }
+  .arch-model-feature{
+    margin-top:14px;
+    display:grid;
+    gap:12px;
+  }
+  .arch-model-media{
+    width:100%;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(0,0,0,.26);
+    overflow:hidden;
+  }
+  .arch-model-media img{
+    width:100%;
+    height:auto;
+    display:block;
+  }
   .arch-craft-split{
     grid-template-columns:minmax(0,1.05fr) minmax(320px,0.8fr) !important;
     align-items:start;
@@ -887,7 +907,7 @@
     margin:14px auto 0;
   }
   @media(max-width:960px){
-    .spatial-section.split,.spatial-grid-2,.spatial-grid-3,.arch-hero,.arch-row-2,.arch-row-2.tight{grid-template-columns:1fr}
+    .spatial-section.split,.spatial-grid-2,.spatial-grid-3,.arch-hero,.arch-row-2,.arch-row-2.tight,.arch-doc-split{grid-template-columns:1fr !important}
   }
 
 
@@ -2009,7 +2029,7 @@ const SPATIAL_DETAIL = {
             <div class="spatial-copy">Miami Modern Architecture shaped this study through horizontal rhythm, shaded thresholds, and an attention to how Florida light moves across façade depth. The design stays sensitive to landscape, frames outward views, and uses sunlight as an active part of the composition.</div>
             <div class="spatial-toolline">Mixed use · Layering · Rhythm · Streetscape · Florida light</div>
           </div>
-          <div class="spatial-section split tone-panel tone-blue" style="margin-top:14px; padding:16px; border:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg, rgba(7,17,26,.96), rgba(5,9,14,.98));">
+          <div class="spatial-section split tone-panel tone-blue arch-doc-split" style="margin-top:14px; padding:16px; border:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg, rgba(7,17,26,.96), rgba(5,9,14,.98));">
             <div class="spatial-stack">
               <div class="spatial-eyebrow">Construction documentation</div>
               <div class="spatial-headline">Drawing sets + detailing</div>
@@ -2022,6 +2042,15 @@ const SPATIAL_DETAIL = {
             <div class="spatial-media-sm"><img src="./images/SD_A_Avocado_1.jpg" alt="Avocado house study 1"></div>
             <div class="spatial-media-sm"><img src="./images/SD_A_Avocado_2.jpg" alt="Avocado house study 2"></div>
             <div class="spatial-media-sm"><img src="./images/SD_A_Avocado_3.jpg" alt="Avocado house study 3"></div>
+          </div>
+          <div class="arch-model-feature">
+            <div class="arch-model-media"><img src="./images/Miami_arc.png" alt="Physical architectural presentation model"></div>
+            <div class="spatial-stack">
+              <div class="spatial-eyebrow">Physical model + fabrication</div>
+              <div class="spatial-headline">Modeling + laser-cut fabrication</div>
+              <div class="spatial-copy">Architectural geometry translated into a precise physical model through laser-cut fabrication, assembly, and final presentation finishing.</div>
+              <div class="spatial-toolline">Modeling · Laser cutting · Fabrication · Presentation</div>
+            </div>
           </div>
         </section>
 
