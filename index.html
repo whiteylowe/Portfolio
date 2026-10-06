@@ -1080,6 +1080,7 @@
     background:rgba(255,255,255,.014);
     overflow:hidden;
     transition:border-color .26s ease, transform .26s ease, box-shadow .26s ease;
+    cursor:pointer;
   }
   .shipped-feature:hover{
     transform:translateY(-2px);
@@ -1176,20 +1177,34 @@
   .shipped-feature-btn,
   .shipped-feature-link{
     appearance:none;
-    border:0;
-    background:none;
-    padding:0;
     font-family:'DM Mono',monospace;
     font-size:10px;
     letter-spacing:.18em;
     text-transform:uppercase;
-    color:rgba(var(--accent),.80);
-    transition:color .18s ease, text-shadow .18s ease;
+    transition:color .18s ease, text-shadow .18s ease, border-color .18s ease, background .18s ease;
   }
-  .shipped-feature-btn:hover,
-  .shipped-feature-link:hover{
+  .shipped-feature-btn{
+    padding:8px 11px;
+    border:1px solid rgba(var(--accent),.38);
+    border-radius:9px;
+    background:rgba(var(--accent),.05);
+    color:rgba(var(--accent),.92);
+  }
+  .shipped-feature-link{
+    border:0;
+    background:none;
+    padding:8px 0;
+    color:rgba(255,255,255,.56);
+  }
+  .shipped-feature-btn:hover{
     color:rgba(var(--accent),1);
+    border-color:rgba(var(--accent),.82);
+    background:rgba(var(--accent),.10);
     text-shadow:0 0 12px rgba(var(--accent),.12);
+  }
+  .shipped-feature-link:hover{
+    color:rgba(255,255,255,.92);
+    text-shadow:0 0 12px rgba(255,255,255,.08);
   }
   .shipped-feature-meta{
     position:absolute;
@@ -1253,6 +1268,53 @@
   pointer-events:none;
   text-align:left;
 }
+
+.perceptual-project-link{
+  position:absolute;
+  right:32px;
+  bottom:28px;
+  z-index:5;
+  min-width:190px;
+  padding-left:22px;
+  border-left:1px solid rgba(var(--accent),.34);
+  display:grid;
+  gap:6px;
+  text-align:left;
+}
+.perceptual-project-title{
+  font-family:'DM Mono',monospace;
+  font-size:14px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.94);
+}
+.perceptual-project-mode{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.46);
+}
+.perceptual-project-cta{
+  width:max-content;
+  margin-top:4px;
+  padding:8px 12px;
+  border:1px solid rgba(var(--accent),.50);
+  border-radius:10px;
+  background:rgba(12,13,16,.72);
+  color:rgba(var(--accent),.96);
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  transition:border-color .2s ease, background .2s ease, box-shadow .2s ease, color .2s ease;
+}
+.perceptual-project-cta:hover{
+  border-color:rgba(var(--accent),.92);
+  background:rgba(var(--accent),.08);
+  color:rgba(var(--accent),1);
+  box-shadow:0 0 16px rgba(var(--accent),.10);
+}
 .perceptual-video-frame{
   width:100%;
   max-width:1180px;
@@ -1261,6 +1323,7 @@
   background:rgba(0,0,0,0.38);
   overflow:hidden;
   position:relative;
+  cursor:pointer;
 }
 .perceptual-video-frame::before{
   content:"";
@@ -1352,7 +1415,14 @@
   .mode-button.mode-pulse::after{animation:modeBorderRipple .82s cubic-bezier(.18,.65,.28,1) both;}
   @keyframes modeBorderRipple{0%{inset:-1px;opacity:0;border-color:rgba(235,253,255,.15);box-shadow:0 0 0 0 rgba(205,246,255,0)}22%{opacity:1;border-color:rgba(233,253,255,.95);box-shadow:0 0 8px 2px rgba(187,239,251,.64),0 0 24px 5px rgba(183,235,247,.30)}100%{inset:-12px;opacity:0;border-color:rgba(192,243,252,0);box-shadow:0 0 26px 5px rgba(185,239,250,0)}}
   @media(max-width:600px){.home-intro{margin-bottom:32px}.home-intro-title{font-size:20px}.perceptual-overlay{left:15px;bottom:15px;right:15px}.perceptual-tagline{font-size:10px;line-height:1.45}.perceptual-label{font-size:9px;letter-spacing:.15em}.perceptual-timed{right:15px;top:15px}.perceptual-timed .timed-copy{display:none}.perceptual-timed .timed-title{font-size:9px;letter-spacing:.12em}.mode-switch{gap:10px}.mode-button{min-height:38px;padding:0 8px;font-size:10px;gap:8px;letter-spacing:.09em}}
-  @media(prefers-reduced-motion:reduce){.mode-button,.perceptual-video-frame .mode-video{transition:none!important}.mode-button.mode-pulse::after{animation:none!important}}
+  
+@media(max-width:600px){
+  .perceptual-project-link{right:15px;bottom:76px;min-width:150px;padding-left:14px}
+  .perceptual-project-title{font-size:11px}
+  .perceptual-project-mode{font-size:9px}
+  .perceptual-project-cta{padding:6px 9px;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.mode-button,.perceptual-video-frame .mode-video{transition:none!important}.mode-button.mode-pulse::after{animation:none!important}}
   @media(max-width:900px){ .featured-row{ grid-template-columns:1fr; } .home-logo-chip{ width:120px; } }
 
 
@@ -1518,6 +1588,11 @@
           <div class="perceptual-label mono">Smart Glasses / Perceptual Interface Visualization</div>
           <div class="perceptual-tagline">Exploring how motion, framing, and visual behavior shape perceptual legibility in wearable systems.</div>
         </div>
+        <div class="perceptual-project-link" id="perceptual-project-link" aria-live="polite">
+          <div class="perceptual-project-title" id="perceptual-project-title">Signal Lock</div>
+          <div class="perceptual-project-mode" id="perceptual-project-mode">Target Mode</div>
+          <button class="perceptual-project-cta" id="perceptual-project-cta" type="button">Explore →</button>
+        </div>
 
         <div class="perceptual-timed timed-1">
           <div class="timed-title">Mode / Smart Camera</div>
@@ -1543,13 +1618,13 @@
       </div>
     </div>
 
-    <div class="featured-label mono">Featured Projects</div>
+    <div class="featured-label mono">XR Systems</div>
     <div class="featured-row" id="featured-row"></div>
 
 
     <div class="shipped-feature-wrap" aria-label="Shipped game title">
       <div class="shipped-feature-label mono">Shipped Title</div>
-      <article class="shipped-feature">
+      <article class="shipped-feature" id="shipped-feature" role="link" tabindex="0" aria-label="Explore To Hell With It project">
         <div class="shipped-feature-media">
           <video autoplay muted loop playsinline preload="metadata" aria-label="To Hell With It gameplay and environment reel">
             <source src="./videos/SD_THWT_Hero_3.mp4?v=2" type="video/mp4">
@@ -1568,6 +1643,9 @@
         </div>
       </article>
     </div>
+
+    <div class="featured-label mono">Spatial Designs</div>
+    <div class="featured-row" id="spatial-featured-row"></div>
   </div>
   <div class="home-logos">
     <div class="home-logos-label mono">Software &amp; Hardware</div>
@@ -2994,23 +3072,48 @@ document.querySelectorAll('.copy-email-btn').forEach((button) => {
 
 // ── SHIPPED TITLE FEATURE ─────────────────────────────────────
 (function wireShippedTitleFeature(){
+  const feature = document.getElementById('shipped-feature');
   const btn = document.getElementById('shipped-project-open');
-  if(!btn) return;
-  btn.addEventListener('click', e => {
-    e.stopPropagation();
+  const steam = feature?.querySelector('.shipped-feature-link');
+  if(!feature || !btn) return;
+
+  const openProject = () => {
     const project = PROJECTS[1];
     const card = project && project.cards.find(c => c.title === 'To Hell With It');
     if(!project || !card) return;
     const idx = PROJECTS.indexOf(project);
     activeZone = idx;
     playClick(2);
+
+    // Use the exact same navigation path as the project cards: open the
+    // Spatial Designs panel, then open the To Hell With It case study.
     renderProject(idx, {openPanel:true, source:'nav'});
     playHeroSequence(idx);
     hideGlassesForAbout(idx);
     flashHeroFrame();
-    setTimeout(() => {
-      if(SPATIAL_DETAIL[card.title]) openDetail(card);
-    }, 200);
+    setTimeout(() => openDetail(card), 200);
+  };
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    openProject();
+  });
+  steam?.addEventListener('click', e => e.stopPropagation());
+
+  // Make the entire shipped-title feature use the *exact same* action as
+  // the Explore Project button, instead of maintaining a second navigation path.
+  feature.addEventListener('click', e => {
+    if(e.target.closest('.shipped-feature-link, .shipped-feature-btn')) return;
+    // Prevent the page-level click handler from immediately closing the
+    // project panel after the shipped feature opens it.
+    e.stopPropagation();
+    btn.click();
+  });
+  feature.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      btn.click();
+    }
   });
 })();
 
@@ -3027,7 +3130,7 @@ document.querySelectorAll('.copy-email-btn').forEach((button) => {
   const picks = [
     {project: PROJECTS[0], card: PROJECTS[0].cards[0]}, // Signal Lock
     {project: PROJECTS[0], card: PROJECTS[0].cards[1]}, // Spatial Companion
-    {project: PROJECTS[1], card: PROJECTS[1].cards[0]}, // Midnight Miso
+    {project: PROJECTS[0], card: PROJECTS[0].cards[2]}, // Mixed Reality Prototypes
   ];
   picks.forEach(({project, card}) => {
     const media = card.mediaType === 'video'
@@ -3065,6 +3168,50 @@ document.querySelectorAll('.copy-email-btn').forEach((button) => {
   });
 })();
 
+// ── SPATIAL DESIGNS HOME ROW ─────────────────────────────────
+(function buildSpatialFeaturedRow(){
+  const row = document.getElementById('spatial-featured-row');
+  if(!row) return;
+  const project = PROJECTS[1];
+  const orderedTitles = ['Naoko Shrine', 'Architecture', 'Midnight Miso'];
+  const picks = orderedTitles
+    .map(title => ({project, card: project.cards.find(c => c.title === title)}))
+    .filter(({card}) => card);
+
+  picks.forEach(({project, card}) => {
+    const media = card.mediaType === 'video'
+      ? `<video autoplay muted loop playsinline preload="metadata"><source src="${card.media}" type="video/mp4"></video>`
+      : `<img src="${card.media}" alt="${card.title}">`;
+    const el = document.createElement('div');
+    el.className = 'featured-card';
+    el.innerHTML = `
+      <div class="featured-card-media">${media}</div>
+      <div class="featured-card-body">
+        <div class="featured-card-cat mono">${project.name}</div>
+        <div class="featured-card-title mono">${card.title}</div>
+        <div class="featured-card-desc">${card.desc}</div>
+        <button class="featured-card-cta mono" type="button">Explore Project →</button>
+      </div>`;
+    const triggerCard = e => {
+      e.stopPropagation();
+      const idx = PROJECTS.indexOf(project);
+      activeZone = idx;
+      playClick(2);
+      renderProject(idx, {openPanel:true, source:'nav'});
+      playHeroSequence(idx);
+      hideGlassesForAbout(idx);
+      flashHeroFrame();
+      setTimeout(() => {
+        if(SPATIAL_DETAIL[card.title]) openDetail(card);
+        else if(card.link) window.location.href = card.link;
+      }, 200);
+    };
+    el.querySelector('.featured-card-cta').addEventListener('click', triggerCard);
+    el.addEventListener('click', triggerCard);
+    row.appendChild(el);
+  });
+})();
+
 
 // ── OPEN PANEL FROM CASE STUDY BACK NAVIGATION ────────────────
 (function checkOpenIntent(){
@@ -3095,11 +3242,32 @@ animateBoids();
 (function initPerceptualModes(){
   const selector=document.getElementById('mode-switch');
   const frame=document.querySelector('.perceptual-video-frame');
+  const projectTitle=document.getElementById('perceptual-project-title');
+  const projectMode=document.getElementById('perceptual-project-mode');
+  const projectCta=document.getElementById('perceptual-project-cta');
   if(!selector || !frame) return;
   const videos=[document.getElementById('mode-video-target'),document.getElementById('mode-video-navigate')];
   const buttons=[...selector.querySelectorAll('.mode-button')];
+  const modeProjects=[
+    {title:'Signal Lock', mode:'Target Mode', href:'signal-lock.html'},
+    {title:'Spatial Companion', mode:'Navigate Mode', href:'spatial-companion.html'}
+  ];
   let current=0;
   const pulseTimers=new WeakMap();
+
+  function openActiveProject(){
+    const target=modeProjects[current];
+    if(target?.href) window.location.href=target.href;
+  }
+
+  function updateProjectLabel(){
+    const target=modeProjects[current];
+    if(!target) return;
+    if(projectTitle) projectTitle.textContent=target.title;
+    if(projectMode) projectMode.textContent=target.mode;
+    frame.setAttribute('aria-label',`Explore ${target.title} case study`);
+  }
+
   function selectMode(next,{restart=true}={}){
     if(!videos[next]) return;
     const previous=current;
@@ -3113,7 +3281,7 @@ animateBoids();
     pulseTimers.set(activeButton,setTimeout(()=>activeButton.classList.remove('mode-pulse'),850));
     buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===next)));
     frame.classList.toggle('is-navigate',next===1);
-    // Prepare the incoming clip before fading it in. Don't show a late frame.
+    updateProjectLabel();
     const incoming=videos[next];
     if(restart){incoming.pause();try{incoming.currentTime=0;}catch(e){}}
     incoming.muted=true;
@@ -3129,7 +3297,10 @@ animateBoids();
   });
   videos[1].pause();
   videos[0].play().catch(()=>{});
+  updateProjectLabel();
   buttons.forEach((button,i)=>button.addEventListener('click',()=>selectMode(i)));
+  projectCta?.addEventListener('click',e=>{e.stopPropagation();openActiveProject();});
+  frame.addEventListener('click',openActiveProject);
 })();
 
 // HUD-like caption: type title and description in sequence; fade together,
