@@ -912,6 +912,35 @@
 
 
 
+  /* ── THWT MATERIAL PROCESS ───────────────────────────── */
+  .thwt-materials-section{
+    gap:12px;
+    margin-top:4px;
+  }
+  .thwt-material-pair{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:16px;
+  }
+  .thwt-material-media{
+    aspect-ratio:16/9;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(0,0,0,.32);
+    overflow:hidden;
+  }
+  .thwt-material-media img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+  }
+  .thwt-material-copy{
+    max-width:900px;
+  }
+  @media(max-width:960px){
+    .thwt-material-pair{grid-template-columns:1fr}
+  }
+
   /* ── THWT FINAL PRODUCTION BREAKDOWN ─────────────────── */
   .thwt-production-pair{
     display:grid;
@@ -1036,6 +1065,7 @@
   .home-intro-title{font-size:clamp(19px,2.5vw,29px);font-weight:300;line-height:1.35;letter-spacing:.015em;color:rgba(255,255,255,.96);margin-bottom:12px;}
   .featured-label{
   text-align:center;
+  margin-top:12px;
   margin-bottom:20px;
   font-family:'DM Mono',monospace;
   font-size:12px;
@@ -1062,7 +1092,7 @@
   .home-featured-section.hidden{ display:none; }
   /* ── SHIPPED TITLE FEATURE ─────────────────────────────── */
   .shipped-feature-wrap{
-    margin:4px auto 52px;
+    margin:18px auto 62px;
     max-width:1180px;
   }
   .shipped-feature-label{
@@ -1109,8 +1139,8 @@
   }
   .shipped-feature-media{
     position:relative;
-    aspect-ratio:2.2 / 1;
-    min-height:360px;
+    aspect-ratio:2 / 1;
+    min-height:380px;
     overflow:hidden;
     background:#000;
   }
@@ -1119,7 +1149,7 @@
     height:100%;
     display:block;
     object-fit:cover;
-    object-position:center center;
+    object-position:center 44%;
   }
   .shipped-feature-media::after{
     content:"";
@@ -1879,16 +1909,14 @@ const SPATIAL_DETAIL = {
           </div>
           <div class="spatial-copy">The scene evolved from grayscale massing and framing studies into a finished environment with material contrast, lighting, and depth.</div>
         </section>
-        <section class="spatial-section split">
-          <div class="spatial-grid-2">
-            <div class="spatial-media-md"><img src="./images/Blood_Mud_2.jpg" alt="Mud and ground material study"></div>
-            <div class="spatial-media-md"><img src="./images/SD_THWT_Play.jpg" alt="Hero environment focal study"></div>
+        <section class="spatial-section thwt-materials-section">
+          <div class="spatial-eyebrow">Procedural materials + in-engine application</div>
+          <div class="spatial-headline">Technical Surface Building in Substance Designer</div>
+          <div class="thwt-material-pair">
+            <div class="thwt-material-media"><img src="./images/Blood_Mud_2.jpg" alt="Procedural mud and ground material development in Substance Designer"></div>
+            <div class="thwt-material-media"><img src="./images/SD_THWT_Play.jpg" alt="Procedural material system applied in the shipped gameplay environment"></div>
           </div>
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">Materials + focal variation</div>
-            <div class="spatial-headline">Surface language and focal staging</div>
-            <div class="spatial-copy">Ground breakup, mud response, and focal staging softened transitions without losing primary composition.</div>
-          </div>
+          <div class="spatial-copy thwt-material-copy">Procedural materials were authored in Substance Designer as controllable surface systems rather than one-off textures. Layered masks, breakup, height and roughness variation, and reusable parameters made it possible to iterate quickly across mud, blood, algae, and organic ground states, then tune those materials in-engine to support gameplay readability, focal contrast, and environmental continuity.</div>
         </section>
         <section class="spatial-section">
           <div class="spatial-eyebrow">Asset range</div>
@@ -1948,7 +1976,20 @@ const SPATIAL_DETAIL = {
                 <source src="./videos/Sintral_Park_Flythrough_web.mp4" type="video/mp4">
               </video>
             </div>
-            <div class="spatial-copy">A continuous flythrough of the finished environment, showing the modular architecture, authored assets, lighting, materials, and spatial composition working together in the shipped world.</div>
+            <div class="spatial-copy">A slower cinematic pass through the finished environment, showing the modular architecture, authored assets, lighting, materials, and spatial composition working together in the shipped world.</div>
+          </div>
+        </section>
+
+        <section class="spatial-section" style="margin-top:34px">
+          <div class="spatial-eyebrow">Shipped game sizzle</div>
+          <div class="spatial-headline">Gameplay + Environment Reel</div>
+          <div class="thwt-flythrough">
+            <div class="thwt-flythrough-frame">
+              <video autoplay muted loop playsinline preload="metadata" aria-label="To Hell With It gameplay and environment sizzle reel">
+                <source src="./videos/THWT_Spice.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="spatial-copy">A final gameplay-facing reel showing the environments in motion with the player present—bringing the asset work, level composition, materials, lighting, and shipped experience together as one closing view of the project.</div>
           </div>
         </section>
 
