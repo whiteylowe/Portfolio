@@ -129,6 +129,17 @@
   .large-sub{margin-top:7px;font-size:11px;color:var(--accent-dim)}
   .large-copy{margin-top:16px;font-size:12px;line-height:1.9;color:var(--text-mid)}
 
+
+  /* Act III: individual, uncropped architectural plates */
+  .act3-accordion{max-width:800px;margin:28px auto 0}
+  .act3-accordion .image-frame,.act3-vessel .image-frame{aspect-ratio:auto}
+  .act3-accordion img,.act3-vessel img{width:100%;height:auto;display:block;object-fit:contain}
+  .act3-vessel{max-width:1100px;margin:54px auto 0}
+  .act3-vessel .large-copy{max-width:760px}
+  .act3-vessel-plates{display:grid;gap:20px;margin-top:24px}
+  .act3-vessel-plates .image-frame{background:transparent}
+  @media(max-width:760px){.act3-vessel{margin-top:38px}.act3-vessel-plates{gap:14px}}
+
   .paper-grid{display:grid;grid-template-columns:minmax(280px,560px) minmax(0,336px);gap:42px;align-items:start;max-width:980px}
   .paper-title{font-size:15px;font-weight:400;margin-bottom:10px}
   .paper-link{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-size:13px;margin:18px 0 22px;transition:transform .18s ease, opacity .18s ease, color .18s ease}
@@ -420,18 +431,20 @@
     <div class="section-label mono">Act III</div>
     <div class="split-text" style="max-width:920px;margin-bottom:28px">Architecture becomes an instrument that frames, compresses, and constructs perception. Operable apertures and inhabitable observatories turn visibility, depth, and procession into designed events.</div>
 
-    <div class="two-large">
-      <div>
-        <div class="image-frame contain"><img src="./images/Thesis_Accordion.jpg" alt="Accordion Aperture System"></div>
-        <div class="large-title">Accordion Aperture System</div>
-        <div class="large-sub">Kinetic Framing through Expansion and Compression</div>
-        <div class="large-copy">A kinetic aperture system that controls view and depth through expansion, compression, and layered framing.</div>
-      </div>
-      <div>
-        <div class="image-frame contain"><img src="./images/Thesis_Vessel.jpg" alt="Vessel Sacellum"></div>
-        <div class="large-title">Vessel Sacellum</div>
-        <div class="large-sub">Astral Observatory</div>
-        <div class="large-copy">A place of introspection where light operates as threshold and orientation. Procession through an inhabitable wall turns fragmented memory into place.</div>
+    <div class="act3-accordion">
+      <div class="image-frame contain"><img src="./images/Thesis_Accordion.jpg" alt="Accordion Aperture System" loading="lazy"></div>
+      <div class="large-title">Accordion Aperture System</div>
+      <div class="large-sub">Kinetic Framing through Expansion and Compression</div>
+      <div class="large-copy">A kinetic aperture system that controls view and depth through expansion, compression, and layered framing.</div>
+    </div>
+
+    <div class="act3-vessel">
+      <div class="large-title">Vessel Sacellum</div>
+      <div class="large-sub">Astral Observatory</div>
+      <div class="large-copy">A place of introspection where light operates as threshold and orientation. Procession through an inhabitable wall turns fragmented memory into place.</div>
+      <div class="act3-vessel-plates">
+        <div class="image-frame contain"><img src="./images/Vessel_2.jpg" alt="Vessel Sacellum white presentation board with spatial and model studies" loading="lazy"></div>
+        <div class="image-frame contain"><img src="./images/Vessel_1.jpg" alt="Vessel Sacellum black presentation board with architectural model studies" loading="lazy"></div>
       </div>
     </div>
   </section>
