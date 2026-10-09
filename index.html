@@ -623,6 +623,38 @@
   .about-contact-icon{width:11px;height:11px;display:inline-flex;align-items:center;justify-content:center;color:rgba(var(--accent),.66);flex:0 0 11px}
   .about-contact-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
 
+
+  /* Refined About page: grouped disciplines, experience, and academic background */
+  .about-introduction{max-width:930px;display:grid;gap:12px;padding:4px 0 8px}
+  .about-introduction .about-kicker{font-size:15px;font-style:normal;line-height:1.65;color:rgba(255,255,255,.88);margin:0;font-weight:300}
+  .about-introduction .about-copy{font-size:12px;line-height:1.85;max-width:910px}
+  .about-role{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.11em;line-height:1.7;text-transform:uppercase;color:rgba(var(--accent),.62);margin-bottom:12px}
+  .about-experience .about-card{display:flex;flex-direction:column;align-items:flex-start;min-height:176px}
+  .about-explore-link{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(var(--accent),.70);margin-top:auto;padding-top:16px;transition:color .2s ease}
+  .about-explore-link:hover{color:rgba(var(--accent),1)}
+  .about-skill-groups,.about-tool-groups{display:grid;gap:0}
+  .about-skill-group{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .about-skill-group:first-child{padding-top:3px}
+  .about-skill-group:last-child,.about-tool-row:last-child{border-bottom:none;padding-bottom:2px}
+  .about-skill-label{font-size:12px;line-height:1.55;letter-spacing:.025em;color:rgba(255,255,255,.84);margin-bottom:5px}
+  .about-tool-row{display:grid;grid-template-columns:125px minmax(0,1fr);gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .about-tool-row:first-child{padding-top:3px}
+  .about-tool-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.09em;line-height:1.75;text-transform:uppercase;color:rgba(var(--accent),.64)}
+
+  /* Compact research credit and scannable university list */
+  .about-research-stack{display:grid;gap:10px}
+  .about-teaching-intro{margin-bottom:12px}
+
+  .about-research-note{border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.012);padding:13px 16px;display:grid;grid-template-columns:210px minmax(0,1fr);align-items:baseline;gap:12px}
+  .about-research-note .about-role{margin:0}
+  .about-research-note .about-card-copy strong{font-weight:400;color:rgba(255,255,255,.84)}
+  .about-school-list{display:grid;gap:6px;padding-top:2px}
+  .about-school-list>div{padding-left:11px;border-left:1px solid rgba(var(--accent),.35)}
+  @media(max-width:760px){.about-research-note{grid-template-columns:1fr;gap:7px}}
+  .about-education .about-card{min-height:150px}
+  @media(max-width:1100px){.about-tool-row{grid-template-columns:1fr;gap:4px}}
+  @media(max-width:960px){.about-experience .about-card,.about-education .about-card{min-height:0}}
+
   @media(max-width:960px){
     .about-grid,.about-two,.about-three,.about-contact,.about-logo-strip{grid-template-columns:1fr}
   }
@@ -1737,11 +1769,11 @@ const PROJECTS = [
     name: 'About',
     slug: 'about',
     eyebrow: 'About',
-    title: '3D ART + REAL-TIME WORLDS.',
-    summary: 'Senior 3D and Technical Artist working across game environments, product visualization, XR, architecture, and interactive systems.',
-    meta: 'Senior 3D Artist • Technical Artist • Environment Art • Game Art',
+    title: 'SPATIAL DESIGN + INTERACTIVE SYSTEMS.',
+    summary: '3D environments, real-time experiences, interaction design, and technical prototyping across physical and digital worlds.',
+    meta: 'Spatial Design • Interactive Systems • Technical Art',
     heroVideo: './videos/Hero_Back_About.mp4',
-    sectionMeta: 'Senior 3D Artist\nTechnical Artist\nEnvironment Art • Game Art',
+    sectionMeta: 'Spatial Design\nInteraction + Prototyping\nTechnical Art',
     cards: [
       { title: 'About', desc: 'Former Meta Reality Labs technical artist with shipped game, architectural, and teaching experience.', link: null, mediaType: 'image', media: './images/About_Hands.jpg' }
     ]
@@ -2008,53 +2040,74 @@ const SPATIAL_DETAIL = {
   'About': `
     <div class="detail-frame">
       <div class="about-panel">
-        <div class="about-grid reveal-block about-hover-zone">
-          <div>
-            <div class="about-title">3D Art + Real-Time Worlds</div>
-            <div class="about-kicker">Senior 3D Artist / Technical Artist working across game art, real-time environments, product visualization, XR, and interactive systems.</div>
-            <div class="about-copy">My work combines environment art, hard-surface modeling, lighting, materials, real-time workflows, and technical prototyping. I’ve developed spatial and visual systems at <a class="about-inline-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs</a>, led environment art for the commercially released Steam game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>, and worked across architecture, visualization, interactive media, and XR.</div>
-            <div class="about-copy">The common thread is building visually strong systems and environments that also have to function: readable game spaces, modular asset systems, interactive prototypes, product concepts, architectural environments, and emerging-interface research.</div>
-          </div>
-          <div class="about-side about-hover-zone">
-            <div class="about-side-label">Best Fit</div>
-            <div class="about-side-copy">Senior 3D Artist · Technical Artist · Environment Artist · Game Art · Product Visualization · Design Technologist</div>
-          </div>
+        <div class="about-introduction reveal-block">
+          <div class="about-section-title">Background</div>
+          <div class="about-kicker">I design and build spatial experiences that connect visual craft, interactive technology, and the physical world.</div>
+          <div class="about-copy">My background spans real-time interaction research at <a class="about-inline-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs</a>, environment art for the shipped game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>, and architectural design and visualization. Across these fields, I bring together spatial thinking, 3D production, and technical prototyping to make emerging ideas tangible, functional, and visually compelling.</div>
         </div>
 
         <div class="about-section reveal-block">
           <div class="about-section-title">Selected Experience</div>
-          <div class="about-three">
+          <div class="about-two about-experience">
             <div class="about-card about-hover-zone">
-              <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs · Technical Artist</a></div>
-              <div class="about-card-copy">Developed real-time environments, high-fidelity visualizations, materials, spatial interfaces, and interactive prototypes for AR wearables and mixed-reality research.</div>
+              <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs Research</a></div>
+              <div class="about-role">Technical Artist · 2021–2025</div>
+              <div class="about-card-copy">Developed real-time spatial experiences and interaction prototypes exploring eye tracking, gaze-based interfaces, sensing, adaptive lens dimming, and mixed reality. Collaborated with research, design, and engineering teams to turn emerging technologies into functional prototypes and demonstrations.</div>
             </div>
             <div class="about-card about-hover-zone">
-              <div class="about-card-title"><a class="about-title-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It · Lead Environment Artist · Shipped Steam Title</a></div>
-              <div class="about-card-copy">Led environment art direction for a commercially released indie game, including worldbuilding, lighting, composition, environmental storytelling, gameplay readability, modular asset kits, props, materials, optimization, and production workflows.</div>
+              <div class="about-card-title"><a class="about-title-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a></div>
+              <div class="about-role">Lead Environment Artist · Shipped Steam Game</div>
+              <div class="about-card-copy">Led environment art for a commercially released indie game, spanning worldbuilding, modular assets, lighting, materials, environmental storytelling, gameplay readability, and real-time production.</div>
             </div>
-            <div class="about-card about-hover-zone">
-              <div class="about-card-title">Master of Architecture + Game Arts</div>
-              <div class="about-card-copy"><strong>Master of Architecture (UF) + M.EAE / Game Arts (UofU)</strong> spanning architectural design, game development, visualization, and interactive media. Recipient of an <strong>AIA Bronze Medal for architectural design</strong> for <a class="about-inline-link" href="campus-obscura.html">Campus Obscura</a>, with experience teaching architecture, digital visualization, and game-related design.</div>
-            </div>
+          </div>
+          <div class="about-research-stack">
+          <div class="about-research-note about-hover-zone">
+            <span class="about-role">Additional Research · UI Design</span>
+            <div class="about-card-copy"><strong>The GApp Lab, University of Utah</strong> — UI design for <a class="about-inline-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11506821/" target="_blank" rel="noopener noreferrer">Color Me Healthy</a>, a pediatric symptom-reporting app developed through interdisciplinary health research.</div>
+          </div>
           </div>
         </div>
 
-        <div class="about-two reveal-block">
+        <div class="about-two reveal-block about-skills-row">
           <div class="about-card about-hover-zone">
             <div class="about-card-title">Core Capabilities</div>
-            <div class="about-highlights about-capabilities">
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Environment Art + Worldbuilding</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Hard-Surface Modeling + Product Visualization</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Modular Assets + Real-Time Production</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Lighting + Look Development</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">PBR Materials + Shader Workflows</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">XR + Interactive Prototyping</div></div>
-              <div class="about-highlight"><div class="about-highlight-dot"></div><div class="about-highlight-copy">Architectural + Spatial Visualization</div></div>
+            <div class="about-skill-groups">
+              <div class="about-skill-group"><div class="about-skill-label">Spatial Design + Visualization</div><div class="about-card-copy">3D Environments · Game Development + Worldbuilding · Hard-Surface Modeling · Architectural + Product Visualization · Lighting + Materials</div></div>
+              <div class="about-skill-group"><div class="about-skill-label">Interaction + Prototyping</div><div class="about-card-copy">XR Experiences · Spatial Interfaces · Interaction Design · Real-Time Prototyping</div></div>
+              <div class="about-skill-group"><div class="about-skill-label">Technical Art + Fabrication</div><div class="about-card-copy">Real-Time Pipelines · Modular Assets · Materials + Shaders · Optimization · 3D Printing + Laser Cutting</div></div>
             </div>
           </div>
           <div class="about-card about-hover-zone">
             <div class="about-card-title">Tools</div>
-            <div class="about-card-copy">Unreal Engine · Unity · Maya · Blender · 3ds Max · Rhino · Revit · AutoCAD · Cinema 4D · Substance 3D · V-Ray · Photoshop</div>
+            <div class="about-tool-groups">
+              <div class="about-tool-row"><div class="about-tool-label">Real-Time Engines</div><div class="about-card-copy">Unreal Engine · Unity</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">3D + Procedural</div><div class="about-card-copy">Blender · Maya · Cinema 4D</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">Design + CAD</div><div class="about-card-copy">Rhino · Grasshopper · Revit · AutoCAD</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">Materials + Rendering</div><div class="about-card-copy">Substance 3D · V-Ray · KeyShot</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">Creative + Interface</div><div class="about-card-copy">Photoshop · After Effects · Figma</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-section reveal-block">
+          <div class="about-section-title">Education + Teaching</div>
+          <div class="about-three about-education">
+            <div class="about-card about-hover-zone">
+              <div class="about-card-title">Academic Teaching</div>
+              <div class="about-role">Course Leadership + Design Education</div>
+              <div class="about-card-copy about-teaching-intro">Led courses and supported studio instruction through instructor and graduate teaching appointments.</div>
+              <div class="about-card-copy"><div class="about-school-list"><div>Florida International University</div><div>University of South Florida</div><div>University of Utah</div><div>University of Florida</div></div></div>
+            </div>
+            <div class="about-card about-hover-zone">
+              <div class="about-card-title">Master of Entertainment Arts &amp; Engineering</div>
+              <div class="about-role">University of Utah · Game Arts</div>
+              <div class="about-card-copy">Graduate work specializing in environment art and virtual reality, with experience in real-time game development and interactive media.</div>
+            </div>
+            <div class="about-card about-hover-zone">
+              <div class="about-card-title">Master of Architecture</div>
+              <div class="about-role">University of Florida</div>
+              <div class="about-card-copy">Recipient of the AIA Bronze Medal for architectural design and academic excellence. Master’s thesis: <a class="about-inline-link" href="campus-obscura.html">Campus Obscura</a>.</div>
+            </div>
           </div>
         </div>
 
