@@ -1540,6 +1540,44 @@
     100%{ opacity:0; filter:blur(10px); }
   }
 
+
+  /* Center full university marks beneath the degree descriptions. */
+  .about-education .about-degree-card{display:flex;flex-direction:column}
+  .about-degree-logo{flex:1;position:relative;min-height:0}
+  .about-degree-logo img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-height:100%}
+  .about-degree-logo img{display:block;width:120px;height:120px;max-width:100%;object-fit:contain;background:transparent}
+  .about-degree-logo-uf img{width:96px;height:96px;top:calc(50% + 10px);max-height:calc(100% - 20px)}
+  @media(max-width:960px){.about-degree-logo{flex:none;height:150px;margin-top:16px}}
+
+  /* About: four disciplines and forthcoming teaching portfolios */
+  .about-capability-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 22px;margin-top:6px}
+  .about-capability-grid .about-skill-group{padding:12px 0 0;border-bottom:0;border-top:1px solid rgba(var(--accent),.22)}
+  .about-capability-grid .about-skill-label{color:rgba(var(--accent),.86);margin-bottom:8px}
+  .about-capability-grid .about-card-copy{line-height:1.9}
+  .about-research-interests{display:flex;flex-wrap:wrap;gap:5px 14px;font-size:11px;line-height:1.8;color:rgba(255,255,255,.65);padding-top:3px}
+  .about-research-interests .about-role{margin:0}
+  .about-school-list{gap:14px}
+  .about-school-name{color:rgba(255,255,255,.83)}
+  .about-school-meta{font-size:10px;line-height:1.7;color:rgba(255,255,255,.49);margin-top:2px}
+  .about-student-work{display:inline;margin-left:8px;white-space:nowrap;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.04em;color:rgba(255,120,80,.88)}
+  @media(max-width:600px){.about-capability-grid{grid-template-columns:1fr}}
+
+
+
+  /* Small uncropped experience marks and tighter academic spacing */
+  .about-experience .about-card{position:relative}
+  .about-experience .about-card-title{padding-right:48px}
+  .about-experience-logo{position:absolute;right:18px;top:18px;width:36px;height:36px;object-fit:contain;pointer-events:none}
+  .about-experience-logo-meta{width:40px}
+  .about-teaching-card .about-role{margin-bottom:6px}
+  .about-teaching-card .about-teaching-intro{margin-bottom:9px}
+  .about-teaching-card .about-school-list{gap:10px}
+  .about-teaching-card .about-school-name{line-height:1.6}
+  .about-teaching-card .about-school-meta{margin-top:1px;line-height:1.55}
+
+.about-student-work{display:inline-block;padding:0;border:0;background:none;cursor:pointer;text-align:left;line-height:inherit}
+  .about-student-work:hover{text-decoration:underline;text-underline-offset:3px}
+  .about-student-work:focus-visible{outline:1px solid currentColor;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -2050,11 +2088,13 @@ const SPATIAL_DETAIL = {
           <div class="about-section-title">Selected Experience</div>
           <div class="about-two about-experience">
             <div class="about-card about-hover-zone">
+              <img class="about-experience-logo about-experience-logo-meta" src="./images/Meta_logo_2.jpg" alt="Meta" loading="lazy">
               <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs Research</a></div>
               <div class="about-role">Technical Artist · 2021–2025</div>
               <div class="about-card-copy">Developed real-time spatial experiences and interaction prototypes exploring eye tracking, gaze-based interfaces, sensing, adaptive lens dimming, and mixed reality. Collaborated with research, design, and engineering teams to turn emerging technologies into functional prototypes and demonstrations.</div>
             </div>
             <div class="about-card about-hover-zone">
+              <img class="about-experience-logo about-experience-logo-game" src="./images/game_logo.jpg" alt="To Hell With It" loading="lazy">
               <div class="about-card-title"><a class="about-title-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a></div>
               <div class="about-role">Lead Environment Artist · Shipped Steam Game</div>
               <div class="about-card-copy">Led environment art for a commercially released indie game, spanning worldbuilding, modular assets, lighting, materials, environmental storytelling, gameplay readability, and real-time production.</div>
@@ -2071,10 +2111,11 @@ const SPATIAL_DETAIL = {
         <div class="about-two reveal-block about-skills-row">
           <div class="about-card about-hover-zone">
             <div class="about-card-title">Core Capabilities</div>
-            <div class="about-skill-groups">
-              <div class="about-skill-group"><div class="about-skill-label">Spatial Design + Visualization</div><div class="about-card-copy">3D Environments · Game Development + Worldbuilding · Hard-Surface Modeling · Architectural + Product Visualization · Lighting + Materials</div></div>
-              <div class="about-skill-group"><div class="about-skill-label">Interaction + Prototyping</div><div class="about-card-copy">XR Experiences · Spatial Interfaces · Interaction Design · Real-Time Prototyping</div></div>
-              <div class="about-skill-group"><div class="about-skill-label">Technical Art + Fabrication</div><div class="about-card-copy">Real-Time Pipelines · Modular Assets · Materials + Shaders · Optimization · 3D Printing + Laser Cutting</div></div>
+            <div class="about-skill-groups about-capability-grid">
+              <div class="about-skill-group"><div class="about-skill-label">Spatial Design</div><div class="about-card-copy">Environment Art + Worldbuilding<br>Architectural + Product Visualization<br>Hard-Surface Modeling · Lighting</div></div>
+              <div class="about-skill-group"><div class="about-skill-label">Interaction + Prototyping</div><div class="about-card-copy">XR + Spatial Interfaces<br>Interaction Design<br>Real-Time Prototypes</div></div>
+              <div class="about-skill-group"><div class="about-skill-label">Technical Art</div><div class="about-card-copy">Real-Time Pipelines + Modular Systems<br>Materials + Shaders<br>Optimization</div></div>
+              <div class="about-skill-group"><div class="about-skill-label">Physical Making</div><div class="about-card-copy">Physical Model-Making<br>3D Printing + Laser Cutting</div></div>
             </div>
           </div>
           <div class="about-card about-hover-zone">
@@ -2083,30 +2124,32 @@ const SPATIAL_DETAIL = {
               <div class="about-tool-row"><div class="about-tool-label">Real-Time Engines</div><div class="about-card-copy">Unreal Engine · Unity</div></div>
               <div class="about-tool-row"><div class="about-tool-label">3D + Procedural</div><div class="about-card-copy">Blender · Maya · Cinema 4D</div></div>
               <div class="about-tool-row"><div class="about-tool-label">Design + CAD</div><div class="about-card-copy">Rhino · Grasshopper · Revit · AutoCAD</div></div>
-              <div class="about-tool-row"><div class="about-tool-label">Materials + Rendering</div><div class="about-card-copy">Substance 3D · V-Ray · KeyShot</div></div>
-              <div class="about-tool-row"><div class="about-tool-label">Creative + Interface</div><div class="about-card-copy">Photoshop · After Effects · Figma</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">Materials + Rendering</div><div class="about-card-copy">Substance 3D · V-Ray · Niagara</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">Visual + UI Design</div><div class="about-card-copy">Photoshop · After Effects · Figma</div></div>
             </div>
           </div>
         </div>
 
         <div class="about-section reveal-block">
-          <div class="about-section-title">Education + Teaching</div>
+          <div class="about-section-title">Teaching + Education</div>
           <div class="about-three about-education">
-            <div class="about-card about-hover-zone">
+            <div class="about-card about-hover-zone about-teaching-card">
               <div class="about-card-title">Academic Teaching</div>
               <div class="about-role">Course Leadership + Design Education</div>
               <div class="about-card-copy about-teaching-intro">Led courses and supported studio instruction through instructor and graduate teaching appointments.</div>
-              <div class="about-card-copy"><div class="about-school-list"><div>Florida International University</div><div>University of South Florida</div><div>University of Utah</div><div>University of Florida</div></div></div>
+              <div class="about-card-copy"><div class="about-school-list"><div class="about-school"><div class="about-school-name">Florida International University</div><div class="about-school-meta">Instructor · 2015–2016 <button type="button" class="about-student-work" aria-label="Student work — currently locked">Student work</button></div></div><div class="about-school"><div class="about-school-name">University of South Florida</div><div class="about-school-meta">Instructor · 2013–2014 <button type="button" class="about-student-work" aria-label="Student work — currently locked">Student work</button></div></div><div class="about-school"><div class="about-school-name">University of Utah</div><div class="about-school-meta">Graduate Teaching Assistant · 2019–2020 <button type="button" class="about-student-work" aria-label="Student work — currently locked">Student work</button></div></div><div class="about-school"><div class="about-school-name">University of Florida</div><div class="about-school-meta">Graduate Teaching Assistant · 2008–2011 <button type="button" class="about-student-work" aria-label="Student work — currently locked">Student work</button></div></div></div></div>
             </div>
-            <div class="about-card about-hover-zone">
+            <div class="about-card about-hover-zone about-degree-card">
               <div class="about-card-title">Master of Entertainment Arts &amp; Engineering</div>
-              <div class="about-role">University of Utah · Game Arts</div>
+              <div class="about-role">University of Utah · Video Game Arts</div>
               <div class="about-card-copy">Graduate work specializing in environment art and virtual reality, with experience in real-time game development and interactive media.</div>
+              <div class="about-degree-logo"><img src="./images/Utah.png" alt="University of Utah" width="120" height="120" loading="lazy"></div>
             </div>
-            <div class="about-card about-hover-zone">
+            <div class="about-card about-hover-zone about-degree-card">
               <div class="about-card-title">Master of Architecture</div>
               <div class="about-role">University of Florida</div>
               <div class="about-card-copy">Recipient of the AIA Bronze Medal for architectural design and academic excellence. Master’s thesis: <a class="about-inline-link" href="campus-obscura.html">Campus Obscura</a>.</div>
+              <div class="about-degree-logo about-degree-logo-uf"><img src="./images/UF.png" alt="University of Florida" width="96" height="96" loading="lazy"></div>
             </div>
           </div>
         </div>
@@ -2421,6 +2464,16 @@ document.addEventListener('click', (e)=>{
     contactMenuWrap.classList.remove('open');
     contactTrigger?.setAttribute('aria-expanded', 'false');
   }
+});
+
+document.addEventListener('click', (e)=>{
+  const studentWork = e.target.closest('.about-student-work');
+  if(!studentWork) return;
+  e.preventDefault();
+  studentWork.classList.remove('shake');
+  void studentWork.offsetWidth;
+  studentWork.classList.add('shake');
+  playError();
 });
 
 pwLock?.addEventListener('click', ()=>{
