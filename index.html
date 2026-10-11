@@ -401,6 +401,16 @@
   .detail-block{min-height:118px; border:1px solid rgba(255,255,255,0.06); padding:12px; background:rgba(255,255,255,0.015)}
   .detail-block-title{font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:rgba(var(--accent),.56); margin-bottom:8px}
   .detail-block-copy{font-size:11px; line-height:1.6; color:rgba(255,255,255,.34)}
+
+  /* Mixed reality: let the embedded research deck lead, without a nested case-study border. */
+  .detail-frame.mixed-reality-detail{border:0;background:transparent;padding:0;max-width:1200px}
+  .detail-frame.mixed-reality-detail::before,
+  .detail-frame.mixed-reality-detail::after{display:none}
+  .mixed-reality-deck{width:100%;aspect-ratio:16/9;overflow:hidden;background:#000}
+  .mixed-reality-context{max-width:880px;padding:22px 2px 4px;display:grid;gap:10px}
+  .mixed-reality-context-title{font-size:17px;letter-spacing:.08em;font-weight:300;color:rgba(255,255,255,.88)}
+  .mixed-reality-context p{font-size:12px;line-height:1.8;color:rgba(255,255,255,.60);font-weight:300}
+
   .detail-close-row{display:flex; justify-content:flex-end; margin-top:14px}
   .detail-close{border:none; background:none; color:rgba(255,255,255,.42); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; cursor:pointer}
   .detail-close:hover{color:rgba(255,255,255,.84)}
@@ -630,8 +640,14 @@
   .about-introduction .about-copy{font-size:12px;line-height:1.85;max-width:910px}
   .about-role{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.11em;line-height:1.7;text-transform:uppercase;color:rgba(var(--accent),.62);margin-bottom:12px}
   .about-experience .about-card{display:flex;flex-direction:column;align-items:flex-start;min-height:176px}
-  .about-explore-link{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(var(--accent),.70);margin-top:auto;padding-top:16px;transition:color .2s ease}
-  .about-explore-link:hover{color:rgba(var(--accent),1)}
+  .about-explore-link{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#75C9E5;margin-top:auto;padding-top:16px;transition:color .2s ease;display:inline-flex;align-items:center;gap:10px}
+  .about-explore-link:hover{color:#B3EAFA}
+  .about-explore-arrow{font-size:16px;line-height:.7;transition:transform .2s ease;display:inline-block}
+  .about-explore-link:hover .about-explore-arrow{transform:translateX(5px)}
+  .about-project-links{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin-top:auto;padding-top:16px}
+  .about-project-links .about-explore-link{margin-top:0;padding-top:0}
+  .about-project-links .about-action-label{display:inline-block;width:106px;white-space:nowrap}
+
   .about-skill-groups,.about-tool-groups{display:grid;gap:0}
   .about-skill-group{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
   .about-skill-group:first-child{padding-top:3px}
@@ -1572,8 +1588,8 @@
   .about-teaching-card .about-role{margin-bottom:6px}
   .about-teaching-card .about-teaching-intro{margin-bottom:9px}
   .about-teaching-card .about-school-list{gap:10px}
-  .about-teaching-card .about-school-name{line-height:1.6}
-  .about-teaching-card .about-school-meta{margin-top:1px;line-height:1.55}
+  .about-teaching-card .about-school-name{line-height:1.43}
+  .about-teaching-card .about-school-meta{margin-top:0;line-height:1.5}
 
 .about-student-work{display:inline-block;padding:0;border:0;background:none;cursor:pointer;text-align:left;line-height:inherit}
   .about-student-work:hover{text-decoration:underline;text-underline-offset:3px}
@@ -1591,7 +1607,7 @@
     </div>
     <a href="index.html" class="brand">
       <div id="name">Nicholas Lowe</div>
-      <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
+      <div id="name-sub" class="mono">Design Technologist • XR Systems • Interactive Environments</div>
     </a>
     <div class="header-controls" id="header-controls">
       <div class="contact-menu-wrap" id="contact-menu-wrap">
@@ -1671,8 +1687,8 @@
 <section class="home-content" id="home-content">
   <div class="home-featured-section" id="home-featured-section">
     <div class="home-intro">
-      <div class="home-intro-eyebrow mono">Technical Artist &nbsp;·&nbsp; XR Systems &nbsp;·&nbsp; Environment Design</div>
-      <h1 class="home-intro-title">Designing how people interact with emerging technologies and spatial worlds.</h1>
+      <div class="home-intro-eyebrow mono">Design Technologist &nbsp;·&nbsp; XR Systems &nbsp;·&nbsp; Interactive Environments</div>
+      <h1 class="home-intro-title">Designing and building new interactive systems.</h1>
       <p class="home-intro-text">I build real-time prototypes, perceptual interfaces, and interactive environments, bringing together technical systems, visual design, and architectural thinking.</p>
     </div>
 
@@ -2068,9 +2084,14 @@ const SPATIAL_DETAIL = {
 
   'Mixed Reality Prototypes': `
     <div class="detail-frame mixed-reality-detail">
-      <div class="detail-title" style="text-align:center; margin:2px 0 18px;">Mixed Reality Prototypes</div>
-      <div style="width:100%; aspect-ratio:16/9; border:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#000;">
-        <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQFyMGypw-De7zlWaWidYRtkHpePq41Ui5wZQJidwK0tOWun0NLTfi-99N8vmfDd4KC6DfxJz3brkAC/pubembed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="display:block;width:100%;height:100%;"></iframe>
+      <div class="mixed-reality-deck">
+        <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQFyMGypw-De7zlWaWidYRtkHpePq41Ui5wZQJidwK0tOWun0NLTfi-99N8vmfDd4KC6DfxJz3brkAC/pubembed?start=false&loop=false&delayms=3000" title="Mixed Reality Prototypes research presentation" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="display:block;width:100%;height:100%;"></iframe>
+      </div>
+      <div class="mixed-reality-context">
+        <div class="detail-kicker">Meta Reality Labs Research · 2021–2025</div>
+        <div class="mixed-reality-context-title">Mixed Reality Prototypes</div>
+        <p>A selection of real-time interaction prototypes developed during my work at Meta Reality Labs Research, exploring eye tracking, gaze-based interfaces, adaptive dimming, sensing, and mixed reality.</p>
+        <p>Working across research, design, and engineering, I helped translate emerging interaction concepts into functional demonstrations for evaluation and exploration.</p>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
     </div>`,
@@ -2080,8 +2101,8 @@ const SPATIAL_DETAIL = {
       <div class="about-panel">
         <div class="about-introduction reveal-block">
           <div class="about-section-title">Background</div>
-          <div class="about-kicker">I design and build spatial experiences that connect visual craft, interactive technology, and the physical world.</div>
-          <div class="about-copy">My background spans real-time interaction research at <a class="about-inline-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs</a>, environment art for the shipped game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>, and architectural design and visualization. Across these fields, I bring together spatial thinking, 3D production, and technical prototyping to make emerging ideas tangible, functional, and visually compelling.</div>
+          <div class="about-kicker">I work across design, technology, and research to develop interactive systems and spatial experiences.</div>
+          <div class="about-copy">My background spans real-time interaction research at <a class="about-inline-link" href="https://www.meta.com/emerging-tech/" target="_blank" rel="noopener noreferrer">Meta Reality Labs</a>, environment art for the shipped game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>, and architectural design and visualization. Across these fields, I bring together spatial thinking, 3D production, and technical prototyping to make emerging ideas tangible, functional, and visually compelling.</div>
         </div>
 
         <div class="about-section reveal-block">
@@ -2089,15 +2110,20 @@ const SPATIAL_DETAIL = {
           <div class="about-two about-experience">
             <div class="about-card about-hover-zone">
               <img class="about-experience-logo about-experience-logo-meta" src="./images/Meta_logo_2.jpg" alt="Meta" loading="lazy">
-              <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/ai-glasses/" target="_blank" rel="noopener noreferrer">Meta Reality Labs Research</a></div>
+              <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/emerging-tech/" target="_blank" rel="noopener noreferrer">Meta Reality Labs Research</a></div>
               <div class="about-role">Technical Artist · 2021–2025</div>
-              <div class="about-card-copy">Developed real-time spatial experiences and interaction prototypes exploring eye tracking, gaze-based interfaces, sensing, adaptive lens dimming, and mixed reality. Collaborated with research, design, and engineering teams to turn emerging technologies into functional prototypes and demonstrations.</div>
+              <div class="about-card-copy">Designed and developed real-time interaction prototypes translating emerging research in eye tracking, sensing, adaptive dimming, and mixed reality into functional demonstrations. Collaborated with research, design, and engineering teams to turn emerging technologies into functional prototypes and demonstrations.</div>
+              <a class="about-explore-link" href="#mixed-reality-prototypes" data-open-mr-prototypes>Explore Mixed Reality Prototypes <span class="about-explore-arrow" aria-hidden="true">⟶</span></a>
             </div>
             <div class="about-card about-hover-zone">
               <img class="about-experience-logo about-experience-logo-game" src="./images/game_logo.jpg" alt="To Hell With It" loading="lazy">
               <div class="about-card-title"><a class="about-title-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a></div>
               <div class="about-role">Lead Environment Artist · Shipped Steam Game</div>
               <div class="about-card-copy">Led environment art for a commercially released indie game, spanning worldbuilding, modular assets, lighting, materials, environmental storytelling, gameplay readability, and real-time production.</div>
+              <div class="about-project-links">
+                <a class="about-explore-link" href="#to-hell-with-it" data-open-thwt-project><span class="about-action-label">View Project</span><span class="about-explore-arrow" aria-hidden="true">⟶</span></a>
+                <a class="about-explore-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer"><span class="about-action-label">View on Steam</span><span class="about-explore-arrow" aria-hidden="true">⟶</span></a>
+              </div>
             </div>
           </div>
           <div class="about-research-stack">
@@ -2114,7 +2140,7 @@ const SPATIAL_DETAIL = {
             <div class="about-skill-groups about-capability-grid">
               <div class="about-skill-group"><div class="about-skill-label">Spatial Design</div><div class="about-card-copy">Environment Art + Worldbuilding<br>Architectural + Product Visualization<br>Hard-Surface Modeling · Lighting</div></div>
               <div class="about-skill-group"><div class="about-skill-label">Interaction + Prototyping</div><div class="about-card-copy">XR + Spatial Interfaces<br>Interaction Design<br>Real-Time Prototypes</div></div>
-              <div class="about-skill-group"><div class="about-skill-label">Technical Art</div><div class="about-card-copy">Real-Time Pipelines + Modular Systems<br>Materials + Shaders<br>Optimization</div></div>
+              <div class="about-skill-group"><div class="about-skill-label">Technical Art</div><div class="about-card-copy">Real-Time Systems + Interaction Logic<br>Animation + Motion Design<br>Materials + Shaders</div></div>
               <div class="about-skill-group"><div class="about-skill-label">Physical Making</div><div class="about-card-copy">Physical Model-Making<br>3D Printing + Laser Cutting</div></div>
             </div>
           </div>
@@ -2122,7 +2148,7 @@ const SPATIAL_DETAIL = {
             <div class="about-card-title">Tools</div>
             <div class="about-tool-groups">
               <div class="about-tool-row"><div class="about-tool-label">Real-Time Engines</div><div class="about-card-copy">Unreal Engine · Unity</div></div>
-              <div class="about-tool-row"><div class="about-tool-label">3D + Procedural</div><div class="about-card-copy">Blender · Maya · Cinema 4D</div></div>
+              <div class="about-tool-row"><div class="about-tool-label">3D + Procedural</div><div class="about-card-copy">Blender · Maya · 3ds Max · Cinema 4D</div></div>
               <div class="about-tool-row"><div class="about-tool-label">Design + CAD</div><div class="about-card-copy">Rhino · Grasshopper · Revit · AutoCAD</div></div>
               <div class="about-tool-row"><div class="about-tool-label">Materials + Rendering</div><div class="about-card-copy">Substance 3D · V-Ray · Niagara</div></div>
               <div class="about-tool-row"><div class="about-tool-label">Visual + UI Design</div><div class="about-card-copy">Photoshop · After Effects · Figma</div></div>
@@ -2813,6 +2839,31 @@ function renderProject(index, {openPanel = false, source = 'nav'} = {}){
     expandCards.style.display = '';
   }
 }
+
+
+// Open selected case studies from About using the same navigation path as the
+// homepage project cards. Open the detail after XR / Spatial navigation updates.
+detailShell.addEventListener('click', (event) => {
+  const mrLink = event.target.closest('[data-open-mr-prototypes]');
+  const gameLink = event.target.closest('[data-open-thwt-project]');
+  if(!mrLink && !gameLink) return;
+  event.preventDefault();
+  event.stopPropagation();
+
+  const projectIndex = mrLink ? 0 : 1;
+  const targetTitle = mrLink ? 'Mixed Reality Prototypes' : 'To Hell With It';
+  const card = PROJECTS[projectIndex].cards.find(c => c.title === targetTitle);
+  if(!card) return;
+
+  activeZone = projectIndex;
+  playClick(2);
+  renderProject(projectIndex, {openPanel:true, source:'nav'});
+  playHeroSequence(projectIndex);
+  hideGlassesForAbout(projectIndex);
+  flashHeroFrame();
+  // The normal project-card route waits for the newly rendered panel to mount.
+  setTimeout(() => openDetail(card), 200);
+});
 
 PROJECTS.forEach((project, index) => {
   const btn = document.createElement('button');
