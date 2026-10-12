@@ -140,6 +140,41 @@
   .act3-vessel-plates .image-frame{background:transparent}
   @media(max-width:760px){.act3-vessel{margin-top:38px}.act3-vessel-plates{gap:14px}}
 
+
+  /* Act IV: physical model study — four equal panels */
+  .physical-studies{margin-top:62px;padding-top:28px;border-top:1px solid var(--line)}
+  .physical-studies-intro{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-bottom:24px}
+  .physical-studies-title{font-size:18px;font-weight:400;letter-spacing:.06em;margin-bottom:9px}
+  .physical-studies-sub{font-size:11px;color:var(--accent-dim)}
+  .physical-studies-copy{font-size:12px;line-height:1.85;color:var(--text-mid);max-width:600px}
+  .physical-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .physical-grid .thumb-button{min-width:0}
+  .physical-grid .image-frame{width:100%;aspect-ratio:1/1;background:#050505}
+  .physical-grid .image-frame img{width:100%;height:100%;object-fit:contain;background:#050505}
+  .physical-grid .thumb-title{font-size:12px;margin-top:12px}
+  .physical-grid .thumb-sub{font-size:10px;line-height:1.6}
+  .thumb-button:focus-visible{outline:1px solid var(--accent);outline-offset:5px}
+  .thumb-button .image-frame{transition:border-color .18s ease}
+  .thumb-button:hover .image-frame{border-color:rgba(240,220,180,.45)}
+  @media(max-width:900px){.physical-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.physical-studies-intro{grid-template-columns:1fr;gap:12px}}
+  @media(max-width:520px){.physical-grid{grid-template-columns:1fr}}
+
+  /* Act IV: clear synthesis, studies, and exhibition sequence */
+  .act4-intro{max-width:900px;margin-bottom:30px}
+  .act4-vision{max-width:1120px;margin:0 auto 62px}
+  .act4-vision .image-frame img{width:100%;height:auto;object-fit:contain}
+  .act4-small-heading{font-size:18px;font-weight:400;letter-spacing:.04em;margin-bottom:9px}
+  .act4-section-copy{font-size:12px;line-height:1.85;color:var(--text-mid);max-width:770px;margin-bottom:24px}
+  .act4-optical{margin-top:12px}
+  .act4-drawings{margin-top:0}
+  .act4-exhibition{margin-top:66px;padding-top:28px;border-top:1px solid var(--line)}
+  .act4-exhibition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:26px}
+  .act4-exhibition-grid .image-frame{aspect-ratio:16/11;display:flex;align-items:center;justify-content:center}
+  .act4-exhibition-grid .image-frame img{width:100%;height:100%;object-fit:contain}
+  .act4-exhibition-grid .large-title{font-size:13px;margin-top:13px}
+  .act4-exhibition-grid .large-sub{font-size:11px}
+  @media(max-width:760px){.act4-exhibition-grid{grid-template-columns:1fr}.act4-vision{margin-bottom:42px}}
+
   .paper-grid{display:grid;grid-template-columns:minmax(280px,560px) minmax(0,336px);gap:42px;align-items:start;max-width:980px}
   .paper-title{font-size:15px;font-weight:400;margin-bottom:10px}
   .paper-link{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-size:13px;margin:18px 0 22px;transition:transform .18s ease, opacity .18s ease, color .18s ease}
@@ -443,8 +478,8 @@
       <div class="large-sub">Astral Observatory</div>
       <div class="large-copy">A place of introspection where light operates as threshold and orientation. Procession through an inhabitable wall turns fragmented memory into place.</div>
       <div class="act3-vessel-plates">
+        <div class="image-frame contain"><img src="./images/Vessel_1.png" alt="Vessel Sacellum black presentation board with architectural model studies" loading="lazy"></div>
         <div class="image-frame contain"><img src="./images/Vessel_2.jpg" alt="Vessel Sacellum white presentation board with spatial and model studies" loading="lazy"></div>
-        <div class="image-frame contain"><img src="./images/Vessel_1.jpg" alt="Vessel Sacellum black presentation board with architectural model studies" loading="lazy"></div>
       </div>
     </div>
   </section>
@@ -452,47 +487,87 @@
   <div class="section-divider"></div>
   <section class="section" id="act-4">
     <div class="section-label mono">Act IV</div>
-    <div class="split-feature">
-      <div class="media-col">
-        <div class="image-frame contain"><img src="./images/Thesis_Act_4.jpg" alt="Campus Obscura aperture theater"></div>
-      </div>
-      <div class="text-col">
-        <div class="act-title">Perception as System</div>
-        <div class="act-subtitle">Architecture as optical instrument</div>
-        <div class="split-text">There is no neutral vision. Every experience of space is mediated by the body, the frame, the aperture, and the instrument.</div>
-        <div class="split-text">Act IV consolidates the thesis into architectural systems that stage light, occlusion, and motion. Space is not observed. It is produced.</div>
-        <div class="split-text">A camera obscura was constructed directly against the gallery wall to physically test aperture behavior, turning exhibition space into a full-scale instrument for framing, compression, and light control.</div>
-      </div>
+    <div class="act4-intro">
+      <div class="act-title">Architectural Synthesis</div>
+      <div class="act-subtitle">Perception made spatial</div>
+      <div class="split-text">Act IV brings the investigations of light, aperture, framing, and inhabitation into a larger architectural vision. The proposed theater imagines perception as an active spatial experience, while the drawings and physical studies explore the optical conditions behind it.</div>
     </div>
 
-    <div class="two-large" style="margin-top:42px">
-      <div>
-        <div class="image-frame contain"><img src="./images/Thesis_Campus_Interior.jpg" alt="Campus Obscura interior"></div>
-        <div class="large-title">Interior</div>
-        <div class="large-sub">Inside the camera</div>
-      </div>
-      <div>
-        <div class="image-frame contain"><img src="./images/Thesis_Campus_Exterior.jpg" alt="Campus Obscura exterior"></div>
-        <div class="large-title">Exterior</div>
-        <div class="large-sub">Camera in space</div>
-      </div>
+    <div class="act4-vision">
+      <div class="image-frame contain"><img src="./images/Thesis_Act_4.jpg" alt="Conceptual architectural vision of the Campus Obscura aperture theater" loading="lazy"></div>
+      <div class="large-title">Envisioned Architectural Experience</div>
+      <div class="large-sub">Conceptual synthesis / light, projection, and inhabitation</div>
     </div>
 
-    <div class="thumb-row" style="margin-top:56px">
-      <div class="thumb-card">
-        <div class="image-frame contain"><img src="./images/Thesis_Projection.jpg" alt="Projection System"></div>
+    <div class="act4-optical">
+      <div class="act4-small-heading">Optical Systems</div>
+      <p class="act4-section-copy">Studies in projection, spatial interference, and focal length investigate how light and framing shape the experience of depth. Select a drawing to examine it at full resolution.</p>
+    <div class="thumb-row act4-drawings">
+      <button class="thumb-button" type="button" data-lightbox-set="act4drawings" data-lightbox-index="0" aria-label="Enlarge Projection System drawing">
+        <div class="image-frame"><img src="./images/Thesis_Projection.jpg" alt="Projection System"></div>
         <div class="thumb-title">Projection System</div>
         <div class="thumb-sub">Light shaping visibility</div>
-      </div>
-      <div class="thumb-card">
-        <div class="image-frame contain"><img src="./images/Thesis_Spatial.jpg" alt="Spatial Interference"></div>
+      </button>
+      <button class="thumb-button" type="button" data-lightbox-set="act4drawings" data-lightbox-index="1" aria-label="Enlarge Spatial Interference drawing">
+        <div class="image-frame"><img src="./images/Thesis_Spatial.jpg" alt="Spatial Interference"></div>
         <div class="thumb-title">Spatial Interference</div>
         <div class="thumb-sub">Depth through overlap</div>
-      </div>
-      <div class="thumb-card">
-        <div class="image-frame contain"><img src="./images/Thesis_Focal.jpg" alt="Focal Lengths as Space"></div>
+      </button>
+      <button class="thumb-button" type="button" data-lightbox-set="act4drawings" data-lightbox-index="2" aria-label="Enlarge Focal Lengths as Space drawing">
+        <div class="image-frame"><img src="./images/Thesis_Focal.jpg" alt="Focal Lengths as Space"></div>
         <div class="thumb-title">Focal Lengths as Space</div>
         <div class="thumb-sub">Compressed and expanded views</div>
+      </button>
+    </div>
+
+    </div>
+
+    <div class="physical-studies">
+      <div class="physical-studies-intro">
+        <div>
+          <h3 class="physical-studies-title">Physical Light Studies</h3>
+          <div class="physical-studies-sub">Laser-cut basswood models / aperture, projection, and inhabited light</div>
+        </div>
+        <p class="physical-studies-copy">Sectional models investigate how openings, layered construction, and changes in light create distinct spatial conditions. These physical explorations complement the optical drawings above, studying light as both a measurable phenomenon and an architectural material.</p>
+      </div>
+      <div class="physical-grid">
+        <button class="thumb-button" type="button" data-lightbox-set="act4models" data-lightbox-index="0" aria-label="Enlarge Sectional Aperture Model">
+          <div class="image-frame"><img src="./images/R_Model_1.jpg" alt="Laser-cut basswood sectional aperture model" loading="lazy"></div>
+          <div class="thumb-title">01 / Sectional Aperture</div>
+          <div class="thumb-sub">Vertical light transmission</div>
+        </button>
+        <button class="thumb-button" type="button" data-lightbox-set="act4models" data-lightbox-index="1" aria-label="Enlarge Interior Light Effect">
+          <div class="image-frame"><img src="./images/R_Model_2.jpg" alt="Physical model studying light inside an architectural chamber" loading="lazy"></div>
+          <div class="thumb-title">02 / Interior Light</div>
+          <div class="thumb-sub">Illumination within enclosed space</div>
+        </button>
+        <button class="thumb-button" type="button" data-lightbox-set="act4models" data-lightbox-index="2" aria-label="Enlarge Light Behavior">
+          <div class="image-frame"><img src="./images/R_Model_3.jpg" alt="Experimental model revealing light behavior" loading="lazy"></div>
+          <div class="thumb-title">03 / Light Behavior</div>
+          <div class="thumb-sub">Light made visible</div>
+        </button>
+        <button class="thumb-button" type="button" data-lightbox-set="act4models" data-lightbox-index="3" aria-label="Enlarge Inhabited Section">
+          <div class="image-frame"><img src="./images/R_Model_4.png" alt="Laser-cut basswood model with figure and stairs" loading="lazy"></div>
+          <div class="thumb-title">04 / Inhabited Section</div>
+          <div class="thumb-sub">Scale and spatial experience</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="act4-exhibition">
+      <div class="act4-small-heading">Exhibition / Built Installation</div>
+      <p class="act4-section-copy">The research was also presented and tested through a physical exhibition, including a camera obscura constructed against the gallery wall. These photographs document the work at the scale of the visitor and the surrounding space.</p>
+      <div class="act4-exhibition-grid">
+        <div>
+          <div class="image-frame contain"><img src="./images/Thesis_Campus_Interior.jpg" alt="Campus Obscura exhibition interior" loading="lazy"></div>
+          <div class="large-title">Interior</div>
+          <div class="large-sub">Inside the camera</div>
+        </div>
+        <div>
+          <div class="image-frame contain"><img src="./images/Thesis_Campus_Exterior.jpg" alt="Campus Obscura installation exterior" loading="lazy"></div>
+          <div class="large-title">Exterior</div>
+          <div class="large-sub">Camera in space</div>
+        </div>
       </div>
     </div>
   </section>
@@ -544,6 +619,17 @@
       {src:'./images/Thesis_Phantom.jpg', type:'image', title:'Phantom Mass', sub:'Void as collective form'},
       {src:'./images/Thesis_Emergent.jpg', type:'image', title:'Emergent Surface', sub:'Agent trajectories made visible'},
       {src:'./videos/Thesis_Perceptial_Drift.mp4', type:'video', title:'Perceptual Drift', sub:'Stability as negotiable construct'}
+    ],
+    act4drawings: [
+      {src:'./images/Thesis_Projection.jpg', type:'image', title:'Projection System', sub:'Light shaping visibility'},
+      {src:'./images/Thesis_Spatial.jpg', type:'image', title:'Spatial Interference', sub:'Depth through overlap'},
+      {src:'./images/Thesis_Focal.jpg', type:'image', title:'Focal Lengths as Space', sub:'Compressed and expanded views'}
+    ],
+    act4models: [
+      {src:'./images/R_Model_1.jpg', type:'image', title:'Sectional Aperture', sub:'Vertical light transmission'},
+      {src:'./images/R_Model_2.jpg', type:'image', title:'Interior Light', sub:'Illumination within enclosed space'},
+      {src:'./images/R_Model_3.jpg', type:'image', title:'Light Behavior', sub:'Light made visible'},
+      {src:'./images/R_Model_4.png', type:'image', title:'Inhabited Section', sub:'Scale and spatial experience'}
     ]
   };
 
