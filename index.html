@@ -960,7 +960,68 @@
 
 
 
-  /* ── THWT MATERIAL PROCESS ───────────────────────────── */
+
+
+  /* Midnight Miso — system and agent share one deliberate two-column composition. */
+  .miso-system-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr);
+    gap:22px;
+    align-items:start;
+  }
+  .miso-system-video{
+    width:100%;
+    aspect-ratio:16/9;
+    border:1px solid rgba(255,255,255,.08);
+    overflow:hidden;
+    background:#000;
+  }
+  .miso-system-video video{width:100%;height:100%;object-fit:contain;display:block}
+  .miso-system-sidebar{display:flex;flex-direction:column;gap:26px;min-width:0}
+  .miso-agent-feature{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 142px;
+    gap:14px;
+    align-items:center;
+  }
+  .miso-agent-copy{min-width:0}
+  .miso-agent-art{height:160px;display:flex;align-items:center;justify-content:center}
+  .miso-agent-art img{
+    width:100%;
+    max-width:142px;
+    max-height:150px;
+    object-fit:contain;
+    display:block;
+    animation:misoAgentFloat 5.8s ease-in-out infinite;
+    filter:drop-shadow(0 8px 13px rgba(0,0,0,.17));
+  }
+  @keyframes misoAgentFloat{0%,100%{transform:translate(0,5px)}25%{transform:translate(7px,-10px)}50%{transform:translate(0,-20px)}75%{transform:translate(-7px,-8px)}}
+  @media(max-width:960px){
+    .miso-system-layout{grid-template-columns:1fr;gap:18px}
+    .miso-system-sidebar{gap:20px}
+    .miso-agent-feature{grid-template-columns:minmax(0,1fr) 142px}
+  }
+
+
+  .miso-function-line{margin-top:3px;font-family:'DM Mono',monospace;font-size:9px;line-height:1.8;letter-spacing:.08em;color:rgba(100,200,255,.57)}
+  .miso-function-line span{color:rgba(255,255,255,.24);padding:0 2px}
+  .miso-mr-item .spatial-caption{letter-spacing:.09em;line-height:1.65;color:rgba(255,255,255,.45)}
+  .miso-swarm-caption{text-transform:none;letter-spacing:.04em;line-height:1.7;font-size:11px;color:rgba(255,255,255,.50)}
+
+  /* Midnight Miso — paired MR study, aligned with the existing case-study system. */
+  .miso-mr-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  .miso-mr-item{display:grid;gap:9px;min-width:0;margin:0}
+  .miso-mr-media{aspect-ratio:16/9;border:1px solid rgba(255,255,255,.08);background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .miso-mr-media img,.miso-mr-media video{width:100%;height:100%;object-fit:contain;display:block}
+  .miso-mr-section{gap:12px}
+  /* Midnight Miso: smaller, contained floating drone beside its description. */
+  .miso-drone-identity{align-items:center;}
+  .miso-drone-identity .drone-bob-stage{height:112px;min-height:112px;overflow:visible;display:flex;align-items:center;justify-content:center;}
+  .miso-drone-identity .drone-bob{position:relative;top:auto;left:auto;width:27.5%;max-width:100px;transform:none;animation:misoDroneBob 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 13px rgba(0,0,0,.18));}
+  @keyframes misoDroneBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+  @media(max-width:760px){.miso-mr-pair{grid-template-columns:1fr}}
+
+    /* ── THWT MATERIAL PROCESS ───────────────────────────── */
   .thwt-materials-section{
     gap:12px;
     margin-top:4px;
@@ -1861,22 +1922,43 @@ const SPATIAL_DETAIL = {
         </div>
       </div>
       <div class="spatial-case" style="margin-top:16px">
-        <section class="spatial-section split">
-          <div class="spatial-media-md"><video src="./videos/A_Midnight.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">System reveal</div>
-            <div class="spatial-headline">Spatial Ordering System</div>
-            <div class="spatial-copy">A network of autonomous agents navigating layered architecture. Orders are resolved through position, visibility, routing, and proximity across a compressed vertical city block.</div>
+        <section class="spatial-section miso-system-section">
+          <div class="miso-system-layout">
+            <div class="miso-system-video">
+              <video src="./videos/A_Midnight.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Spatial ordering system video"></video>
+            </div>
+            <div class="miso-system-sidebar">
+              <div class="spatial-stack">
+                <div class="spatial-eyebrow">System reveal</div>
+                <div class="spatial-headline">Spatial Ordering System</div>
+                <div class="spatial-copy">A network of autonomous agents navigating layered architecture. Orders are resolved through position, visibility, routing, and proximity across a compressed vertical city block.</div>
+              </div>
+              <div class="miso-agent-feature">
+                <div class="miso-agent-copy spatial-stack">
+                  <div class="spatial-eyebrow">Agent design</div>
+                  <div class="spatial-headline">Drone Identity &amp; Functions</div>
+                  <div class="spatial-copy">A modular courier connecting orders, architecture, and movement throughout the city. Designed around pickup and delivery, route navigation, status signaling, and interaction with the built environment.</div><div class="miso-function-line">PICKUP + DELIVERY <span>·</span> ROUTING <span>·</span> STATUS SIGNALS <span>·</span> SPATIAL INTERACTION</div>
+                </div>
+                <div class="miso-agent-art">
+                  <img src="./images/SD_Drone_2.png" alt="Midnight Miso modular delivery drone">
+                </div>
+              </div>
+            </div>
           </div>
         </section>
-        <section class="spatial-section split">
-          <div class="spatial-stack">
-            <div class="spatial-eyebrow">Agent design</div>
-            <div class="spatial-headline">Drone beauty and identity</div>
-            <div class="spatial-copy">A modular delivery agent designed to carry, signal, and negotiate space. The drone acts as both courier and interface, giving the world a clear embodied actor.</div>
-          </div>
-          <div class="drone-bob-stage">
-            <img class="drone-bob" src="./images/SD_Drone_2.png" alt="Drone beauty render">
+        <section class="spatial-section miso-mr-section">
+          <div class="spatial-eyebrow">Interaction study</div>
+          <div class="spatial-headline">Mixed Reality Exploration</div>
+          <div class="spatial-copy">Exploring the boundary between physical and digital interfaces: a delivery drone from Midnight Miso appears within the real workspace. The Unity prototype demonstrates spatial presence, while the diagram proposes gesture-directed delivery to objects on the desk.</div>
+          <div class="miso-mr-pair">
+            <figure class="miso-mr-item">
+              <div class="miso-mr-media"><img src="./images/Diagram_MR_Drone.jpg" alt="Wireframe concept diagram of gesture-directed mixed reality drone delivery at a desk" loading="lazy"></div>
+              <figcaption class="spatial-caption">Physical + digital interfaces / gesture-directed delivery concept</figcaption>
+            </figure>
+            <figure class="miso-mr-item">
+              <div class="miso-mr-media"><video src="./videos/AR_drone_desk.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Mixed reality drone hovering in the physical desk workspace"></video></div>
+              <figcaption class="spatial-caption">Mixed Reality Drone Perspective / Unity animation for Meta Quest</figcaption>
+            </figure>
           </div>
         </section>
         <section class="spatial-section">
@@ -1892,7 +1974,7 @@ const SPATIAL_DETAIL = {
           <div class="spatial-eyebrow">World scale</div>
           <div class="spatial-headline">Drone instances and system density</div>
           <div class="spatial-media-lg"><img src="./gifs/SD_Drone_Fly.gif" alt="Drone density gif"></div>
-          <div class="spatial-caption">Multiple agents operating together across the same environment.</div>
+          <div class="spatial-caption miso-swarm-caption">A swarm of idle couriers gathers above Midnight Miso, anticipating the evening rush and the next wave of orders.</div>
         </section>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
