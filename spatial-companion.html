@@ -108,6 +108,10 @@
   .process-wrap { width:100%; background:#000; overflow:hidden; border:1px solid var(--border); }
   .process-wrap img { width:100%; display:block; }
 
+  /* ── MOTION BREAKDOWN ── */
+  .motion-breakdown-subtitle { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan-dim); margin:-14px 0 24px; }
+  .motion-breakdown-media img { width:100%; height:auto; display:block; }
+
   /* ── PROCESS 4-STEP STRIP ── */
   .process-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); margin-top:1px; }
   .process-step { background:var(--bg); padding:28px 26px; }
@@ -116,7 +120,7 @@
   .process-step-text { font-size:12px; color:var(--white-mid); font-weight:300; line-height:1.76; }
 
   /* ── LOOP / AI AGENT IMAGE ── */
-  .loop-wrap { width:100%; background:#0a0a0f; overflow:hidden; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; padding:56px; }
+  .loop-wrap { width:100%; background:#0a0a0f; overflow:hidden; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; padding:40px; }
   .loop-wrap img { max-width:640px; width:100%; display:block; }
 
   /* ── PERCEPTUAL PRINCIPLES ── */
@@ -430,28 +434,21 @@
     <div class="process-wrap fade-up">
       <img src="./images/X_Companion_Process.jpg" alt="Process and System Design diagram" />
     </div>
-    <div class="process-strip fade-up">
-      <div class="process-step">
-        <div class="process-num">01 &mdash; Problem Mapping</div>
-        <div class="process-step-title">Identifying the Friction</div>
-        <div class="process-step-text">Identified power drain and visual overload caused by animated AR menus in outdoor use. Defined instant-glance visual cues that stay legible without stealing attention.</div>
-      </div>
-      <div class="process-step">
-        <div class="process-num">02 &mdash; Scenario Designs</div>
-        <div class="process-step-title">Storyboarding Personas</div>
-        <div class="process-step-text">Storyboarded tasks for Jogger, Creator, Investigator, and Streamer personas in Figma. Color-coded stencils reusing elements for nav, status, and media control.</div>
-      </div>
-      <div class="process-step">
-        <div class="process-num">03 &mdash; Interaction Prototyping</div>
-        <div class="process-step-title">Rapid Test Loops</div>
-        <div class="process-step-text">Tested stencil design across roles, reusing dots for nav, status, and media. Refined colors, timing, and position through rapid loops with engineers.</div>
-      </div>
-      <div class="process-step">
-        <div class="process-num">04 &mdash; System Archetypes</div>
-        <div class="process-step-title">Modular Stencil Specs</div>
-        <div class="process-step-text">Presented modular stencil specs for cross-discipline stakeholder review. Uploaded to interaction library for future low-power AR builds.</div>
-      </div>
-    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MOTION AS LANGUAGE — ANIMATION BREAKDOWN
+════════════════════════════════════════════ -->
+<div class="section fade-up">
+  <div class="section-label">Motion as Language</div>
+  <div class="motion-breakdown-subtitle">Expressive Animation &middot; Rigging &middot; Procedural Materials</div>
+  <div class="process-wrap motion-breakdown-media">
+    <video autoplay muted loop playsinline preload="metadata" aria-label="Motion vocabulary, Blender animation controls and shader nodes, and companion interface responses" style="width:100%;height:auto;display:block;background:#000;">
+      <source src="./videos/AR_Anim_Break.mp4" type="video/mp4">
+      Your browser could not load this video.
+    </video>
   </div>
 </div>
 
@@ -459,9 +456,9 @@
      AI AGENT LOOP IMAGE
 ════════════════════════════════════════════ -->
 <div class="section fade-up">
-  <div class="section-label">AI Agent Interactions</div>
+  <div class="section-label">Perception &amp; Response Loop</div>
   <div class="loop-wrap">
-    <img src="./images/X_Companion_Loop.jpg" alt="AI Agent interaction loop diagram" style="max-width:480px;" />
+    <img src="./images/X_Companion_Loop.jpg" alt="Perception and response interaction feedback loop" style="max-width:600px;" />
   </div>
 </div>
 
