@@ -1655,6 +1655,77 @@
 .about-student-work{display:inline-block;padding:0;border:0;background:none;cursor:pointer;text-align:left;line-height:inherit}
   .about-student-work:hover{text-decoration:underline;text-underline-offset:3px}
   .about-student-work:focus-visible{outline:1px solid currentColor;outline-offset:3px}
+
+  /* About — concise research thread, without adding another heavy card */
+  .about-research-focus{
+    display:grid;
+    grid-template-columns:180px minmax(0,1fr);
+    gap:24px;
+    border-top:1px solid rgba(255,255,255,.11);
+    padding:18px 0 5px;
+    max-width:1080px;
+  }
+  .about-research-focus .about-section-title{padding-top:4px}
+  .about-research-focus-body{display:grid;gap:9px;max-width:850px}
+  .about-research-question{
+    font-size:14px;
+    line-height:1.65;
+    font-weight:300;
+    letter-spacing:.01em;
+    color:rgba(255,255,255,.86);
+  }
+  .about-research-focus .about-card-copy{line-height:1.75}
+  .about-research-topics{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 0;
+    padding-top:3px;
+    font-family:'DM Mono',monospace;
+    font-size:9px;
+    line-height:1.5;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    color:rgba(var(--accent),.79);
+  }
+  .about-research-topics span + span::before{
+    content:'·';
+    margin:0 12px;
+    color:rgba(255,255,255,.25);
+  }
+  @media(max-width:760px){
+    .about-research-focus{grid-template-columns:1fr;gap:10px}
+  }
+
+  /* About readability refinement: small, scoped typography adjustments */
+  .about-panel .about-copy,
+  .about-panel .about-side-copy,
+  .about-panel .about-highlight-copy,
+  .about-panel .about-card-copy,
+  .about-panel .about-contact-value { font-size:13px; }
+  .about-panel .about-introduction .about-copy { font-size:13px; }
+  .about-panel .about-section-title,
+  .about-panel .about-side-label,
+  .about-panel .about-contact-label,
+  .about-panel .about-logo-label,
+  .about-panel .about-role,
+  .about-panel .about-tool-label,
+  .about-panel .about-explore-link,
+  .about-panel .about-research-topics,
+  .about-panel .about-student-work { font-size:10px; }
+  .about-panel .about-school-meta { font-size:11px; }
+
+  /* Architecture: Swarm Fossils paired research studies */
+  .swarm-fossils-study{display:grid;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07)}
+  .swarm-fossils-pair{margin-top:2px;align-items:start}
+  .swarm-fossils-image{min-width:0;background:#000;border:1px solid rgba(255,255,255,.08)}
+  .swarm-fossils-image img{display:block;width:100%;height:auto;object-fit:contain}
+
+  /* Craft: give the physical fabrication model a prominent, uncropped presentation. */
+  .arch-craft-split .arch-craft-tall img{width:72%}
+  .arch-craft-model-study{grid-template-columns:minmax(0,.93fr) minmax(0,1.07fr) !important;align-items:center}
+  .arch-craft-model-photo{aspect-ratio:auto;min-width:0;padding:0}
+  .arch-craft-model-photo img{width:100%;height:auto;object-fit:contain;display:block}
+  @media(max-width:960px){.arch-craft-model-study{grid-template-columns:1fr !important}}
 </style>
 </head>
 <body>
@@ -2183,8 +2254,19 @@ const SPATIAL_DETAIL = {
       <div class="about-panel">
         <div class="about-introduction reveal-block">
           <div class="about-section-title">Background</div>
-          <div class="about-kicker">I work across design, technology, and research to develop interactive systems and spatial experiences.</div>
-          <div class="about-copy">My background spans real-time interaction research at <a class="about-inline-link" href="https://www.meta.com/emerging-tech/" target="_blank" rel="noopener noreferrer">Meta Reality Labs</a>, environment art for the shipped game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>, and architectural design and visualization. Across these fields, I bring together spatial thinking, 3D production, and technical prototyping to make emerging ideas tangible, functional, and visually compelling.</div>
+          <div class="about-kicker">I design and build interactive systems that shape how people perceive, navigate, and engage with physical and digital space.</div>
+          <div class="about-copy">I take ideas from early research and design concepts into working prototypes, spatial environments, and finished experiences. My work spans gaze, sensing, and mixed reality at <a class="about-inline-link" href="https://www.meta.com/emerging-tech/" target="_blank" rel="noopener noreferrer">Meta Reality Labs Research</a>; lead environment art for the shipped game <a class="about-inline-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">To Hell With It</a>; and architectural design, visualization, and technical documentation.</div>
+        </div>
+
+        <div class="about-research-focus reveal-block" aria-labelledby="about-research-heading">
+          <div class="about-section-title" id="about-research-heading">Research Interests</div>
+          <div class="about-research-focus-body">
+            <div class="about-research-question">How can light, motion, sensing, and physical interaction make complex systems easier to perceive and understand?</div>
+            <p class="about-card-copy">My work explores perception and attention across spatial interfaces, tangible interactions, and responsive environments—connecting architectural inquiry with real-time prototyping and emerging hardware.</p>
+            <div class="about-research-topics" aria-label="Research areas">
+              <span>Perceptual Interfaces</span><span>Tangible Interaction</span><span>Responsive Environments</span>
+            </div>
+          </div>
         </div>
 
         <div class="about-section reveal-block">
@@ -2194,7 +2276,7 @@ const SPATIAL_DETAIL = {
               <img class="about-experience-logo about-experience-logo-meta" src="./images/Meta_logo_2.jpg" alt="Meta" loading="lazy">
               <div class="about-card-title"><a class="about-title-link" href="https://www.meta.com/emerging-tech/" target="_blank" rel="noopener noreferrer">Meta Reality Labs Research</a></div>
               <div class="about-role">Technical Artist · 2021–2025</div>
-              <div class="about-card-copy">Designed and developed real-time interaction prototypes translating emerging research in eye tracking, sensing, adaptive dimming, and mixed reality into functional demonstrations. Collaborated with research, design, and engineering teams to turn emerging technologies into functional prototypes and demonstrations.</div>
+              <div class="about-card-copy">Designed and built real-time interaction prototypes exploring eye tracking, sensing, adaptive dimming, and mixed reality. Partnered with research, design, and engineering teams to translate emerging hardware capabilities into testable interactions and functional demonstrations.</div>
               <a class="about-explore-link" href="#mixed-reality-prototypes" data-open-mr-prototypes>Explore Mixed Reality Prototypes <span class="about-explore-arrow" aria-hidden="true">⟶</span></a>
             </div>
             <div class="about-card about-hover-zone">
@@ -2256,7 +2338,7 @@ const SPATIAL_DETAIL = {
             <div class="about-card about-hover-zone about-degree-card">
               <div class="about-card-title">Master of Architecture</div>
               <div class="about-role">University of Florida</div>
-              <div class="about-card-copy">Recipient of the AIA Bronze Medal for architectural design and academic excellence. Master’s thesis: <a class="about-inline-link" href="campus-obscura.html">Campus Obscura</a>.</div>
+              <div class="about-card-copy">Recipient of the <strong>AIA Bronze Medal</strong> for architectural design and academic excellence. M.Arch thesis: <a class="about-inline-link" href="campus-obscura.html">Campus Obscura</a>—an investigation of perception, optical apparatus, and constructed space, with a physical exhibition and research paper.</div>
               <div class="about-degree-logo about-degree-logo-uf"><img src="./images/UF.png" alt="University of Florida" width="96" height="96" loading="lazy"></div>
             </div>
           </div>
@@ -2319,13 +2401,13 @@ const SPATIAL_DETAIL = {
           <div class="spatial-media-lg arch-craft-full"><img src="./images/SD_A_Craft_4.jpg" alt="American Craft Museum full scale exterior visualization"></div>
         </section>
 
-        <section class="spatial-section split reveal-block tone-panel tone-soft arch-craft-lighting">
+        <section class="spatial-section split reveal-block tone-panel tone-soft arch-craft-lighting arch-craft-model-study">
           <div class="spatial-stack">
-            <div class="spatial-eyebrow">Apertures, lighting, and sun orientation</div>
-            <div class="spatial-copy">The placement and proportion of apertures are driven by the sun’s path, balancing northern light for steady illumination and controlled southern exposure for warmth and depth.</div>
-            <div class="spatial-copy">Deep reveals, light shelves, and oriented openings reduce glare, protect the collection, and create a quieter dialogue between time, light, and material.</div>
+            <div class="spatial-eyebrow">Brise-Soleil · Framing Light and Views</div>
+            <div class="spatial-copy">The layered brise-soleil filters daylight and frames views, mediating between the building’s interior and its surroundings.</div>
+            <div class="spatial-copy">Physical model studies using laser-cut components explore the relationship between structure, enclosure, and architectural form.</div>
           </div>
-          <div class="spatial-media-md arch-craft-diagram"><img src="./images/SD_A_Craft_5.jpg" alt="American Craft Museum daylight and sun orientation diagram"></div>
+          <div class="spatial-media-md arch-craft-model-photo"><img src="./images/Craft_Model_1.JPG" alt="Physical architectural model showing timber framing, curved white volumes, and laser-cut fabrication components"></div>
         </section>
 
         <section class="spatial-section reveal-block tone-panel tone-soft">
@@ -2447,6 +2529,16 @@ const SPATIAL_DETAIL = {
           <div class="spatial-copy" style="margin-top:14px">Computational design opened a different register of architectural thinking, where systems, repetition, and parametric control could generate form without losing atmosphere. These studies balance scripted logic with spatial judgment so the resulting geometry still reads as inhabited, legible, and visually intentional.</div>
           <div class="spatial-copy">The Flux Hotel, Orlando, FL became a useful frame for this way of working, linking fluid formal variation to hospitality, circulation, and a stronger relationship between diagram, envelope, and experience.</div>
           <div class="spatial-toolline">Parametric design · Form finding · Flux Hotel, Orlando FL</div>
+
+          <!-- Related graduate research: Swarm Fossils -->
+          <div class="swarm-fossils-study">
+            <div class="spatial-eyebrow">Parallel Graduate Research · Swarm Fossils</div>
+            <div class="spatial-grid-2 swarm-fossils-pair">
+              <div class="swarm-fossils-image"><img src="./images/Comp_1.jpg" alt="Swarm Fossils — When Geometry Becomes Space: geometric variations and spatial studies" loading="lazy"></div>
+              <div class="swarm-fossils-image"><img src="./images/Comp_2.jpg" alt="Swarm Theater Interior — architectural space formed around a porous geometric assembly" loading="lazy"></div>
+            </div>
+            <div class="spatial-copy">A parallel investigation into geometric fragmentation, aggregation, and spatial form. From individual geometric studies to the Swarm Theater Interior, the work explores how patterned surfaces and complex assemblies shape enclosure, structure, and spatial experience.</div>
+          </div>
         </section>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
