@@ -407,6 +407,9 @@
   .detail-frame.mixed-reality-detail::before,
   .detail-frame.mixed-reality-detail::after{display:none}
   .mixed-reality-deck{width:100%;aspect-ratio:16/9;overflow:hidden;background:#000}
+  /* Small, deliberately quiet navigation cue; the animated deck remains the focus. */
+  .mixed-reality-deck-guide{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:0 2px 12px;font-family:'DM Mono',monospace;font-size:10px;line-height:1.6;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.43)}
+  .mixed-reality-deck-count{color:rgba(var(--accent),.80);white-space:nowrap}
   .mixed-reality-context{max-width:880px;padding:22px 2px 4px;display:grid;gap:10px}
   .mixed-reality-context-title{font-size:17px;letter-spacing:.08em;font-weight:300;color:rgba(255,255,255,.88)}
   .mixed-reality-context p{font-size:12px;line-height:1.8;color:rgba(255,255,255,.60);font-weight:300}
@@ -1960,7 +1963,7 @@ const PROJECTS = [
     cards: [
       { title: 'Signal Lock', desc: 'Targeting, scanning, and readable control logic for a defense-adjacent interface study.', link: 'signal-lock.html', mediaType: 'video', media: './videos/X_Signal_Lock_2.mp4' },
       { title: 'Spatial Companion', desc: 'Persistent presence, state expression, and lightweight augmented behavior.', link: 'spatial-companion.html', mediaType: 'video', media: './videos/X_Spatial_Dance.mp4' },
-      { title: 'Mixed Reality Prototypes', desc: 'AR & VR studies, object placement, and interface behavior tests.', link: null, mediaType: 'video', media: './videos/Mixed_Reality.mp4' }
+      { title: 'Mixed Reality Prototypes', desc: 'Gaze, sensing, spatial interfaces, and AR/VR studies from Meta research and independent exploration.', link: null, mediaType: 'video', media: './videos/Mixed_Reality.mp4' }
     ]
   },
   {
@@ -2312,14 +2315,18 @@ const SPATIAL_DETAIL = {
 
   'Mixed Reality Prototypes': `
     <div class="detail-frame mixed-reality-detail">
+      <div class="mixed-reality-deck-guide" aria-label="Presentation information">
+        <span>Selected Research &amp; Prototypes</span>
+        <span class="mixed-reality-deck-count">14 Slides &nbsp;·&nbsp; Use arrows to explore &rarr;</span>
+      </div>
       <div class="mixed-reality-deck">
         <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQFyMGypw-De7zlWaWidYRtkHpePq41Ui5wZQJidwK0tOWun0NLTfi-99N8vmfDd4KC6DfxJz3brkAC/pubembed?start=false&loop=false&delayms=3000" title="Mixed Reality Prototypes research presentation" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="display:block;width:100%;height:100%;"></iframe>
       </div>
       <div class="mixed-reality-context">
-        <div class="detail-kicker">Meta Reality Labs Research · 2021–2025</div>
+        <div class="detail-kicker">Meta Reality Labs Research (2021–2025) / Independent Studies</div>
         <div class="mixed-reality-context-title">Mixed Reality Prototypes</div>
-        <p>A selection of real-time interaction prototypes developed during my work at Meta Reality Labs Research, exploring eye tracking, gaze-based interfaces, adaptive dimming, sensing, and mixed reality.</p>
-        <p>Working across research, design, and engineering, I helped translate emerging interaction concepts into functional demonstrations for evaluation and exploration.</p>
+        <p>A collection of interactive prototypes and visual studies from Meta Reality Labs Research and independent exploration, spanning eye tracking, gaze-based interfaces, adaptive dimming, sensing, spatial interfaces, and AR/VR.</p>
+        <p>Working across research, design, and engineering at Meta, I helped translate emerging concepts into functional demonstrations. Independent experiments extend these ideas through spatial interaction and visualization studies.</p>
       </div>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
     </div>`,
