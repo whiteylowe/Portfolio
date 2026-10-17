@@ -1021,7 +1021,48 @@
   @keyframes misoDroneBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
   @media(max-width:760px){.miso-mr-pair{grid-template-columns:1fr}}
 
-    /* ── THWT MATERIAL PROCESS ───────────────────────────── */
+  
+  /* To Hell With It — worldbuilding-led case-study introduction */
+  .thwt-editorial{padding:35px 38px 30px;border:1px solid rgba(255,255,255,.095);background:linear-gradient(115deg,rgba(20,23,31,.94),rgba(9,11,16,.95) 75%);display:grid;gap:16px}
+  .thwt-editorial-index{font-size:9px;letter-spacing:.21em;color:rgba(120,196,231,.68)}
+  .thwt-editorial-title{font-size:clamp(27px,3.5vw,48px);line-height:1.1;letter-spacing:.025em;font-weight:300;color:rgba(255,255,255,.93)}
+  .thwt-editorial-text{font-size:13px;line-height:1.85;font-weight:300;max-width:790px;color:rgba(255,255,255,.68)}
+  .thwt-editorial-keys{display:flex;gap:18px 30px;flex-wrap:wrap;margin-top:8px;padding-top:17px;border-top:1px solid rgba(255,255,255,.1);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,220,180,.68)}
+  .thwt-section-intro{max-width:820px}
+  .thwt-compare-item{display:grid;gap:9px;min-width:0;margin:0}
+  .thwt-compare-item .spatial-caption{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.48)}
+  .thwt-motion-context{margin-top:5px}
+  .thwt-shipped-proof{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:22px;align-items:center;margin-top:16px;padding:18px;border:1px solid rgba(255,255,255,.075);background:rgba(255,255,255,.015)}
+  .thwt-proof-media{width:100%;border:1px solid rgba(255,255,255,.08);background:#050507;overflow:hidden}
+  .thwt-proof-media img{width:100%;height:auto;display:block}
+  .thwt-proof-copy{display:grid;gap:10px;align-content:center}
+  .thwt-steam-link{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#75C9E5;width:max-content;padding-top:5px}
+  .thwt-steam-link:hover{color:#B3EAFA}
+  @media(max-width:760px){.thwt-editorial{padding:24px 20px}.thwt-shipped-proof{grid-template-columns:1fr}}
+
+
+  /* THWT: image-led study of gateways and the two environment types. */
+  .thwt-added-section{margin-top:30px}
+  .thwt-gateway-grid{display:grid;grid-template-columns:minmax(0,.57fr) minmax(0,1.43fr);gap:14px}
+  .thwt-world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .thwt-added-figure{display:grid;grid-template-rows:auto auto;gap:9px;min-width:0;margin:0;align-content:start}
+  .thwt-added-media{height:clamp(260px,29vw,405px);border:1px solid rgba(255,255,255,.085);background:rgba(4,5,9,.45);overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .thwt-added-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+  .thwt-added-object img{object-fit:contain}
+  .thwt-world-grid .thwt-added-media{height:auto;aspect-ratio:16/9}
+  .thwt-world-grid .thwt-added-media img{object-fit:contain}
+  .thwt-added-figure .spatial-caption{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.09em;line-height:1.55;color:rgba(255,255,255,.48)}
+  @media(max-width:760px){.thwt-gateway-grid,.thwt-world-grid{grid-template-columns:1fr}.thwt-added-media{height:auto;aspect-ratio:16/9}.thwt-added-object{aspect-ratio:4/3}}
+
+
+  /* THWT: three-image architectural study — one establishing view, two closer views. */
+  .thwt-city-feature{margin-top:8px}
+  .thwt-city-feature .thwt-added-media{height:auto;aspect-ratio:16/9}
+  .thwt-city-feature .thwt-added-media img{object-fit:contain}
+  .thwt-path-pair{margin-top:3px}
+  .thwt-arch-note{font-size:11px;line-height:1.75;color:rgba(255,255,255,.52);max-width:810px}
+
+  /* ── THWT MATERIAL PROCESS ───────────────────────────── */
   .thwt-materials-section{
     gap:12px;
     margin-top:4px;
@@ -2081,6 +2122,14 @@ const SPATIAL_DETAIL = {
           </div>
           <div class="spatial-copy">UV packing and alpha masking optimized for dense foliage in a real-time environment, balancing visual fidelity with performance constraints.</div>
         </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">Procedural material development</div>
+          <div class="spatial-headline">Snow-Covered Shrine Masonry</div>
+          <div style="width:100%;border:1px solid rgba(255,255,255,.08);background:#000;overflow:hidden">
+            <img src="./images/SD_Substance.jpg" alt="Substance Designer procedural shrine masonry material breakdown and controlled stone, moss, and snow variations" style="display:block;width:100%;height:auto">
+          </div>
+          <div class="spatial-copy">Procedural masonry authored in Substance Designer, with controllable stone, moss, and snow coverage for varied surface conditions.</div>
+        </section>
         <section class="spatial-section split">
           <div class="spatial-media-md"><img src="./images/SD_Naoko_Process.png" alt="Naoko Shrine process and shrine gate sequencing"></div>
           <div class="spatial-stack">
@@ -2098,10 +2147,6 @@ const SPATIAL_DETAIL = {
             <div class="spatial-toolline">Focus: Spatial sequencing · Compression · Tonal transition · Environment pacing</div>
           </div>
           <div class="spatial-media-lg"><img src="./images/SD_Cave_Panel_1.jpg" alt="Black Wing Cave threshold entrance"></div>
-          <div class="spatial-grid-2">
-            <div class="spatial-media-md"><img src="./images/SD_Cave_3.jpg" alt="Black Wing Cave material decay detail"></div>
-            <div class="spatial-media-md"><img src="./images/SD_Cave_4.jpg" alt="Black Wing Cave erosion and artifact detail"></div>
-          </div>
           <div class="spatial-stack">
             <div class="spatial-eyebrow">Massing + light study</div>
             <div class="spatial-headline">Grayscale to final lighting structure</div>
@@ -2126,51 +2171,55 @@ const SPATIAL_DETAIL = {
         <section class="spatial-section">
           <div class="spatial-media-lg"><img src="./images/SD_THWT_Sintral.jpg" alt="To Hell With It final hero image"></div>
         </section>
-        <section class="spatial-section split">
+        <section class="thwt-editorial" aria-label="Environment design approach">
+          <div class="thwt-editorial-index mono">01 / ENVIRONMENT DESIGN — SHIPPED GAME</div>
+          <h2 class="thwt-editorial-title">Designing the Unfamiliar</h2>
+          <p class="thwt-editorial-text"><em>To Hell With It</em> moves between ruined industrial spaces and strange, overgrown landscapes. My contributions included environment art, modular architecture, and materials across both settings.</p>
+          <p class="thwt-editorial-text">Working with simplified geometry let me concentrate on silhouette, proportion, and atmosphere. Even as the world became more exaggerated and strange, its spaces still needed to be recognizable and navigable.</p>
+          <div class="thwt-editorial-keys mono"><span>Environment Art</span><span>Modular Architecture</span><span>Material Authoring</span></div>
+        </section>
+        <section class="spatial-section">
+          <div class="spatial-eyebrow">Early studies / Finished environment</div>
+          <div class="spatial-headline">Massing and Composition</div>
+          <div class="spatial-copy thwt-section-intro">The environments began with massing studies, where I could work through scale, major forms, and composition before introducing materials and lighting.</div>
+          <div class="spatial-grid-2">
+            <figure class="thwt-compare-item"><div class="spatial-media-md"><img src="./images/SD_THWT_Grey_4.jpg" alt="To Hell With It greybox massing"></div><figcaption class="spatial-caption">01 / Grayscale massing + composition</figcaption></figure>
+            <figure class="thwt-compare-item"><div class="spatial-media-md"><img src="./images/SD_THWT_Gazebo.jpg" alt="To Hell With It final environment frame"></div><figcaption class="spatial-caption">02 / Final atmosphere + lighting</figcaption></figure>
+          </div>
+          
+        </section>
+        <section class="spatial-section split thwt-motion-context">
           <div class="spatial-media-md"><video src="./videos/SD_THWT_Hero_3.mp4?v=2" autoplay muted loop playsinline preload="metadata"></video></div>
           <div class="spatial-stack">
-            <div class="spatial-eyebrow">Spatial Designs / Shipped game</div>
-            <div class="spatial-headline">To Hell With It</div>
-            <div class="spatial-copy">Shipped Steam game environment work focused on playable atmosphere, readable framing, and a broad range of authored assets. The spaces had to hold up as playable areas, communicate tone quickly, and support the game as a complete authored world.</div>
+            <div class="spatial-eyebrow">Gameplay / Environment</div>
+            <div class="spatial-headline">In-Game Environments</div>
+            <div class="spatial-copy">The spaces were built to be experienced in motion. Changing viewpoints reveal how the architecture, terrain, and lighting work together beyond a single composed frame.</div>
             <div class="spatial-toolline">Environment art · Level mood · Asset production · Shipped game</div>
           </div>
         </section>
-        <section class="spatial-section">
-          <div class="spatial-media-md"><img src="./images/SD_THWT_Steam.jpg?v=2" alt="To Hell With It Steam listing"></div>
-          <div class="spatial-caption">A shipped Steam title where environment art guided navigation, mood, and moment-to-moment interaction.</div>
-        </section>
-        <section class="spatial-section">
-          <div class="spatial-eyebrow">Framing + final composition</div>
-          <div class="spatial-headline">Greybox to final atmosphere</div>
-          <div class="spatial-grid-2">
-            <div class="spatial-media-md"><img src="./images/SD_THWT_Grey_4.jpg" alt="To Hell With It greybox massing"></div>
-            <div class="spatial-media-md"><img src="./images/SD_THWT_Gazebo.jpg" alt="To Hell With It final environment frame"></div>
-          </div>
-          <div class="spatial-copy">The scene evolved from grayscale massing and framing studies into a finished environment with material contrast, lighting, and depth.</div>
-        </section>
         <section class="spatial-section thwt-materials-section">
           <div class="spatial-eyebrow">Procedural materials + in-engine application</div>
-          <div class="spatial-headline">Technical Surface Building in Substance Designer</div>
+          <div class="spatial-headline">Procedural Materials in Substance Designer</div>
           <div class="thwt-material-pair">
             <div class="thwt-material-media"><img src="./images/Blood_Mud_2.jpg" alt="Procedural mud and ground material development in Substance Designer"></div>
             <div class="thwt-material-media"><img src="./images/SD_THWT_Play.jpg" alt="Procedural material system applied in the shipped gameplay environment"></div>
           </div>
-          <div class="spatial-copy thwt-material-copy">Procedural materials were authored in Substance Designer as controllable surface systems rather than one-off textures. Layered masks, breakup, height and roughness variation, and reusable parameters made it possible to iterate quickly across mud, blood, algae, and organic ground states, then tune those materials in-engine to support gameplay readability, focal contrast, and environmental continuity.</div>
+          <div class="spatial-copy thwt-material-copy">In Substance Designer, I built adjustable materials for mud, blood, algae, and organic ground surfaces. Masks, height variation, and roughness controls made it easier to create related surfaces and refine them in-engine without rebuilding each texture from scratch.</div>
         </section>
         <section class="spatial-section">
           <div class="spatial-eyebrow">Asset range</div>
-          <div class="spatial-headline">Hard surface to organic production</div>
+          <div class="spatial-headline">Architectural and Organic Assets</div>
           <div class="spatial-grid-2">
             <div class="spatial-media-sm"><img src="./images/SD_THWT_Arch.jpg" alt="Asset production sheet one"></div>
             <div class="spatial-media-sm"><img src="./images/SD_THWT_Arch_1.jpg" alt="Asset production sheet two"></div>
           </div>
-          <div class="spatial-copy">The asset work ranges from architectural forms and structural pieces to natural and weathered elements, supporting a cohesive world rather than a single hero prop.</div>
+          <div class="spatial-copy">Alongside larger environments, I created individual architectural and organic assets, from weathered structural pieces to the unfamiliar plant forms found throughout the landscape.</div>
         </section>
         <section class="spatial-section">
           <div class="spatial-eyebrow">Modular asset system</div>
-          <div class="spatial-headline">Optimized kits for expansive level building</div>
+          <div class="spatial-headline">Modular Environment Kit</div>
           <div class="spatial-media-lg"><img src="./images/SD_THWT_Assets.jpg" alt="Modular low poly asset kit for To Hell With It"></div>
-          <div class="spatial-copy">This modular asset set was built to be low poly, optimized, and flexible across a wide range of gameplay and environmental use cases. Reusable pieces gave level designers a faster way to realize combat spaces, expand world building, and construct larger environments with consistency and ease.</div>
+          <div class="spatial-copy">Reusable structural pieces allowed the team to assemble and revise larger spaces while keeping the same visual language. The kit could be rearranged rather than rebuilt for each new area.</div>
         </section>
       </div>
 
@@ -2180,9 +2229,31 @@ const SPATIAL_DETAIL = {
           </div>
           <div class="spatial-stack" style="margin-top:10px">
             <div class="spatial-eyebrow">World guidance</div>
-            <div class="spatial-headline">Environmental Direction Through Form + Light</div>
-            <div class="spatial-copy">Assets are intentionally shaped to guide the player through blood-filled terrain, using contour bias and subtle bioluminescent properties to create directional flow. Rather than explicit markers, the environment itself becomes the navigation system, leading players through the unique biodome of this hellish world.</div>
+            <div class="spatial-headline">Reading the Landscape</div>
+            <div class="spatial-copy">From above, the relationship between terrain, bridges, and clearings becomes easier to see. Those larger shapes helped organize routes through the overgrown landscape.</div>
           </div>
+        </section>
+
+        <section class="spatial-section thwt-added-section" aria-label="Spatial composition and architectural landmarks">
+          <div class="spatial-eyebrow">Environment design / Spatial composition</div>
+          <div class="spatial-headline">Architecture and Landmarks</div>
+          <div class="spatial-copy thwt-section-intro">The industrial district offered a different kind of space: stacked buildings, suspended walkways, and routes that move vertically as well as across the ground. Its density is part of the atmosphere, but the larger structural elements also help establish its layout.</div>
+          <figure class="thwt-added-figure thwt-city-feature">
+            <div class="thwt-added-media"><img src="./images/THWT_city_dark.png" loading="lazy" alt="Industrial city at dusk with illuminated windows, layered walkways, and atmospheric haze"></div>
+            <figcaption class="spatial-caption">Industrial city / Structure, scale, and depth</figcaption>
+          </figure>
+          <div class="spatial-copy thwt-section-intro">The closer views reveal two approaches to orientation. In the garden, an arch frames a destination along the path; in the city, platforms and connected structures suggest opportunities to climb and cross between levels.</div>
+          <div class="thwt-world-grid thwt-path-pair">
+            <figure class="thwt-added-figure">
+              <div class="thwt-added-media"><img src="./images/THWT_Path1.png" loading="lazy" alt="Bioluminescent garden approach leading toward a pointed archway"></div>
+              <figcaption class="spatial-caption">Garden approach / Archway and path</figcaption>
+            </figure>
+            <figure class="thwt-added-figure">
+              <div class="thwt-added-media"><img src="./images/THWT_Path2.png" loading="lazy" alt="Industrial city detail with layered platforms, bridges, and visual hints for climbing"></div>
+              <figcaption class="spatial-caption">City detail / Climb cues and circulation</figcaption>
+            </figure>
+          </div>
+          <div class="thwt-arch-note">Despite their different forms, both environments rely on recognizable thresholds, changes in elevation, and selective lighting to give players a way through.</div>
         </section>
 
         <section class="spatial-section" style="margin-top:28px">
@@ -2194,14 +2265,14 @@ const SPATIAL_DETAIL = {
                 <img src="./images/SD_THWT_Mod_1.jpg" alt="Sintral Park modular greenhouse architecture kit">
               </div>
               <div class="thwt-production-title">Modular Architecture</div>
-              <div class="thwt-production-copy">Reusable arches, columns, stairs, platforms, and structural elements developed as a modular environment kit for rapid world building and visual consistency.</div>
+              <div class="thwt-production-copy">A kit of arches, columns, stairs, and platforms provided the basic architectural framework, with parts that could be recombined across the environment.</div>
             </div>
             <div class="thwt-production-card">
               <div class="thwt-production-media">
                 <img src="./images/SD_THWT_Action.jpg" alt="Sintral Park modular architecture integrated into final gameplay environment">
               </div>
               <div class="thwt-production-title">In-Game Integration</div>
-              <div class="thwt-production-copy">The kit was assembled with lighting, foliage, materials, and gameplay elements to create a cohesive greenhouse environment with clear spatial framing.</div>
+              <div class="thwt-production-copy">In the finished game, those parts sit alongside foliage, lighting, and gameplay elements, turning the kit into an inhabited space rather than an isolated asset collection.</div>
             </div>
           </div>
         </section>
@@ -2215,7 +2286,7 @@ const SPATIAL_DETAIL = {
                 <source src="./videos/Sintral_Park_Flythrough_web.mp4" type="video/mp4">
               </video>
             </div>
-            <div class="spatial-copy">A slower cinematic pass through the finished environment, showing the modular architecture, authored assets, lighting, materials, and spatial composition working together in the shipped world.</div>
+            <div class="spatial-copy">A moving view through Sintral Park, showing how the built forms, vegetation, and lighting come together across different areas of the level.</div>
           </div>
         </section>
 
@@ -2228,10 +2299,14 @@ const SPATIAL_DETAIL = {
                 <source src="./videos/THWT_Spice.mp4" type="video/mp4">
               </video>
             </div>
-            <div class="spatial-copy">A final gameplay-facing reel showing the environments in motion with the player present—bringing the asset work, level composition, materials, lighting, and shipped experience together as one closing view of the project.</div>
+            <div class="spatial-copy">Gameplay footage places the environments back in their intended context, with the player moving through the spaces and encountering their changes in scale and character.</div>
           </div>
         </section>
 
+        <section class="spatial-section thwt-shipped-proof">
+          <div class="thwt-proof-media"><img src="./images/SD_THWT_Steam.jpg?v=2" alt="To Hell With It Steam listing"></div>
+          <div class="thwt-proof-copy"><div class="spatial-eyebrow">Shipped title / 2021</div><div class="spatial-headline">Released on Steam</div><div class="spatial-copy"><em>To Hell With It</em> was released on Steam in 2021. The images and breakdowns above document a selection of my environment-art contributions.</div><a class="thwt-steam-link" href="https://store.steampowered.com/app/1567740/To_Hell_With_It/" target="_blank" rel="noopener noreferrer">View on Steam →</a></div>
+        </section>
       <div class="detail-close-row"><button class="detail-close" type="button">Close detail</button></div>
     </div>`,
 

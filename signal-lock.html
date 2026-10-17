@@ -857,6 +857,301 @@ position: relative;
     100% { opacity: 0; transform: scaleX(1); }
   }
 
+
+/* Unified header styling: mirrors the home page while retaining
+   Signal Lock's previous/next project controls. */
+.site-header {
+  position:fixed; inset:0 0 auto 0; height:110px; z-index:1100;
+  background:linear-gradient(180deg,rgba(2,2,4,.99) 70%,rgba(2,2,4,.93));
+  backdrop-filter:blur(2px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.site-header::after {
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(240,220,180,.22),transparent);
+}
+.site-header .header-inner {
+  width:min(1320px,calc(100vw - 64px)); height:100%; margin:0 auto;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:start;padding-top:20px;
+}
+.site-header .brand {justify-self:center;text-align:center;text-decoration:none;color:inherit;}
+.site-header #name {
+  font-family:'Inter',sans-serif;font-size:22px;line-height:1;letter-spacing:.28em;
+  text-transform:uppercase;font-weight:400;display:inline-block;position:relative;
+  color:rgba(255,255,255,.92);
+}
+.site-header #name::after {
+  content:"";position:absolute;left:0;right:0;bottom:-8px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(240,220,180,.72),transparent);
+  animation:none;
+}
+.site-header #name-sub {
+  margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.24em;
+  text-transform:uppercase;color:rgba(240,220,180,.78);font-weight:400;
+}
+.site-header .header-back,.site-header .header-next {
+  align-self:start;margin-top:20px;font-family:'DM Mono',monospace;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.50);
+}
+.site-header .header-back:hover,.site-header .header-next:hover {
+  color:rgba(240,220,180,.95);
+}
+.signal-site-nav {
+  position:absolute;bottom:0;left:0;right:0;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.signal-nav-link {
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.24em;
+  text-transform:uppercase;white-space:nowrap;padding:0 48px;height:40px;
+  display:flex;align-items:center;color:rgba(255,255,255,.38);
+  transition:color .22s ease,background .28s ease;
+}
+.signal-nav-link:hover {color:rgba(255,255,255,.82);background:rgba(240,220,180,.035);}
+.signal-nav-link.active {color:rgba(240,220,180,.96);background:linear-gradient(180deg,rgba(240,220,180,.115),rgba(240,220,180,.045));}
+.signal-nav-divider {width:1px;height:14px;background:rgba(255,255,255,.08);flex-shrink:0;}
+@media(max-width:900px){
+  .site-header .header-inner{width:calc(100vw - 28px);grid-template-columns:1fr;justify-items:center;padding-top:12px;}
+  .site-header .header-back,.site-header .header-next{display:none;}
+  .site-header #name{font-size:18px;}
+  .site-header #name-sub{font-size:8px;letter-spacing:.12em;}
+  .signal-site-nav{overflow-x:auto;justify-content:flex-start;}
+  .signal-nav-link{padding:0 18px;font-size:9px;}
+}
+
+
+/* Index header source CSS — copied from index, scoped to Signal Lock */
+.site-header .site-header {
+    position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50;
+    background:linear-gradient(180deg, rgba(2,2,4,0.99) 70%, rgba(2,2,4,0.93));
+    backdrop-filter:blur(2px);
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+.site-header .site-header::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.22), transparent);
+  }
+.site-header .header-inner {
+    width:var(--content-width); height:100%; margin:0 auto;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:start; padding-top:20px;
+  }
+.site-header .brand {justify-self:center; text-align:center; display:block}
+.site-header .header-left-controls {justify-self:start; display:flex; align-items:center; margin-top:20px}
+.site-header #name {
+    font-size:22px; line-height:1; letter-spacing:0.28em; text-transform:uppercase; font-weight:400;
+    display:inline-block; position:relative;
+  }
+.site-header #name::after {
+    content:""; position:absolute; left:0; right:0; bottom:-8px; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(var(--accent),0.72), transparent);
+  }
+.site-header #name-sub {margin-top:14px; font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(var(--accent),0.78)}
+.site-header .header-controls {
+    justify-self:end;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+    margin-top:20px;
+    position:relative;
+  }
+.site-header .audio-toggle,
+  .contact-trigger {
+    border:none;
+    background:none;
+    color:var(--text-dim);
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:10px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    padding:0;
+  }
+.site-header .audio-toggle {color:rgba(120,255,185,0.9)}
+.site-header .audio-toggle.is-off {color:rgba(255,170,80,0.88)}
+.site-header .audio-dot {
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(120,255,185,0.95);
+    box-shadow:0 0 10px rgba(120,255,185,0.18);
+    flex-shrink:0;
+  }
+.site-header .audio-toggle.is-off .audio-dot {
+    background:rgba(255,170,80,0.95);
+    box-shadow:0 0 10px rgba(255,170,80,0.16);
+  }
+.site-header .audio-toggle:hover,
+  .contact-trigger:hover {color:rgba(var(--accent),0.95)}
+.site-header .contact-menu-wrap {position:relative}
+.site-header .contact-dropdown {
+    position:absolute;
+    top:100%;
+    right:0;
+    margin-top:12px;
+    width:max-content;
+    min-width:0;
+    border:1px solid rgba(255,255,255,0.10);
+    background:rgba(10,12,16,0.975);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    padding:12px 16px;
+    display:grid;
+    gap:10px;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(-6px);
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:70;
+  }
+.site-header .contact-menu-wrap.open .contact-dropdown {
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+  }
+.site-header .contact-link-item {
+    font-size:10px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.62);
+    padding:4px 0;
+    text-align:right;
+  }
+.site-header .contact-link-item:hover {color:rgba(var(--accent),0.92)}
+.site-header .pw-row {
+    display:grid;
+    gap:8px;
+    justify-items:end;
+    padding-top:4px;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+.site-header .pw-label {
+    font-size:9px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:rgba(255,140,90,0.82);
+  }
+.site-header .pw-input {
+    width:132px;
+    background:none;
+    border:none;
+    border-bottom:1px solid rgba(255,120,80,0.45);
+    color:rgba(255,210,190,0.92);
+    font-size:10px;
+    letter-spacing:0.16em;
+    text-align:right;
+    outline:none;
+    padding:2px 0;
+  }
+.site-header .pw-input::placeholder {color:rgba(255,120,80,0.45)}
+.site-header .pw-lock {
+    border:none;
+    background:none;
+    color:rgba(255,120,80,0.88);
+    padding:0;
+    width:18px;
+    height:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+.site-header .pw-lock-icon {
+    display:inline-block;
+    width:8px;
+    height:9px;
+    border:1.5px solid currentColor;
+    border-radius:1px;
+    position:relative;
+  }
+.site-header .pw-lock-icon::before {
+    content:"";
+    position:absolute;
+    top:-6px;
+    left:-1px;
+    width:8px;
+    height:6px;
+    border:1.5px solid currentColor;
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
+  }
+.site-header .site-nav {
+    position:absolute; bottom:0; left:0; right:0; height:40px;
+    display:flex; align-items:center; justify-content:center;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+.site-header .site-nav-item { position:relative; display:flex; align-items:center; }
+.site-header .site-nav-sep { width:1px; height:14px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+.site-header .site-nav-btn {
+    border:none; background:transparent; color:rgba(255,255,255,0.38);
+    font-family:"DM Mono",monospace; font-size:12px; letter-spacing:0.24em; text-transform:uppercase;
+    padding:0 48px; height:40px; white-space:nowrap;
+    display:flex; align-items:center; gap:7px;
+    transition:color .22s ease, background .28s ease, box-shadow .28s ease;
+  }
+.site-header .site-nav-btn:hover { color:rgba(255,255,255,0.82); background:rgba(var(--accent),0.035); }
+.site-header .site-nav-btn.active {
+    color:rgba(var(--accent),0.96);
+    background:linear-gradient(180deg, rgba(var(--accent),0.115), rgba(var(--accent),0.045));
+    box-shadow:inset 0 1px rgba(var(--accent),0.20), inset 0 -1px rgba(var(--accent),0.10);
+  }
+.site-header .site-nav-btn.has-drop::after {
+    content:""; width:0; height:0;
+    border-left:3px solid transparent; border-right:3px solid transparent;
+    border-top:4px solid currentColor; opacity:0.5; transition:transform .18s ease;
+  }
+.site-header .site-nav-item.drop-open .site-nav-btn.has-drop::after { transform:rotate(180deg); }
+.site-header .site-nav-drop {
+    position:absolute; top:calc(100% + 2px); left:50%;
+    transform:translateX(-50%) translateY(-6px);
+    min-width:190px; background:rgba(4,4,6,0.98);
+    border:1px solid rgba(255,255,255,0.09);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    padding:6px 0; opacity:0; pointer-events:none;
+    transition:opacity .16s ease, transform .16s ease; z-index:80;
+  }
+.site-header .site-nav-item.drop-open .site-nav-drop { opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+.site-header .site-nav-drop-item {
+    display:flex; align-items:center; gap:10px; width:100%; padding:9px 18px; border:none; background:none;
+    font-family:"DM Mono",monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+    color:rgba(255,255,255,0.46); text-align:left; white-space:nowrap;
+    transition:color .18s ease, background .18s ease, padding-left .18s ease;
+  }
+.site-header .site-nav-drop-item::before {
+    content:""; width:5px; height:5px; border-radius:50%; flex:0 0 5px;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.92) 0 12%, rgba(var(--accent),.88) 28%, rgba(var(--accent),.34) 62%, rgba(var(--accent),.08) 100%);
+    box-shadow:0 0 0 1px rgba(var(--accent),.18), 0 0 8px rgba(var(--accent),.10);
+    opacity:.58; transform:scale(.9);
+    transition:opacity .18s ease, transform .18s ease, box-shadow .18s ease;
+  }
+.site-header .site-nav-drop-item:hover { color:rgba(var(--accent),0.94); background:rgba(var(--accent),0.035); padding-left:20px; }
+.site-header .site-nav-drop-item:hover::before {
+    opacity:1; transform:scale(1.18);
+    box-shadow:0 0 0 1px rgba(var(--accent),.30), 0 0 10px rgba(var(--accent),.22);
+  }
+.site-header { --accent:240, 220, 180; --text-dim:rgba(255,255,255,.52); --content-width:min(1320px, calc(100vw - 64px)); --header-h:110px; }
+.site-header .header-inner{align-items:start;padding-top:20px;}
+.site-header #name{font-family:'Inter',sans-serif;font-size:22px;line-height:1;letter-spacing:.28em;font-weight:400;animation:none;}
+.site-header #name::after{animation:none;bottom:-8px;background:linear-gradient(90deg,transparent,rgba(240,220,180,.72),transparent);}
+.site-header #name-sub{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.24em;margin-top:14px;font-weight:400;color:rgba(240,220,180,.78);}
+.site-header .brand{display:block;}
+.site-header .site-nav-btn{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.24em;text-decoration:none;}
+.site-header .site-nav-btn.has-drop::after{display:none;}
+.site-header .site-nav-btn.has-drop::after{display:block;}
+@media(max-width:900px){.site-header .header-inner{grid-template-columns:1fr;justify-items:center;padding-top:18px}.site-header .header-left-controls,.site-header .header-controls{display:none}.site-header #name{font-size:18px}.site-header #name-sub{font-size:9px}.site-header .site-nav{overflow-x:auto;justify-content:flex-start}.site-header .site-nav-btn{padding:0 20px;font-size:10px}}
+
+/* Exact home header container and decorative line */
+.site-header{position:fixed;inset:0 0 auto 0;height:110px;z-index:1100;background:linear-gradient(180deg,rgba(2,2,4,.99) 70%,rgba(2,2,4,.93));backdrop-filter:blur(2px);border-bottom:1px solid rgba(255,255,255,.05);}
+.site-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(240,220,180,.22),transparent);}
+.site-header .header-inner{width:min(1320px,calc(100vw - 64px));height:100%;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;padding-top:20px;}
+.site-header .site-nav{position:absolute;bottom:0;left:0;right:0;height:40px;display:flex;align-items:center;justify-content:center;border-top:1px solid rgba(255,255,255,.06)}
+.site-header .site-nav-item{position:relative;display:flex;align-items:center}
+.site-header .site-nav-sep{width:1px;height:14px;background:rgba(255,255,255,.08);flex-shrink:0}
+.site-header .site-nav-btn{border:none;background:transparent;color:rgba(255,255,255,.38);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;padding:0 48px;height:40px;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:color .22s ease,background .28s ease,box-shadow .28s ease}
+.site-header .site-nav-btn.active{color:rgba(240,220,180,.96);background:linear-gradient(180deg,rgba(240,220,180,.115),rgba(240,220,180,.045));box-shadow:inset 0 1px rgba(240,220,180,.2),inset 0 -1px rgba(240,220,180,.1)}
+.site-header .site-nav-btn:hover{color:rgba(255,255,255,.82);background:rgba(240,220,180,.035)}
 </style>
 </head>
 <body>
@@ -864,13 +1159,43 @@ position: relative;
 
 <header class="site-header">
   <div class="header-inner">
-    <a class="header-back" href="index.html#xr-systems" id="header-back-link">← XR Systems</a>
-    <a class="brand" href="index.html" style="text-decoration:none;color:inherit;cursor:pointer;">
+    <div class="header-left-controls">
+      <button class="audio-toggle mono" id="audio-toggle" type="button" aria-pressed="true">
+        <span class="audio-dot"></span>
+        <span class="audio-state">Audio On</span>
+      </button>
+    </div>
+    <a href="index.html" class="brand">
       <div id="name">Nicholas Lowe</div>
-      <div id="name-sub" class="mono">Technical Artist • XR Systems • Environment Design</div>
+      <div id="name-sub" class="mono">Design Technologist • XR Systems • Interactive Environments</div>
     </a>
-    <a class="header-next" href="spatial-companion.html" id="header-next-link">Spatial Companion →</a>
+    <div class="header-controls" id="header-controls">
+      <div class="contact-menu-wrap" id="contact-menu-wrap">
+        <button class="contact-trigger mono" id="contact-trigger" type="button" aria-expanded="false">Contact</button>
+        <div class="contact-dropdown" id="contact-dropdown">
+          <a class="contact-link-item mono" href="https://www.linkedin.com/in/nicholas-lowe-2a400135/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="contact-link-item mono" href="https://github.com/whiteylowe" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="contact-link-item mono" href="mailto:nicklowe3d@gmail.com">Email</a>
+          <div class="pw-row" id="pw-row" hidden>
+            <span class="pw-label mono">Password Protected</span>
+            <input id="pw-input" class="pw-input mono" type="password" placeholder="Password" maxlength="24" />
+            <button class="pw-lock" id="pw-lock" type="button" aria-label="Locked">
+              <span class="pw-lock-icon"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <nav class="site-nav" id="site-nav" aria-label="Site navigation">
+  <div class="site-nav-item"><a class="site-nav-btn mono has-drop active" href="index.html">XR Systems</a></div>
+  <div class="site-nav-sep"></div>
+  <div class="site-nav-item"><a class="site-nav-btn mono has-drop" href="index.html">Spatial Designs</a></div>
+  <div class="site-nav-sep"></div>
+  <div class="site-nav-item"><a class="site-nav-btn mono has-drop" href="index.html">Research</a></div>
+  <div class="site-nav-sep"></div>
+  <div class="site-nav-item"><a class="site-nav-btn mono" href="index.html">About</a></div>
+</nav>
 </header>
 
 
@@ -1270,6 +1595,15 @@ document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 
 
 
+</script>
+<script>
+(() => {
+ const contact=document.getElementById('contact-menu-wrap');
+ const trigger=document.getElementById('contact-trigger');
+ if(contact&&trigger){trigger.addEventListener('click',(e)=>{e.stopPropagation();const open=contact.classList.toggle('open');trigger.setAttribute('aria-expanded',String(open));});document.addEventListener('click',(e)=>{if(!contact.contains(e.target)){contact.classList.remove('open');trigger.setAttribute('aria-expanded','false');}});}
+ const audio=document.getElementById('audio-toggle');
+ if(audio){const videos=()=>[...document.querySelectorAll('video')];const setAudio=(enabled)=>{videos().forEach(v=>v.muted=!enabled);audio.classList.toggle('is-off',!enabled);audio.setAttribute('aria-pressed',String(enabled));const label=audio.querySelector('.audio-state');if(label)label.textContent=enabled?'Audio On':'Audio Off';};setAudio(false);audio.addEventListener('click',()=>setAudio(audio.getAttribute('aria-pressed')!=='true'));}
+})();
 </script>
 </body>
 </html>
