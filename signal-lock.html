@@ -1152,6 +1152,107 @@ position: relative;
 .site-header .site-nav-btn{border:none;background:transparent;color:rgba(255,255,255,.38);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;padding:0 48px;height:40px;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:color .22s ease,background .28s ease,box-shadow .28s ease}
 .site-header .site-nav-btn.active{color:rgba(240,220,180,.96);background:linear-gradient(180deg,rgba(240,220,180,.115),rgba(240,220,180,.045));box-shadow:inset 0 1px rgba(240,220,180,.2),inset 0 -1px rgba(240,220,180,.1)}
 .site-header .site-nav-btn:hover{color:rgba(255,255,255,.82);background:rgba(240,220,180,.035)}
+
+
+/* Signal Lock narrative pass — scoped to case-study content, header preserved */
+#content {
+  --cyan:#75DFFF;
+  --cyan-dim:rgba(117,223,255,.78);
+  --cyan-faint:rgba(117,223,255,.26);
+  --white:rgba(248,251,253,.95);
+  --white-mid:rgba(225,235,241,.77);
+  --white-dim:rgba(219,232,239,.66);
+  --border:rgba(184,220,237,.14);
+}
+#content .hero {grid-template-columns:minmax(0,1fr) minmax(300px,430px);gap:64px;min-height:460px;}
+#content .hero-title {font-size:clamp(52px,5vw,72px);line-height:.98;}
+#content .hero-eyebrow {font-size:10px;letter-spacing:.23em;color:var(--cyan);}
+#content .hero-subtitle {font-size:12px;letter-spacing:.14em;line-height:1.65;max-width:460px;margin-bottom:22px;}
+#content .hero-meta-label {font-size:10px;color:var(--cyan);letter-spacing:.2em;margin-bottom:10px;}
+#content .hero-meta-text {font-size:15px;line-height:1.7;color:rgba(245,250,253,.88);max-width:445px;}
+#content .hero-story {padding:25px 27px;background:linear-gradient(120deg,rgba(3,9,14,.56),rgba(3,9,14,.12));border-left:1px solid rgba(117,223,255,.32);backdrop-filter:blur(3px);}
+#content .hero-story .hero-meta-block:last-child {margin-bottom:0;}
+#content .hero-bg-video::after {background:linear-gradient(180deg,rgba(5,5,7,.57),rgba(5,5,7,.32) 40%,rgba(5,5,7,.87)),linear-gradient(90deg,rgba(5,5,7,.38),rgba(5,5,7,.09) 50%,rgba(5,5,7,.44));}
+#content .tool-tag {font-size:9px;letter-spacing:.12em;padding:6px 10px;color:var(--cyan-dim);border-color:rgba(117,223,255,.25);}
+#content .hero-demo-link {display:inline-flex;gap:12px;align-items:center;margin-top:24px;padding:10px 0;border-bottom:1px solid rgba(117,223,255,.48);text-decoration:none;color:#C7F0FF;font:400 10px 'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase;transition:color .2s, border-color .2s;}
+#content .hero-demo-link:hover {color:white;border-color:white;}
+#content .section {margin-bottom:76px;}
+#content .section-label {font-size:12px;letter-spacing:.24em;color:var(--cyan);margin-bottom:23px;}
+#content .media-heading {display:flex;justify-content:space-between;gap:20px;align-items:center;margin:0 0 16px;font:400 11px 'DM Mono',monospace;letter-spacing:.17em;text-transform:uppercase;}
+#content .media-index {color:var(--cyan);}
+#content .media-context {color:var(--white-mid);font-size:10px;}
+#content .media-caption {font-size:14px;line-height:1.7;color:var(--white-mid);margin-top:17px;max-width:820px;}
+#content .section-intro {font-size:15px;line-height:1.8;max-width:860px;margin-bottom:24px;color:var(--white-mid);font-weight:300;}
+#content .section-intro strong {font-weight:400;color:var(--white);}
+#content .sequence-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+#content .sequence-step {position:relative;min-height:202px;border:1px solid rgba(117,223,255,.18);background:linear-gradient(150deg,rgba(117,223,255,.07),rgba(255,255,255,.012) 66%);padding:24px 20px 25px;}
+#content .sequence-step:not(:last-child)::after {content:'→';font:400 18px 'DM Mono',monospace;color:var(--cyan);position:absolute;right:-17px;top:42px;z-index:4;text-shadow:0 0 7px #050507;background:#050507;width:20px;text-align:center;}
+#content .sequence-number {color:var(--cyan);font:400 11px 'DM Mono',monospace;letter-spacing:.14em;display:flex;gap:13px;align-items:center;margin-bottom:25px;}
+#content .sequence-number span {color:rgba(200,231,242,.72);font-size:9px;letter-spacing:.09em;}
+#content .sequence-title {font-size:16px;color:var(--white);margin-bottom:10px;font-weight:400;}
+#content .sequence-step p {font-size:13px;line-height:1.7;color:var(--white-mid);}
+#content .sequence-note {display:flex;align-items:center;gap:10px;margin-top:16px;color:rgba(195,216,227,.62);font:400 10px 'DM Mono',monospace;letter-spacing:.035em;line-height:1.6;}
+#content .status-dot {height:5px;width:5px;border-radius:50%;flex-shrink:0;background:var(--cyan);box-shadow:0 0 10px rgba(117,223,255,.45);}
+#content .prototype-emphasis {gap:18px;background:transparent;}
+#content .prototype-emphasis .proto-card {border:1px solid var(--border);padding:34px 30px;}
+#content .proto-title {font-size:20px;line-height:1.35;color:var(--white);margin:11px 0 14px;}
+#content .proto-text {font-size:14px;line-height:1.75;color:var(--white-mid);}
+#content .proto-link {font-size:10px;letter-spacing:.12em;color:var(--cyan);margin-bottom:13px;border-bottom:1px solid rgba(117,223,255,.42);padding-bottom:7px;}
+#content .prototype-status,#content .proto-concept-label {font:400 10px 'DM Mono',monospace;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;line-height:1.6;}
+#content .prototype-status-muted {color:rgba(221,232,239,.6);}
+#content .proto-concept-label {font-size:10px;text-transform:none;letter-spacing:.04em;color:var(--white-mid);min-height:29px;}
+#content .proto-tag {font-size:10px;letter-spacing:.09em;color:var(--cyan-dim);}
+#content .proto-img {margin-top:22px;height:260px;}
+#content .proto-img img {opacity:1;}
+#content .split-media-copy {grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);gap:22px;align-items:stretch;}
+#content .split-copy-card {padding:32px;}
+#content .split-copy-kicker {font:400 10px 'DM Mono',monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:22px;}
+#content .split-copy-body {font-size:14px;line-height:1.77;color:var(--white-mid);}
+#content .split-copy-body strong {font-weight:400;color:var(--white);}
+#content .feature-showcase {margin-bottom:76px;}
+#content .feature-grid {gap:14px;}
+#content .feature-img {aspect-ratio:4/4.7;}
+#content .feature-body {padding:23px 20px 25px;}
+#content .feature-title {font-size:15px;margin-bottom:7px;}
+#content .feature-sub {font-size:10px;letter-spacing:.075em;line-height:1.6;color:var(--cyan);}
+#content .feature-text {font-size:13px;line-height:1.75;color:var(--white-mid);}
+#content .reticle-intro {font-size:15px;line-height:1.8;color:var(--white-mid);max-width:850px;margin-bottom:25px;}
+#content .contain-media-grid {gap:18px;}
+#content .evidence-grid {gap:18px;}
+#content .evidence-panel {border:1px solid var(--border);background:rgba(255,255,255,.014);padding:32px 31px;}
+#content .evidence-kicker {font:400 10px 'DM Mono',monospace;letter-spacing:.18em;color:var(--cyan);margin-bottom:15px;}
+#content .evidence-panel:last-child .evidence-kicker {color:rgba(235,225,198,.82);}
+#content .impl-lead {font-size:15px;line-height:1.75;color:var(--white);margin-bottom:20px;}
+#content .impl-list {gap:11px;}
+#content .impl-list li {font-size:13px;line-height:1.75;color:var(--white-mid);}
+#content .closing-note {max-width:850px;font-size:15px;line-height:1.8;color:var(--white-mid);margin-top:23px;}
+@media(max-width:1100px) {
+  #content .hero {grid-template-columns:minmax(0,1fr) minmax(280px,.9fr);gap:32px;padding:60px 42px;}
+  #content .section{padding-left:42px;padding-right:42px;}
+  #content .sequence-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #content .sequence-step:nth-child(2)::after{display:none;}
+}
+@media(max-width:750px) {
+  #content {padding-top:140px;}
+  #content .hero {grid-template-columns:1fr;gap:32px;padding:55px 25px;}
+  #content .hero-title {font-size:52px;}
+  #content .hero-story {padding:18px 20px;}
+  #content .section {padding-left:22px;padding-right:22px;margin-bottom:60px;}
+  #content .section-label {font-size:11px;letter-spacing:.16em;}
+  #content .media-heading {flex-wrap:wrap;}
+  #content .sequence-grid,#content .prototype-emphasis,#content .split-media-copy,#content .evidence-grid,#content .contain-media-grid {grid-template-columns:1fr;}
+  #content .sequence-step {min-height:0;}
+  #content .sequence-step::after {display:none;}
+  #content .feature-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #content .feature-img {aspect-ratio:1/1;}
+  #content .bottom-nav {padding:35px 22px;}
+}
+@media(max-width:490px) {
+  #content .feature-grid {grid-template-columns:1fr;}
+  #content .feature-img {aspect-ratio:16/10;}
+  #content .hero-meta-text {font-size:14px;}
+}
+
 </style>
 </head>
 <body>
@@ -1209,77 +1310,115 @@ position: relative;
 <main id="content">
 <div id="top"></div>
 
-  <!-- Hero -->
+  <!-- Hero: a human task, not an abstract perceptual claim -->
   <div class="hero">
-  <div class="hero-bg-video">
-    <video autoplay muted loop playsinline preload="auto">
-      <source src="./videos/Signal_Drone.mp4" type="video/mp4">
-    </video>
-  </div>
-
+    <div class="hero-bg-video">
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="./videos/Signal_Drone.mp4" type="video/mp4">
+      </video>
+    </div>
     <div>
-      <div class="hero-eyebrow">XR Systems &nbsp;/&nbsp; Perceptual Interface</div>
+      <div class="hero-eyebrow">XR Systems &nbsp;/&nbsp; Cross-Device Interaction</div>
       <h1 class="hero-title">Signal<br>Lock</h1>
-      <div class="hero-subtitle">Multi-Surface Perceptual Interface Studies</div>
+      <div class="hero-subtitle">Drone navigation across tablet and wearable AR</div>
       <div class="tools-strip">
-        <span class="tool-tag">HTML Canvas</span>
-        <span class="tool-tag">Procedural UI</span>
+        <span class="tool-tag">JavaScript + Canvas</span>
+        <span class="tool-tag">Interactive UI</span>
         <span class="tool-tag">Motion Design</span>
-        <span class="tool-tag">Real-time Rendering</span>
+        <span class="tool-tag">XR Concept Study</span>
       </div>
+      <a class="hero-demo-link" href="https://whiteylowe.github.io/Signal-Lock/" target="_blank" rel="noopener noreferrer">Explore browser prototype <span aria-hidden="true">↗</span></a>
     </div>
-    <div>
+    <div class="hero-story">
       <div class="hero-meta-block">
-        <div class="hero-meta-label">Problem</div>
-        <div class="hero-meta-text">Autonomous perception systems must resolve visual complexity while preserving operator clarity across both anchored devices and egocentric displays.</div>
+        <div class="hero-meta-label">The scenario</div>
+        <div class="hero-meta-text">Plan a drone's route on a tablet, then look up and refine its destination through wearable AR—without losing the target or the task.</div>
       </div>
       <div class="hero-meta-block">
-        <div class="hero-meta-label">Focus</div>
-        <div class="hero-meta-text">Visual hierarchy, attention guidance, and interaction coherence across changing interface scales.</div>
+        <div class="hero-meta-label">The design question</div>
+        <div class="hero-meta-text">How can an instruction move from a screen-based overview into the physical world, while keeping its meaning and feedback intact?</div>
       </div>
     </div>
   </div>
 
-  <!-- Primary video -->
-  <div class="section" style="margin-top:64px;">
+    <!-- Primary video: tablet-side planning / visual study -->
+  <div class="section primary-film" style="margin-top:64px;">
+    <div class="media-heading"><span class="media-index">01 / TABLET OVERVIEW</span><span class="media-context">Survey · select · assign a task</span></div>
     <div class="video-wrap tilt-video" id="signal-lock-hero-video">
       <video autoplay muted loop playsinline>
         <source src="./videos/X_Signal_Lock_1.mp4" type="video/mp4">
       </video>
     </div>
+    <p class="media-caption">The larger control surface keeps the broader environment visible: locations, possible routes, scans, and the drone's task state. The interface film illustrates the intended workflow.</p>
   </div>
 
-  <!-- Exploration -->
-  <div class="section fade-up">
-    <div class="section-label">Exploration</div>
-    <div class="pef-grid">
-      <div class="pef-cell">
-        <div class="pef-key">Control Surface Mode</div>
-        <div class="pef-text">Scanning, targeting, and trajectory feedback expand across space.
-Complexity is distributed and visible.</div>
+    <!-- Interaction storyboard: these are proposed connected steps, not a hardware-integrated demo -->
+  <div class="section fade-up interaction-sequence">
+    <div class="section-label">One task, two views</div>
+    <p class="section-intro"><strong>Go to the shoreline. Inspect that area. Move a little closer.</strong> Signal Lock explores how those simple instructions could travel between a map and the operator's own field of view.</p>
+    <div class="sequence-grid">
+      <div class="sequence-step">
+        <div class="sequence-number">01 <span>PLAN / TABLET</span></div>
+        <div class="sequence-title">Choose a destination</div>
+        <p>Survey the site, place a waypoint, and assign a drone task from the larger map.</p>
       </div>
-      <div class="pef-cell">
-        <div class="pef-key">Wearable AR Mode</div>
-        <div class="pef-text">The same logic compresses into attention, timing, and reticle stability.
-Complexity is reduced to selective cues.</div>
+      <div class="sequence-step">
+        <div class="sequence-number">02 <span>TRANSFER / SHARED INTENT</span></div>
+        <div class="sequence-title">Carry the target forward</div>
+        <p>The proposed AR view retains the chosen destination and task, rather than starting over.</p>
       </div>
-      <div class="pef-cell">
-        <div class="pef-key">Coherence Across Scales</div>
-        <div class="pef-text">The system does not change.
-Only its presentation adapts across scale.</div>
+      <div class="sequence-step">
+        <div class="sequence-number">03 <span>REFINE / WEARABLE AR</span></div>
+        <div class="sequence-title">Adjust it in the world</div>
+        <p>Look toward the location, refine the target, and confirm the adjustment intentionally.</p>
+      </div>
+      <div class="sequence-step">
+        <div class="sequence-number">04 <span>RESPOND / FEEDBACK</span></div>
+        <div class="sequence-title">Stay oriented</div>
+        <p>Progress, scanning, arrival, and cancellation cues remain understandable at either scale.</p>
+      </div>
+    </div>
+    <div class="sequence-note"><span class="status-dot"></span> Proposed cross-device scenario — illustrated through separate browser UI experiments and visual studies.</div>
+  </div>
+
+    <!-- Working artifacts appear near the top so the reader can inspect actual interaction -->
+  <div class="section fade-up" id="prototype-studies">
+    <div class="section-label">What I prototyped</div>
+    <p class="section-intro">I developed interactive browser-based interface studies alongside animated proposals for a two-surface drone workflow. The browser experiment demonstrates command and feedback behaviors; the AR handoff remains a design concept.</p>
+    <div class="proto-grid prototype-emphasis">
+      <div class="proto-card">
+        <div class="prototype-status">INTERACTIVE / BROWSER</div>
+        <div class="proto-title">Targeting + scan interaction</div>
+        <a class="proto-link" href="https://whiteylowe.github.io/Signal-Lock/" target="_blank" rel="noopener noreferrer">Open live browser prototype <span aria-hidden="true">↗</span></a>
+        <p class="proto-text">An HTML Canvas and JavaScript study of reticles, contextual commands, scan feedback, and animated task states. Use the live demo to explore the interface behavior.</p>
+        <div class="proto-tag">JavaScript / Canvas / Procedural UI</div>
+        <div class="proto-img">
+          <img src="./gifs/Signal_Lock_Field.gif" alt="Animated interface study with drone targeting, markers and scan feedback" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="proto-card">
+        <div class="prototype-status prototype-status-muted">VISUAL STUDY / PROPOSED SYSTEM</div>
+        <div class="proto-title">Map-to-world translation</div>
+        <div class="proto-concept-label">Interface behavior study · not a synchronized AR device demo</div>
+        <p class="proto-text">Animations explore what should stay visible as a task moves from a large control surface to a smaller, situated display: target, direction, priority, and confirmation.</p>
+        <div class="proto-tag">Information hierarchy / Motion / XR UX</div>
+        <div class="proto-img">
+          <img src="./gifs/Signal_Lock_Situated.gif" alt="Animated situated interface guidance study" onerror="this.style.display='none'">
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- AR Wearable large image after Coherence Across Scales -->
+  <!-- The visual contrast between the two views -->
   <div class="section fade-up">
-    <div class="section-label">Wearable Signal Translation</div>
+    <div class="section-label">02 / From screen to world</div>
+    <p class="section-intro">The tablet is for the big picture. Wearable AR could help at the moment a task becomes local: checking a shoreline, refining a point beyond a tree, or redirecting the drone from where the operator stands.</p>
     <div class="ar-wearable-hero">
-      <img src="./images/Ar_Wearable_1.jpg" alt="AR Wearable signal translation" onerror="this.style.display='none'">
+      <img src="./images/Ar_Wearable_1.jpg" alt="Conceptual relationship between a handheld drone-control screen and wearable AR" onerror="this.style.display='none'">
     </div>
   </div>
 
-  <!-- Perceptual exchange split -->
+  <!-- Keep the existing side-by-side interface animation, but give it a tangible situation -->
   <div class="section fade-up">
     <div class="split-media-copy">
       <div class="video-wrap">
@@ -1288,60 +1427,56 @@ Only its presentation adapts across scale.</div>
         </video>
       </div>
       <div class="split-copy-card">
+        <div class="split-copy-kicker">Shared target / different interfaces</div>
         <div class="split-copy-body">
-          <p>Signal Lock translates a single system across two conditions:</p>
-          <p>Control Surface: complexity expands through spatial distribution
-Wearable AR: complexity compresses into targeting, timing, and attention</p>
-          <p>Rather than redesigning the interface, the system preserves its logic across scale.
-
-On the monitor, trajectories and command states spread outward.
-In wearable view, those same relationships condense into reticle stability and selective cues.</p>
+          <p>Imagine selecting a coastal waypoint on the tablet. As the drone approaches, you look up through AR glasses and recognize the same target in the landscape.</p>
+          <p>Rather than navigate back through a map, you refine the instruction from your own perspective: <strong>move beyond that tree, scan this area, hold position.</strong></p>
+          <p>The interaction principle is continuity. One task should remain recognizable as the controls and available screen space change.</p>
         </div>
         <div class="split-tools">
-          <span class="tool-tag">HTML</span>
-
-          <span class="tool-tag">JavaScript</span>
-          <span class="tool-tag">Procedural UI</span>
-          <span class="tool-tag">Motion Design</span>
+          <span class="tool-tag">Command continuity</span>
+          <span class="tool-tag">Situated targeting</span>
+          <span class="tool-tag">Visual feedback</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Feature cards -- full bleed -->
-  <div style="margin-bottom:88px;">
+  <!-- Preserve all four animated studies, but connect each to a tangible UI decision -->
+  <div class="feature-showcase">
     <div class="section" style="margin-bottom:28px;">
-      <div class="section-label">Perceptual Systems</div>
+      <div class="section-label">Interface behavior studies</div>
+      <p class="section-intro">These animated studies investigate four parts of the experience. They illustrate interaction principles, not sensor-verified gaze tracking or autonomous drone perception.</p>
     </div>
     <div class="feature-grid fade-up">
       <div class="feature-card">
         <div class="feature-img">
-          <img src="./gifs/Signal_Lock_Gaze.gif" alt="Gaze Detection" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Gaze Detection</div>'">
+          <img src="./gifs/Signal_Lock_Gaze.gif" alt="Animated reticle and attention targeting concept" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Targeting study</div>'">
         </div>
         <div class="feature-body">
-          <div class="feature-title">Gaze Detection</div>
-          <div class="feature-sub">Perceptual Signal Capture</div>
-          <div class="feature-text">Perceptual signals establish stable attention anchors through continuous gaze sampling. Detection stability replaces explicit selection as the primary interaction mechanism.</div>
+          <div class="feature-title">Attention + Targeting</div>
+          <div class="feature-sub">Proposed gaze-guided selection</div>
+          <div class="feature-text">A reticle holds a candidate location in view. Looking can suggest a target; an explicit action would confirm a drone command.</div>
         </div>
       </div>
       <div class="feature-card">
         <div class="feature-img">
-          <img src="./gifs/Signal_Lock_Situated.gif" alt="Situated Operation" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Situated Operation</div>'">
+          <img src="./gifs/Signal_Lock_Situated.gif" alt="Animated context-sensitive guidance overlay" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Guidance study</div>'">
         </div>
         <div class="feature-body">
-          <div class="feature-title">Situated Operation</div>
-          <div class="feature-sub">Context Adaptive Guidance</div>
-          <div class="feature-text">System behavior adapts to environmental variability including lighting, motion, and scene interference. Perceptual guidance remains selective, preserving attention for critical spatial tasks.</div>
+          <div class="feature-title">Situated Guidance</div>
+          <div class="feature-sub">Only what matters nearby</div>
+          <div class="feature-text">A compact cue helps the operator orient to a location without reproducing the entire tablet interface.</div>
         </div>
       </div>
       <div class="feature-card">
         <div class="feature-img">
-          <img src="./gifs/Signal_Lock_Field.gif" alt="Field Resolution" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Field Resolution</div>'">
+          <img src="./gifs/Signal_Lock_Field.gif" alt="Animated drone scan sampling and markers" onerror="this.outerHTML='<div class=\'placeholder-cell\'>Scan feedback study</div>'">
         </div>
         <div class="feature-body">
-          <div class="feature-title">Field Resolution</div>
-          <div class="feature-sub">Progressive Spatial Sampling</div>
-          <div class="feature-text">Spatial understanding develops through iterative sampling and signal refinement across the visual field. Detail and confidence increase without requiring expansion of interface structure.</div>
+          <div class="feature-title">Scan + Feedback</div>
+          <div class="feature-sub">Visible task progress</div>
+          <div class="feature-text">Sampling animation and markers communicate what the drone is inspecting and how the task is progressing.</div>
         </div>
       </div>
       <div class="feature-card">
@@ -1349,96 +1484,76 @@ In wearable view, those same relationships condense into reticle stability and s
           <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"><source src="./videos/Signal_Lock_Org.mp4" type="video/mp4"></video>
         </div>
         <div class="feature-body">
-          <div class="feature-title">Field Organization</div>
-          <div class="feature-sub">Attention Hierarchy Formation</div>
-          <div class="feature-text">Visual complexity reorganizes through layered signal priority and temporal structuring. Hierarchy governs perception, allowing clarity to persist under increasing informational load.</div>
+          <div class="feature-title">Information Priority</div>
+          <div class="feature-sub">Overview vs. first-person</div>
+          <div class="feature-text">Routes and status can spread out on the tablet, while the wearable view prioritizes direction, selection, and alerts.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Perceptual Exchange -->
+  <!-- Animated Perceptual Exchange GIF remains intact -->
   <div class="section fade-up">
-    <div class="section-label">Perceptual Exchange</div>
-    <p class="reticle-intro">The same system logic operates across both surfaces -- a Control Surface for spatial command and a Wearable AR display for situated operation. Signal Lock is the perceptual bridge between them.</p>
-    <div style="width:100%; border:1px solid var(--border); overflow:hidden;">
-      <img src="./gifs/Signal_Lock_Perceptual_Exchange.gif" alt="Control Surface and Wearable AR modes" style="width:100%;display:block;opacity:0.92;" onerror="this.style.display='none'">
+    <div class="section-label">The shared interaction model</div>
+    <p class="reticle-intro">The intended relationship is not two unrelated interfaces. It's one drone task represented differently: spatial overview on the tablet and immediate direction and feedback in AR.</p>
+    <div class="perceptual-exchange-media" style="width:100%; border:1px solid var(--border); overflow:hidden;">
+      <img src="./gifs/Signal_Lock_Perceptual_Exchange.gif" alt="Animated concept of information shared between control surface and wearable AR" style="width:100%;display:block;opacity:0.92;" onerror="this.style.display='none'">
     </div>
   </div>
 
-  <!-- Interaction diagram -->
+  <!-- Existing explanatory video and original diagram retained -->
   <div class="section fade-up">
-  <div class="section-label">Interaction Loop</div>
-  <div class="contain-media-grid">
-    <div class="contain-media-frame">
-      <video autoplay muted loop playsinline preload="metadata">
-        <source src="./videos/X_Signal_Detail.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="contain-media-frame">
-      <img src="./images/Signal_Lock_Interaction_Loop.jpg" alt="Interaction Loop" onerror="this.style.display='none'">
-    </div>
-  </div>
-</div>
-
-  <!-- Perceptual design implications -->
-  <div class="section fade-up">
-    <div class="section-label">Perceptual Design Implications</div>
-    <div class="impl-grid">
-      <div>
-        <p class="impl-lead">AR systems resolve targeting and action sequencing through perceptual anchoring and behavioral hierarchy rather than interface expansion.</p>
-        <ul class="impl-list">
-          <li>Gaze anchoring replaces selection with stabilization -- the system meets attention rather than demanding it.</li>
-          <li>Hierarchy governs perception through timing and motion rather than density.</li>
-          <li>Scale reshapes perceptual organization without modifying system behavior.</li>
-        </ul>
-      </div>
-      <div class="impl-quote">
-        Across monitor-scale environments, identical system logic externalizes complexity through spatial distribution.<br><br>
-        At egocentric scale, the same logic resolves complexity through perceptual anchoring -- same model, different perceptual contract.
-      </div>
-    </div>
-  </div>
-
-  <!-- Interactive prototypes -->
-  <div style="margin-bottom:88px;">
-    <div class="section" style="margin-bottom:28px;">
-      <div class="section-label">Interactive Prototypes</div>
-    </div>
-    <div class="proto-grid fade-up">
-      <div class="proto-card">
-        <div class="proto-title">Wearable AR Display</div>
-        <a class="proto-link" href="https://whiteylowe.github.io/Signal-Lock/" target="_blank">[ Open Live Demo ] &#8599;</a>
-        <p class="proto-text">Designed for attention precision, where perceptual signals, hierarchy, and feedback must operate within a tightly bounded visual field.</p>
-        <div class="proto-tag">+ Applied Eye Tracking Principles</div>
-        <div class="proto-img">
-          <img src="./gifs/Signal_Lock_Field.gif" alt="Wearable AR field resolution" onerror="this.style.display='none'">
-        </div>
-      </div>
-      <div class="proto-card">
-        <div class="proto-title">Spatial Monitor Display</div>
-        <div class="proto-link-locked"><span class="lock-dot" aria-hidden="true"></span><span>[ Locked ]</span></div>
-        <p class="proto-text">Optimized for perceptual distribution, allowing system complexity, signal relationships, and behavioral states to externalize across expanded visual space.</p>
-        <div class="proto-tag">+ Gesture Driven Interaction</div>
-        <div class="proto-img">
-          <img src="./gifs/Signal_Lock_Situated.gif" alt="Spatial Monitor Display situated operation" onerror="this.style.display='none'">
-        </div>
-      </div>
-    </div>
-
-    <!-- Wearable AR video -->
-    <div class="section fade-up" style="margin-top:48px;">
-      <div class="section-label">Wearable AR</div>
-      <div class="video-wrap">
+    <div class="section-label">Commands, feedback + task states</div>
+    <p class="section-intro">A useful drone interface should make the next action unambiguous: select a destination, choose an operation, receive feedback, then adjust or cancel. The following studies explore visual language for those moments.</p>
+    <div class="contain-media-grid">
+      <div class="contain-media-frame">
         <video autoplay muted loop playsinline preload="metadata">
-          <source src="./videos/Ar_Wearables_2.mp4" type="video/mp4">
+          <source src="./videos/X_Signal_Detail.mp4" type="video/mp4">
         </video>
       </div>
+      <div class="contain-media-frame">
+        <img src="./images/Signal_Lock_Interaction_Loop.jpg" alt="Concept diagram of the interaction loop linking a drone, control surface and wearable display" onerror="this.style.display='none'">
+      </div>
     </div>
-
   </div>
 
-  <!-- Bottom nav -->
+  <!-- Transparent statement of project scope -->
+  <div class="section fade-up" id="project-scope">
+    <div class="section-label">Built / Next to test</div>
+    <div class="impl-grid evidence-grid">
+      <div class="evidence-panel">
+        <div class="evidence-kicker">BUILT / INTERACTIVE UI STUDIES</div>
+        <p class="impl-lead">A set of browser-based experiments in targeting, contextual commands, scan sequences, and animated response.</p>
+        <ul class="impl-list">
+          <li>HTML Canvas and JavaScript interaction experiments.</li>
+          <li>Procedural graphics, reticles, overlays, and feedback states.</li>
+          <li>Motion studies of information adapted for two display scales.</li>
+        </ul>
+      </div>
+      <div class="evidence-panel">
+        <div class="evidence-kicker">PROPOSED / NOT YET HARDWARE TESTED</div>
+        <p class="impl-lead">The larger XR concept is a handoff between tablet planning and situated command in wearable AR.</p>
+        <ul class="impl-list">
+          <li>Live coordination of target and task state between both displays.</li>
+          <li>World-anchored AR cues and actual eye-tracking input.</li>
+          <li>Drone integration and real-world navigation trials.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing visual, preserved -->
+  <div class="section fade-up closing-wearable">
+    <div class="section-label">Wearable AR / proposed experience</div>
+    <div class="video-wrap">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="./videos/Ar_Wearables_2.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p class="closing-note">The design opportunity is simple: issue an instruction from the big picture, then finish it from where you're standing. Signal Lock is an early exploration of how those two scales of interaction might connect.</p>
+  </div>
+
+    <!-- Bottom nav -->
   <div class="case-scroll-top-wrap"><a class="case-scroll-top-btn" href="#top" id="scroll-top-btn" aria-label="Scroll to top"><span class="case-scroll-top-glyph" aria-hidden="true"></span></a></div>
 
   <div class="bottom-nav">
