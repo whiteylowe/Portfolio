@@ -105,6 +105,43 @@
   .single-image-block .caption-sub{margin-top:6px;font-size:11px;color:var(--accent-dim)}
   .single-image-block .caption-copy{margin-top:14px;font-size:12px;line-height:1.85;color:var(--text-mid)}
 
+  /* Act I / photographic studies: apparatus, sighting and exposure.
+     Both views of the camera are taken from the existing Thesis_Pinhole.jpg composite.
+     The left study reverses the camera crop, without mirroring any page text. */
+  .optical-studies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:34px;align-items:start}
+  .optical-study{min-width:0;margin:0;display:flex;flex-direction:column}
+  .optical-study-media{position:relative;aspect-ratio:1/1;overflow:hidden;background:#050505;border:1px solid var(--line)}
+  .optical-crop{position:absolute;inset:0;background-image:url('./images/Thesis_Pinhole.jpg');background-size:200% auto;background-repeat:no-repeat}
+  .optical-crop.camera{background-position:right center;transform:scaleX(-1)}
+  .optical-crop.viewer{background-position:left center}
+  .optical-photo{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+  .optical-study-title{font-size:13px;font-weight:400;color:var(--text);margin-top:13px;line-height:1.4}
+  .optical-study-type{font-size:10px;letter-spacing:.05em;color:var(--accent-dim);margin-top:5px}
+  .optical-study-copy{font-size:11px;line-height:1.75;color:var(--text-mid);margin-top:10px;max-width:46ch}
+  .optical-photo-trigger{border:1px solid var(--line);background:#050505;padding:0;width:100%;aspect-ratio:1/1;cursor:pointer;overflow:hidden}
+  .optical-photo-trigger .optical-photo{border:0}
+  .optical-photo-trigger:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+  .optical-photo-trigger:hover{border-color:rgba(240,220,180,.45)}
+  @media(max-width:760px){.optical-studies{grid-template-columns:1fr;gap:30px}.optical-study-media,.optical-photo-trigger{aspect-ratio:4/3}.optical-study-copy{max-width:65ch}}
+
+
+  /* Act I: separate the photographic record from the optical research boards. */
+  .optical-research{margin-top:52px;padding-top:26px;border-top:1px solid var(--line)}
+  .optical-research-heading{font-size:18px;font-weight:400;letter-spacing:.04em;margin-bottom:9px}
+  .optical-research-intro{max-width:730px;font-size:12px;line-height:1.85;color:var(--text-mid);margin-bottom:25px}
+  .optical-research-primary{display:block;max-width:1120px;margin:0 auto 30px}
+  .optical-research-primary .image-frame{background:#fff}
+  .optical-research-primary img{display:block;width:100%;height:auto;object-fit:contain}
+  .optical-research-primary .thumb-title{font-size:15px;margin-top:15px}
+  .optical-research-primary .thumb-copy{max-width:770px;margin-top:11px}
+  .optical-research-secondary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+  .optical-research-secondary .image-frame{aspect-ratio:16/9;background:#fff}
+  .optical-research-secondary img{width:100%;height:100%;object-fit:contain}
+  @media(max-width:760px){.optical-research-secondary{grid-template-columns:1fr}.optical-research{margin-top:38px}}
+  .research-conclusion{border-top:1px solid var(--line);margin-top:46px;padding:24px 0 0;max-width:850px}
+  .research-conclusion .act4-small-heading{margin-bottom:12px}
+  .research-conclusion p{font-size:12px;line-height:1.9;color:var(--text-mid)}
+
   .thumb-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:30px}
   .thumb-row.four{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:24px}
   .thumb-card{display:block}
@@ -130,6 +167,7 @@
   .large-copy{margin-top:16px;font-size:12px;line-height:1.9;color:var(--text-mid)}
 
 
+  .act3-concept-title{font-size:18px;font-weight:400;letter-spacing:.04em;color:var(--text);margin-bottom:13px}
   /* Act III: individual, uncropped architectural plates */
   .act3-accordion{max-width:800px;margin:28px auto 0}
   .act3-accordion .image-frame,.act3-vessel .image-frame{aspect-ratio:auto}
@@ -397,28 +435,64 @@
       </div>
     </div>
 
-    <div class="single-image-block">
-      <div class="image-frame contain"><img src="./images/Thesis_Pinhole.jpg" alt="Hand built pinhole camera and tripod"></div>
-      <div class="caption-title">Cigar Pinhole</div>
-      <div class="caption-sub">Hand built pinhole camera &amp; tripod, wood and cigar box</div>
+    <div class="optical-studies" aria-label="Act I photographic investigations">
+      <figure class="optical-study">
+        <div class="optical-study-media">
+          <div class="optical-crop camera" role="img" aria-label="Hand-built cigar-box pinhole camera, wooden tripod, and construction details, mirrored horizontally"></div>
+        </div>
+        <figcaption>
+          <div class="optical-study-title">01 / Cigar Pinhole</div>
+          <div class="optical-study-type">Camera construction</div>
+          <p class="optical-study-copy">A hand-built cedar cigar-box camera and wooden tripod. Cedar resists moisture-related movement, helping maintain a stable, light-tight enclosure for the pinhole and film.</p>
+        </figcaption>
+      </figure>
+
+      <figure class="optical-study">
+        <div class="optical-study-media">
+          <div class="optical-crop viewer" role="img" aria-label="Wide fisheye view through a repurposed door viewer used for aiming the camera"></div>
+        </div>
+        <figcaption>
+          <div class="optical-study-title">02 / Door-Viewer Viewfinder</div>
+          <div class="optical-study-type">Wide-angle framing</div>
+          <p class="optical-study-copy">A door peephole served as a wide-angle finder, offering an approximately 160° view for aiming. The recorded field was set separately by pinhole-to-film distance and film dimensions.</p>
+        </figcaption>
+      </figure>
+
+      <figure class="optical-study">
+        <button class="optical-photo-trigger" type="button" data-lightbox-set="act1photos" data-lightbox-index="0" aria-label="Enlarge pinhole photographic studies">
+          <img class="optical-photo" src="./images/Campus_Obscura_Photos.jpg" alt="Contact sheet of site-specific pinhole photographs: stairs, windows, architectural thresholds, light leaks and overlapping exposures" loading="lazy">
+        </button>
+        <figcaption>
+          <div class="optical-study-title">03 / Pinhole Photographs</div>
+          <div class="optical-study-type">Light and image studies</div>
+          <p class="optical-study-copy">Windows, stairs, and thresholds establish focal points in situ. Light leaks and overlapping exposures register the material enclosure, while the film plane governs framing, depth, and image scale.</p>
+        </figcaption>
+      </figure>
     </div>
 
-    <div class="thumb-row">
-      <button class="thumb-button" type="button" data-lightbox-set="act1" data-lightbox-index="0">
-        <div class="image-frame"><img src="./images/Thesis_1.jpg" alt="Taxonomy of Light"></div>
+    <div class="optical-research">
+      <h3 class="optical-research-heading">Optical Investigations</h3>
+      <p class="optical-research-intro">From camera construction and photographic observation to tests of aperture geometry, image projection, and optical depth.</p>
+
+      <button class="thumb-button optical-research-primary" type="button" data-lightbox-set="act1" data-lightbox-index="0" aria-label="Enlarge Taxonomy of Light board">
+        <div class="image-frame"><img src="./images/Thesis_1.jpg" alt="Taxonomy of Light board with an aperture comparison matrix, optical wheel and constructed chamber floor plan" loading="lazy"></div>
         <div class="thumb-title">Taxonomy of Light</div>
-        <div class="thumb-sub">Aperture Studies</div>
+        <div class="thumb-sub">Architectural Aperture Experiments</div>
+        <p class="thumb-copy">A constructed optical chamber and aperture experiments examine how circular openings, slits, and combined geometries change projected images. The photographic matrix compares image clarity, directional blur, and overlapping fields of light.</p>
       </button>
-      <button class="thumb-button" type="button" data-lightbox-set="act1" data-lightbox-index="1">
-        <div class="image-frame"><img src="./images/Thesis_2.jpg" alt="Curved Film Plane"></div>
-        <div class="thumb-title">Curved Film Plane</div>
-        <div class="thumb-sub">Bending the image field</div>
-      </button>
-      <button class="thumb-button" type="button" data-lightbox-set="act1" data-lightbox-index="2">
-        <div class="image-frame"><img src="./images/Thesis_3.jpg" alt="Water Lens"></div>
-        <div class="thumb-title">Water Lens</div>
-        <div class="thumb-sub">Campus as Photogram</div>
-      </button>
+
+      <div class="optical-research-secondary">
+        <button class="thumb-button" type="button" data-lightbox-set="act1" data-lightbox-index="1">
+          <div class="image-frame"><img src="./images/Thesis_2.jpg" alt="Curved Film Plane research board" loading="lazy"></div>
+          <div class="thumb-title">Curved Film Plane</div>
+          <div class="thumb-sub">Bending the image field</div>
+        </button>
+        <button class="thumb-button" type="button" data-lightbox-set="act1" data-lightbox-index="2">
+          <div class="image-frame"><img src="./images/Thesis_3.jpg" alt="Water Lens research board" loading="lazy"></div>
+          <div class="thumb-title">Water Lens</div>
+          <div class="thumb-sub">Campus as Photogram</div>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -430,10 +504,10 @@
         <div class="video-frame"><video src="./videos/Thesis_Act_2.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
       </div>
       <div class="text-col">
-        <div class="act-title">Spatial Mechanics</div>
-        <div class="act-subtitle">Order as behavior</div>
-        <div class="split-text">Within every coherent image there are multiple spatial narratives competing for primacy.</div>
-        <div class="split-text">Explorations of computational systems and emergent spatial behavior treat swarm dynamics, particle systems, and procedural rules as models of spatial intelligence.</div>
+        <div class="act-title">Emergent Spatial Systems</div>
+        <div class="act-subtitle">Order through interaction</div>
+        <div class="split-text">The investigation shifts from optical image formation to spatial organization. Particle systems, vector fields, and procedural rules test how local interactions generate collective patterns, boundaries, and movement.</div>
+        <div class="split-text">These studies consider form as a changing field rather than a fixed object, linking motion and emergence to the experience of space.</div>
       </div>
     </div>
 
@@ -464,13 +538,14 @@
   <div class="section-divider"></div>
   <section class="section" id="act-3">
     <div class="section-label mono">Act III</div>
-    <div class="split-text" style="max-width:920px;margin-bottom:28px">Architecture becomes an instrument that frames, compresses, and constructs perception. Operable apertures and inhabitable observatories turn visibility, depth, and procession into designed events.</div>
+    <h2 class="act3-concept-title">Architecture as Apparatus</h2>
+    <div class="split-text" style="max-width:920px;margin-bottom:28px">Optical principles become architectural mechanisms. Operable apertures control the field of view, while inhabitable walls, thresholds, and elevated passages organize perception through movement.</div>
 
     <div class="act3-accordion">
       <div class="image-frame contain"><img src="./images/Thesis_Accordion.jpg" alt="Accordion Aperture System" loading="lazy"></div>
       <div class="large-title">Accordion Aperture System</div>
       <div class="large-sub">Kinetic Framing through Expansion and Compression</div>
-      <div class="large-copy">A kinetic aperture system that controls view and depth through expansion, compression, and layered framing.</div>
+      <div class="large-copy">A movable framing plane expands and compresses the opening, changing what is visible and how depth is read.</div>
     </div>
 
     <div class="act3-vessel">
@@ -570,6 +645,11 @@
         </div>
       </div>
     </div>
+
+    <div class="research-conclusion">
+      <h3 class="act4-small-heading">Research Proposition</h3>
+      <p>Campus Obscura proposes architecture as a constructed viewing apparatus. Apertures, movement, and material boundaries shape how space becomes visible, experienced, and understood.</p>
+    </div>
   </section>
 
   <div class="section-divider"></div>
@@ -609,8 +689,11 @@
 
 <script>
   const previewSets = {
+    act1photos: [
+      {src:'./images/Campus_Obscura_Photos.jpg', type:'image', title:'Pinhole Photographs', sub:'Light, film plane and architectural framing'}
+    ],
     act1: [
-      {src:'./images/Thesis_1.jpg', type:'image', title:'Taxonomy of Light', sub:'Aperture Studies'},
+      {src:'./images/Thesis_1.jpg', type:'image', title:'Taxonomy of Light', sub:'Architectural Aperture Experiments'},
       {src:'./images/Thesis_2.jpg', type:'image', title:'Curved Film Plane', sub:'Bending the image field'},
       {src:'./images/Thesis_3.jpg', type:'image', title:'Water Lens', sub:'Campus as Photogram'}
     ],
